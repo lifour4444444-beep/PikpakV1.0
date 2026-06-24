@@ -1,5 +1,5 @@
 __pycache__/
 *.pyc
 *.pyo
-*.onnx.data
-debug.log
+gui_config.json
+*.log
