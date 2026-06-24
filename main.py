@@ -13,6 +13,7 @@ import hashlib
 import io
 import json
 import os
+import random
 import re
 import subprocess
 import struct
@@ -35,7 +36,7 @@ from lib.utils import (
     solve_pow_single,
     LOCALES,
 )
-from lib.http_client import make_request, http_get_raw, USER_AGENT, configure_proxy, get_current_ip, get_proxy_dict, pin_proxy, unpin_proxy
+from lib.http_client import make_request, http_get_raw, USER_AGENT, configure_proxy, get_current_ip, get_proxy_dict, pin_proxy, unpin_proxy, force_rotate_proxy
 from lib.mail import create_mail_account, fetch_verification_code
 import lib.mail
 
@@ -48,6 +49,38 @@ _stop_event = threading.Event()
 _result_lock = threading.Lock()
 
 _on_captcha_image = None
+
+
+class _GlobalRateLimiter:
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._paused = threading.Event()
+        self._paused.set()
+        self._global_rate_limit_count = 0
+
+    def pause_all(self, wait_seconds):
+        with self._lock:
+            self._global_rate_limit_count += 1
+            self._paused.clear()
+        return self._global_rate_limit_count
+
+    def resume_all(self):
+        with self._lock:
+            self._paused.set()
+
+    def wait_if_paused(self, timeout=1):
+        return self._paused.wait(timeout=timeout)
+
+    @property
+    def is_paused(self):
+        return not self._paused.is_set()
+
+    def reset_count(self):
+        with self._lock:
+            self._global_rate_limit_count = 0
+
+
+_global_rate_limiter = _GlobalRateLimiter()
 
 
 def request_stop():
@@ -105,20 +138,29 @@ def _debug(msg):
 
 _log_buffer = ''
 
+_worker_tls = threading.local()
+
+
+def set_worker_id(wid):
+    _worker_tls.wid = wid
+
+
 def _log(msg, end='\n'):
     """关键信息输出到控制台"""
     global _log_buffer
+    wid = getattr(_worker_tls, 'wid', None)
+    prefix = f'[W{str(wid).zfill(2)}] ' if wid is not None else ''
     if end == '':
         if _log_buffer:
             _log_buffer += msg
         else:
-            _log_buffer = f'[{time.strftime("%H:%M:%S")}] {msg}'
+            _log_buffer = f'[{time.strftime("%H:%M:%S")}] {prefix}{msg}'
     else:
         if _log_buffer:
             print(f'{_log_buffer}{msg}', end='\n')
             _log_buffer = ''
         else:
-            print(f'[{time.strftime("%H:%M:%S")}] {msg}', end='\n')
+            print(f'[{time.strftime("%H:%M:%S")}] {prefix}{msg}', end='\n')
     sys.stdout.flush()
 
 def get_image_dimensions(buf):
@@ -219,7 +261,7 @@ def fetch_prehandle(sess='', subsid=1):
 
     resp = None
     last_error = None
-    for attempt in range(3):
+    for attempt in range(4):
         try:
             resp = requests.get(url, headers={
                 'User-Agent': USER_AGENT,
@@ -227,17 +269,25 @@ def fetch_prehandle(sess='', subsid=1):
                 'Accept': '*/*',
             }, timeout=15, proxies=get_proxy_dict())
             break
+        except requests.exceptions.SSLError as e:
+            last_error = e
+            force_rotate_proxy()
+            if attempt < 3:
+                time.sleep(2.0 * (attempt + 1))
         except requests.exceptions.Timeout as e:
             last_error = e
-            if attempt < 2:
+            if attempt < 3:
                 time.sleep(1.5 * (attempt + 1))
         except requests.exceptions.ConnectionError as e:
             last_error = e
-            if attempt < 2:
+            err_str = str(e).lower()
+            if 'ssl' in err_str or 'wrong_version' in err_str:
+                force_rotate_proxy()
+            if attempt < 3:
                 time.sleep(2.0 * (attempt + 1))
 
     if resp is None:
-        raise RuntimeError(f'prehandle失败(重试3次): {last_error}')
+        raise RuntimeError(f'prehandle失败(重试4次): {last_error}')
 
     return parse_prehandle_response(resp.text)
 
@@ -368,7 +418,7 @@ def submit_verify(sess, sid, subcapclass, collect, eks, ans, pow_answer, pow_cal
 
     resp = None
     last_error = None
-    for attempt in range(3):
+    for attempt in range(4):
         try:
             resp = requests.post(VERIFY_URL, data=body.encode('utf-8'), headers={
                 'User-Agent': USER_AGENT,
@@ -377,17 +427,25 @@ def submit_verify(sess, sid, subcapclass, collect, eks, ans, pow_answer, pow_cal
                 'Origin': 'https://user.mypikpak.com',
             }, timeout=15, proxies=get_proxy_dict())
             break
+        except requests.exceptions.SSLError as e:
+            last_error = e
+            force_rotate_proxy()
+            if attempt < 3:
+                time.sleep(2.0 * (attempt + 1))
         except requests.exceptions.Timeout as e:
             last_error = e
-            if attempt < 2:
+            if attempt < 3:
                 time.sleep(1.5 * (attempt + 1))
         except requests.exceptions.ConnectionError as e:
             last_error = e
-            if attempt < 2:
+            err_str = str(e).lower()
+            if 'ssl' in err_str or 'wrong_version' in err_str:
+                force_rotate_proxy()
+            if attempt < 3:
                 time.sleep(2.0 * (attempt + 1))
 
     if resp is None:
-        raise RuntimeError(f'提交验证码失败(重试3次): {last_error}')
+        raise RuntimeError(f'提交验证码失败(重试4次): {last_error}')
 
     try:
         data = resp.json()
@@ -787,10 +845,26 @@ def parse_invite_link(link):
 
     # 获取HTML
     url = f'https://mypikpak.com/s/{share_id}'
-    resp = requests.get(url, headers={
-        'User-Agent': USER_AGENT,
-        'Referer': 'https://mypikpak.com/',
-    }, timeout=20, proxies=get_proxy_dict())
+    last_err = None
+    for attempt in range(3):
+        try:
+            use_proxy = (attempt == 0)
+            proxies = get_proxy_dict() if use_proxy else None
+            resp = requests.get(url, headers={
+                'User-Agent': USER_AGENT,
+                'Referer': 'https://mypikpak.com/',
+            }, timeout=20, proxies=proxies)
+            break
+        except requests.exceptions.SSLError as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep(2)
+        except requests.exceptions.ConnectionError as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep(3)
+    else:
+        raise RuntimeError(f'邀请链接解析失败(重试3次): {last_err}')
     if resp.status_code != 200:
         raise RuntimeError(f'获取分享页面失败 {resp.status_code}')
 
@@ -917,6 +991,8 @@ def run_batch_round(round_num):
     mail_account = create_mail_account(force_domain=lib.mail._FORCE_DOMAIN)
     _log(f'\n📧 {mail_account["email"]}')
 
+    time.sleep(random.uniform(1.0, 4.0))
+
     _log('  获取captcha_token...', end='')
     if _is_stopped(): return False
     init_resp = get_initial_captcha_token(device_id, locale)
@@ -929,6 +1005,8 @@ def run_batch_round(round_num):
     initial_token = init_resp['data']['captcha_token']
     _log(' ✓')
     _log(f'    JWT_A: {initial_token[:50]}...')
+
+    time.sleep(random.uniform(1.0, 4.0))
 
     _log('  请求人机验证...', end='')
     if _is_stopped(): return False
@@ -1081,11 +1159,13 @@ def main():
                 rate_limit_count += 1
                 delays = [10, 50, 60]
                 idx = min(rate_limit_count, len(delays)) - 1
-                wait_seconds = delays[idx]
+                wait_seconds = delays[idx] + random.randint(0, delays[idx] // 2)
                 _log(f'⛔ 触发频率限制(第{rate_limit_count}次)，等待{wait_seconds}秒后重试')
                 _debug(f'频率限制响应: {json.dumps(e.data)}')
+                _log(f'  当前出口IP: {get_current_ip()}')
                 time.sleep(wait_seconds)
                 unpin_proxy()
+                _log(f'  切换后IP: {get_current_ip()}')
                 if rate_limit_count >= 3:
                     _log('⚠ 频率限制重试3次无效，跳过本轮，等待下一轮')
                     rate_limit_count = 0

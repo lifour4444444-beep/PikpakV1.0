@@ -1,4 +1,4 @@
-﻿﻿import random
+import random
 import re
 import string
 import time
@@ -62,7 +62,7 @@ def get_available_domains():
     for base_url in _MAILTM_PROVIDERS:
         try:
             resp = make_request("GET", base_url, "/domains",
-                                headers={"Accept": "application/json"},
+                                headers={"Accept": "application/json", "Cache-Control": "no-cache"},
                                 timeout=15, use_proxy=True)
             data = _safe_data(resp)
             if isinstance(data, list):
@@ -81,7 +81,7 @@ def get_available_domains():
 
 def _get_domains_for_provider(base_url):
     resp = make_request("GET", base_url, "/domains",
-                        headers={"Accept": "application/json"},
+                        headers={"Accept": "application/json", "Cache-Control": "no-cache"},
                         timeout=15, use_proxy=True)
     data = _safe_data(resp)
     if not isinstance(data, list):
@@ -111,16 +111,43 @@ def _try_create_mailtm(base_url, local, password, domain):
 
 def _try_create_guerrilla():
     import requests
-    from .http_client import get_proxy_dict
+    from .http_client import get_proxy_dict, force_rotate_proxy
 
-    proxies = get_proxy_dict()
-    resp = requests.get(
-        _GUERRILLA_URL + "/ajax.php",
-        params={"f": "get_email_address"},
-        headers={"Accept": "application/json"},
-        timeout=15,
-        proxies=proxies,
-    )
+    params = {"f": "get_email_address", "_": str(int(time.time() * 1000))}
+    last_error = None
+    for attempt in range(3):
+        proxies = get_proxy_dict()
+        try:
+            resp = requests.get(
+                _GUERRILLA_URL + "/ajax.php",
+                params=params,
+                headers={"Accept": "application/json", "Cache-Control": "no-cache"},
+                timeout=15,
+                proxies=proxies,
+            )
+            break
+        except requests.exceptions.SSLError as e:
+            last_error = e
+            force_rotate_proxy()
+            if attempt < 2:
+                time.sleep(2)
+        except requests.exceptions.ConnectionError as e:
+            last_error = e
+            err_str = str(e).lower()
+            if 'ssl' in err_str or 'wrong_version' in err_str:
+                force_rotate_proxy()
+            if attempt < 2:
+                time.sleep(2)
+    else:
+        try:
+            resp = requests.get(
+                _GUERRILLA_URL + "/ajax.php",
+                params=params,
+                headers={"Accept": "application/json", "Cache-Control": "no-cache"},
+                timeout=15,
+            )
+        except Exception as e:
+            raise RuntimeError(f"Guerrilla Mail创建失败(所有重试耗尽): {e}")
     data = _safe_json(resp)
     if not isinstance(data, dict):
         raise RuntimeError(f"Guerrilla Mail创建失败: {data}")
@@ -294,11 +321,41 @@ def _fetch_code_mailtm(token, base_url, stop_check=None):
 
 def _fetch_code_guerrilla(sid_token, stop_check=None):
     import requests
-    from .http_client import get_proxy_dict
+    from .http_client import get_proxy_dict, force_rotate_proxy
 
     last_error = None
     poll_count = 0
     seen_ids = set()
+
+    def _guerrilla_get(params, timeout=15):
+        proxies = get_proxy_dict()
+        for attempt in range(3):
+            try:
+                return requests.get(
+                    _GUERRILLA_URL + "/ajax.php",
+                    params=params,
+                    headers={"Accept": "application/json"},
+                    timeout=timeout,
+                    proxies=proxies,
+                )
+            except requests.exceptions.SSLError:
+                force_rotate_proxy()
+                proxies = get_proxy_dict()
+                if attempt < 2:
+                    time.sleep(2)
+            except requests.exceptions.ConnectionError as e:
+                err_str = str(e).lower()
+                if 'ssl' in err_str or 'wrong_version' in err_str:
+                    force_rotate_proxy()
+                    proxies = get_proxy_dict()
+                if attempt < 2:
+                    time.sleep(2)
+        return requests.get(
+            _GUERRILLA_URL + "/ajax.php",
+            params=params,
+            headers={"Accept": "application/json"},
+            timeout=timeout,
+        )
 
     while True:
         if stop_check and stop_check():
@@ -306,14 +363,7 @@ def _fetch_code_guerrilla(sid_token, stop_check=None):
 
         poll_count += 1
         try:
-            proxies = get_proxy_dict()
-            resp = requests.get(
-                _GUERRILLA_URL + "/ajax.php",
-                params={"f": "check_email", "seq": 0, "sid_token": sid_token},
-                headers={"Accept": "application/json"},
-                timeout=15,
-                proxies=proxies,
-            )
+            resp = _guerrilla_get({"f": "check_email", "seq": 0, "sid_token": sid_token})
             data = _safe_json(resp)
             messages = data.get("list", []) if isinstance(data, dict) else []
 
@@ -337,13 +387,7 @@ def _fetch_code_guerrilla(sid_token, stop_check=None):
                     return body_code
 
                 try:
-                    detail_resp = requests.get(
-                        _GUERRILLA_URL + "/ajax.php",
-                        params={"f": "fetch_email", "email_id": msg_id, "sid_token": sid_token},
-                        headers={"Accept": "application/json"},
-                        timeout=15,
-                        proxies=proxies,
-                    )
+                    detail_resp = _guerrilla_get({"f": "fetch_email", "email_id": msg_id, "sid_token": sid_token})
                     detail = _safe_json(detail_resp)
                     full_body = detail.get("mail_body", "") if isinstance(detail, dict) else ""
                     full_code = _find_code(full_body)
@@ -362,11 +406,39 @@ def _fetch_code_guerrilla(sid_token, stop_check=None):
 
 def _fetch_code_tempmailio(email, stop_check=None):
     import requests
-    from .http_client import get_proxy_dict
+    from .http_client import get_proxy_dict, force_rotate_proxy
 
     last_error = None
     poll_count = 0
     seen_ids = set()
+
+    def _tempmailio_get(url, timeout=15):
+        proxies = get_proxy_dict()
+        for attempt in range(3):
+            try:
+                return requests.get(
+                    url,
+                    headers={"Accept": "application/json"},
+                    timeout=timeout,
+                    proxies=proxies,
+                )
+            except requests.exceptions.SSLError:
+                force_rotate_proxy()
+                proxies = get_proxy_dict()
+                if attempt < 2:
+                    time.sleep(2)
+            except requests.exceptions.ConnectionError as e:
+                err_str = str(e).lower()
+                if 'ssl' in err_str or 'wrong_version' in err_str:
+                    force_rotate_proxy()
+                    proxies = get_proxy_dict()
+                if attempt < 2:
+                    time.sleep(2)
+        return requests.get(
+            url,
+            headers={"Accept": "application/json"},
+            timeout=timeout,
+        )
 
     while True:
         if stop_check and stop_check():
@@ -374,13 +446,7 @@ def _fetch_code_tempmailio(email, stop_check=None):
 
         poll_count += 1
         try:
-            proxies = get_proxy_dict()
-            resp = requests.get(
-                f"{_TEMPMĀILIO_URL}/api/v2/email/{email}/messages",
-                headers={"Accept": "application/json"},
-                timeout=15,
-                proxies=proxies,
-            )
+            resp = _tempmailio_get(f"{_TEMPMĀILIO_URL}/api/v2/email/{email}/messages")
             messages = _safe_json(resp)
 
             if not isinstance(messages, list):

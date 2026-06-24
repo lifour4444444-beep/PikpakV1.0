@@ -2,6 +2,7 @@ import json
 import io
 import os
 import queue
+import random
 import sys
 import threading
 import time
@@ -701,6 +702,9 @@ class App(tk.Tk):
         workers = self._config_vars['workers'].get()
         round_lock = threading.Lock()
         round_counter = [0]
+        rate_limit_lock = threading.Lock()
+        rate_limit_paused = threading.Event()
+        rate_limit_paused.set()
 
         def _next_round():
             with round_lock:
@@ -712,14 +716,28 @@ class App(tk.Tk):
             rate_limit_count = 0
             try:
                 while not self._stop_flag.is_set():
+                    if not rate_limit_paused.wait(timeout=1):
+                        continue
+
                     if not first_round:
                         self._msg_queue.put(
                             ('ui', 'log', f'\n⏳ 等待 {_worker.DELAY_MINUTES} 分钟...\n', 'info'))
                         for _ in range(_worker.DELAY_MINUTES * 60):
                             if self._stop_flag.is_set():
                                 return
+                            if not rate_limit_paused.wait(timeout=1):
+                                continue
                             time.sleep(1)
                     first_round = False
+
+                    stagger_delay = (worker_id - 1) * random.uniform(5, 55) / max(1, workers - 1) if workers > 1 else 0
+                    if stagger_delay > 0:
+                        self._msg_queue.put(
+                            ('ui', 'log', '[Worker-{}] ⏱ 错开启动，等待 {:.0f}秒\n'.format(worker_id, stagger_delay), 'info'))
+                        for _ in range(int(stagger_delay)):
+                            if self._stop_flag.is_set():
+                                return
+                            time.sleep(1)
 
                     round_num = _next_round()
                     if max_rounds > 0 and round_num > max_rounds:
@@ -749,9 +767,11 @@ class App(tk.Tk):
                             ('ui', 'log', '[Worker-{}] IP获取失败，跳过本轮\n'.format(worker_id), 'warn'))
                         with round_lock:
                             self._fail_count += 1
+                        _worker.unpin_proxy()
                         continue
 
                     try:
+                        _worker.set_worker_id(worker_id)
                         acct = _worker.run_batch_round(round_num)
                         rate_limit_count = 0
                         if acct:
@@ -763,16 +783,47 @@ class App(tk.Tk):
                                 self._fail_count += 1
                     except _worker.RateLimitError:
                         rate_limit_count += 1
-                        delays = [10, 50, 60]
+                        delays = [30, 90, 180]
                         idx = min(rate_limit_count, len(delays)) - 1
-                        wait_seconds = delays[idx]
+                        wait_seconds = delays[idx] + random.randint(0, delays[idx] // 2)
+
+                        with rate_limit_lock:
+                            if rate_limit_paused.is_set():
+                                rate_limit_paused.clear()
+                                self._msg_queue.put(
+                                    ('ui', 'log', '\n⛔ 全局频率限制触发，所有Worker暂停{}秒\n'.format(wait_seconds), 'warn'))
+
+                        current_ip = '获取失败'
+                        for _ in range(3):
+                            current_ip = _worker.get_current_ip()
+                            if current_ip != '获取失败':
+                                break
+                            time.sleep(2)
                         self._msg_queue.put(
-                            ('ui', 'log', '[Worker-{}] 触发频率限制(第{}次)，等待{}秒后重试\n'.format(worker_id, rate_limit_count, wait_seconds), 'warn'))
+                            ('ui', 'log', '  [Worker-{}] 当前出口IP: {}\n'.format(worker_id, current_ip), 'warn'))
+
                         for _ in range(wait_seconds):
                             if self._stop_flag.is_set():
                                 return
                             time.sleep(1)
+
                         _worker.unpin_proxy()
+                        _worker.force_rotate_proxy()
+
+                        new_ip = '获取失败'
+                        for _ in range(3):
+                            new_ip = _worker.get_current_ip()
+                            if new_ip != '获取失败':
+                                break
+                            time.sleep(2)
+                        self._msg_queue.put(
+                            ('ui', 'log', '  [Worker-{}] 切换后IP: {}\n'.format(worker_id, new_ip), 'warn'))
+
+                        with rate_limit_lock:
+                            rate_limit_paused.set()
+                            self._msg_queue.put(
+                                ('ui', 'log', '✅ 全局暂停结束，Worker恢复运行\n', 'info'))
+
                         if rate_limit_count >= 3:
                             with round_lock:
                                 self._fail_count += 1
@@ -791,6 +842,7 @@ class App(tk.Tk):
                             self._fail_count += 1
                         self._msg_queue.put(
                             ('ui', 'log', f'\n[系统] 运行出错: {e}\n', 'error'))
+                        _worker.force_rotate_proxy()
 
                     with round_lock:
                         self._round_count = round_num
