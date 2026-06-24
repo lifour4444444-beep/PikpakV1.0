@@ -110,6 +110,10 @@ class ProxyManager:
 
 _proxy_manager = ProxyManager()
 
+_proxy_cooldown_until = 0.0
+_proxy_cooldown_lock = threading.Lock()
+_proxy_semaphore = threading.Semaphore(3)
+
 
 def configure_proxy(proxy_list=None, gateway='', rotate_every=1):
     _proxy_manager.configure(proxy_list=proxy_list, gateway=gateway, rotate_every=rotate_every)
@@ -136,6 +140,23 @@ def force_rotate_proxy():
     return result
 
 
+def _wait_proxy_cooldown():
+    global _proxy_cooldown_until
+    while True:
+        with _proxy_cooldown_lock:
+            remaining = _proxy_cooldown_until - time.monotonic()
+            if remaining <= 0:
+                return
+        time.sleep(min(remaining, 1.0))
+
+
+def _trigger_proxy_cooldown(seconds):
+    global _proxy_cooldown_until
+    with _proxy_cooldown_lock:
+        new_until = time.monotonic() + seconds
+        _proxy_cooldown_until = max(_proxy_cooldown_until, new_until)
+
+
 _session_tls = threading.local()
 
 
@@ -154,7 +175,7 @@ def _get_session():
     if s is None:
         s = requests.Session()
         retry = Retry(total=0, read=False, connect=False, status=False, backoff_factor=0)
-        adapter = requests.adapters.HTTPAdapter(pool_connections=2, pool_maxsize=2, max_retries=retry)
+        adapter = requests.adapters.HTTPAdapter(pool_connections=1, pool_maxsize=1, max_retries=retry)
         s.mount('https://', adapter)
         s.mount('http://', adapter)
         _session_tls.session = s
@@ -188,42 +209,67 @@ def make_request(method, base_url, path, headers=None, body=None, timeout=30, us
 
         proxies = _proxy_manager.get() if (use_proxy and _proxy_manager.enabled) else None
 
-        try:
-            if method == 'GET':
-                resp = session.get(url, headers=request_headers, timeout=timeout, proxies=proxies)
-            elif method == 'POST':
-                resp = session.post(url, headers=request_headers, data=body_bytes, timeout=timeout, proxies=proxies)
-            else:
-                raise ValueError(f'Unsupported HTTP method: {method}')
-
+        if use_proxy and _proxy_manager.enabled:
+            _wait_proxy_cooldown()
+            _proxy_semaphore.acquire()
             try:
-                data = resp.json()
-            except (json.JSONDecodeError, ValueError):
-                data = resp.text
-
-            return {'status_code': resp.status_code, 'data': data}
-        except requests.exceptions.SSLError as e:
-            last_error = e
-            _proxy_manager.force_rotate()
-            need_new_session = True
-            if attempt < retries:
-                time.sleep(2.0 * (attempt + 1))
-        except requests.exceptions.Timeout as e:
-            last_error = e
-            if attempt < retries:
-                time.sleep(1.5 * (attempt + 1))
-        except requests.exceptions.ConnectionError as e:
-            last_error = e
-            err_str = str(e).lower()
-            if 'ssl' in err_str or 'wrong_version' in err_str:
+                resp = _do_request(session, method, url, request_headers, body_bytes, timeout, proxies)
+            except requests.exceptions.SSLError as e:
+                last_error = e
+                _trigger_proxy_cooldown(5 + attempt * 3)
                 _proxy_manager.force_rotate()
                 need_new_session = True
-            if attempt < retries:
-                time.sleep(2.0 * (attempt + 1))
-        except requests.exceptions.RequestException as e:
-            raise RuntimeError(f'请求失败: {e}')
+                if attempt < retries:
+                    time.sleep(3.0 * (attempt + 1))
+                continue
+            except requests.exceptions.ConnectionError as e:
+                last_error = e
+                err_str = str(e).lower()
+                if 'ssl' in err_str or 'wrong_version' in err_str:
+                    _trigger_proxy_cooldown(5 + attempt * 3)
+                    _proxy_manager.force_rotate()
+                    need_new_session = True
+                if attempt < retries:
+                    time.sleep(3.0 * (attempt + 1))
+                continue
+            except requests.exceptions.Timeout as e:
+                last_error = e
+                if attempt < retries:
+                    time.sleep(2.0 * (attempt + 1))
+                continue
+            except requests.exceptions.RequestException as e:
+                raise RuntimeError(f'请求失败: {e}')
+            finally:
+                _proxy_semaphore.release()
+        else:
+            try:
+                resp = _do_request(session, method, url, request_headers, body_bytes, timeout, proxies)
+            except requests.exceptions.Timeout as e:
+                last_error = e
+                if attempt < retries:
+                    time.sleep(2.0 * (attempt + 1))
+                    continue
+                raise RuntimeError(f'请求失败(重试{retries}次): {last_error}')
+            except requests.exceptions.RequestException as e:
+                raise RuntimeError(f'请求失败: {e}')
+
+        try:
+            data = resp.json()
+        except (json.JSONDecodeError, ValueError):
+            data = resp.text
+
+        return {'status_code': resp.status_code, 'data': data}
 
     raise RuntimeError(f'请求失败(重试{retries}次): {last_error}')
+
+
+def _do_request(session, method, url, headers, body, timeout, proxies):
+    if method == 'GET':
+        return session.get(url, headers=headers, timeout=timeout, proxies=proxies)
+    elif method == 'POST':
+        return session.post(url, headers=headers, data=body, timeout=timeout, proxies=proxies)
+    else:
+        raise ValueError(f'Unsupported HTTP method: {method}')
 
 
 _IP_SERVICES = [
@@ -237,15 +283,22 @@ _IP_SERVICES = [
 
 def get_current_ip():
     proxies = _proxy_manager.get() if _proxy_manager.enabled else None
-    for url, parser in _IP_SERVICES:
-        try:
-            resp = requests.get(url, headers={'Connection': 'close'},
-                               timeout=8, proxies=proxies)
-            ip = parser(resp)
-            if ip and re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip):
-                return ip
-        except Exception:
-            continue
+    if _proxy_manager.enabled:
+        _wait_proxy_cooldown()
+        _proxy_semaphore.acquire()
+    try:
+        for url, parser in _IP_SERVICES:
+            try:
+                resp = requests.get(url, headers={'Connection': 'close'},
+                                   timeout=8, proxies=proxies)
+                ip = parser(resp)
+                if ip and re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip):
+                    return ip
+            except Exception:
+                continue
+    finally:
+        if _proxy_manager.enabled:
+            _proxy_semaphore.release()
     return '获取失败'
 
 
@@ -261,45 +314,75 @@ def http_get_raw(url_text, referer=None, timeout=15, use_proxy=False, retries=3)
     last_error = None
     for attempt in range(retries + 1):
         proxies = _proxy_manager.get() if (use_proxy and _proxy_manager.enabled) else None
-        try:
-            resp = requests.get(url_text, headers=request_headers, timeout=timeout, proxies=proxies)
-            content = resp.content
-            if not content or len(content) < 24:
-                last_error = f'响应为空或过小({len(content)}字节)'
-                if attempt < retries:
-                    time.sleep(1.5 * (attempt + 1))
-                    continue
-                raise RuntimeError(f'下载图片失败: {last_error}')
-            ct = resp.headers.get('Content-Type', '')
-            if 'image' not in ct and 'octet-stream' not in ct:
-                if content[:100].strip().startswith(b'<'):
-                    last_error = '返回HTML而非图片'
-                else:
-                    last_error = f'非图片响应({ct})'
-                if attempt < retries:
-                    time.sleep(1.5 * (attempt + 1))
-                    continue
-                raise RuntimeError(f'下载图片失败: {last_error}')
-            return content
-        except requests.exceptions.SSLError:
-            last_error = 'SSL握手失败'
-            if use_proxy and _proxy_manager.enabled:
+
+        if use_proxy and _proxy_manager.enabled:
+            _wait_proxy_cooldown()
+            _proxy_semaphore.acquire()
+            try:
+                resp = requests.get(url_text, headers=request_headers, timeout=timeout, proxies=proxies)
+            except requests.exceptions.SSLError:
+                last_error = 'SSL握手失败'
+                _trigger_proxy_cooldown(5 + attempt * 3)
                 _proxy_manager.force_rotate()
-            if attempt < retries:
-                time.sleep(2.0 * (attempt + 1))
-        except requests.exceptions.Timeout:
-            last_error = '超时'
+                if attempt < retries:
+                    time.sleep(3.0 * (attempt + 1))
+                continue
+            except requests.exceptions.ConnectionError as e:
+                last_error = '连接失败'
+                err_str = str(e).lower()
+                if 'ssl' in err_str or 'wrong_version' in err_str:
+                    _trigger_proxy_cooldown(5 + attempt * 3)
+                    _proxy_manager.force_rotate()
+                if attempt < retries:
+                    time.sleep(3.0 * (attempt + 1))
+                continue
+            except requests.exceptions.Timeout:
+                last_error = '超时'
+                if attempt < retries:
+                    time.sleep(2.0 * (attempt + 1))
+                continue
+            except requests.exceptions.RequestException as e:
+                raise RuntimeError(f'下载图片失败: {e}')
+            finally:
+                _proxy_semaphore.release()
+        else:
+            try:
+                resp = requests.get(url_text, headers=request_headers, timeout=timeout, proxies=proxies)
+            except requests.exceptions.SSLError:
+                last_error = 'SSL握手失败'
+                if attempt < retries:
+                    time.sleep(3.0 * (attempt + 1))
+                continue
+            except requests.exceptions.ConnectionError as e:
+                last_error = '连接失败'
+                if attempt < retries:
+                    time.sleep(3.0 * (attempt + 1))
+                continue
+            except requests.exceptions.Timeout:
+                last_error = '超时'
+                if attempt < retries:
+                    time.sleep(2.0 * (attempt + 1))
+                continue
+            except requests.exceptions.RequestException as e:
+                raise RuntimeError(f'下载图片失败: {e}')
+
+        content = resp.content
+        if not content or len(content) < 24:
+            last_error = f'响应为空或过小({len(content)}字节)'
             if attempt < retries:
                 time.sleep(1.5 * (attempt + 1))
-        except requests.exceptions.ConnectionError as e:
-            last_error = '连接失败'
-            err_str = str(e).lower()
-            if 'ssl' in err_str or 'wrong_version' in err_str:
-                if use_proxy and _proxy_manager.enabled:
-                    _proxy_manager.force_rotate()
+                continue
+            raise RuntimeError(f'下载图片失败: {last_error}')
+        ct = resp.headers.get('Content-Type', '')
+        if 'image' not in ct and 'octet-stream' not in ct:
+            if content[:100].strip().startswith(b'<'):
+                last_error = '返回HTML而非图片'
+            else:
+                last_error = f'非图片响应({ct})'
             if attempt < retries:
-                time.sleep(2.0 * (attempt + 1))
-        except requests.exceptions.RequestException as e:
-            raise RuntimeError(f'下载图片失败: {e}')
+                time.sleep(1.5 * (attempt + 1))
+                continue
+            raise RuntimeError(f'下载图片失败: {last_error}')
+        return content
 
     raise RuntimeError(f'下载图片失败(重试{retries}次): {last_error}')

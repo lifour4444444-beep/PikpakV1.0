@@ -4021,3 +4021,43 @@
 [01:55:12] PoW nonce=626 0ms
 [01:55:13] 第 33 轮注册
 [01:55:13] device_id=VxD4LV8Xo2wt8Onot5ei0chX7XVnvKnp locale=en-US
+[01:55:18] 第 32 轮注册
+[01:55:18] device_id=Kcyz995DKhrP1fz5HiUoYT4Uz3ZmsTHa locale=zh-CN
+[01:55:20] 绑定结果: 成功
+[01:55:20] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[01:55:23] 绑定结果: 成功
+[01:55:23] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[01:55:23] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "en", "message": "Account or device operation is too frequent, please try again later"}]}
+[01:55:29] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "zh", "message": "\u8d26\u53f7\u6216\u8bbe\u5907\u64cd\u4f5c\u8fc7\u4e8e\u9891\u7e41\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5"}]}
+[01:55:32] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "en", "message": "Account or device operation is too frequent, please try again later"}]}
+[01:55:33] 验证成功 ticket=tr03k9E0VNRys5ymr625pV-3K1eXLF... randstr=@vKn
+[01:55:35] 兑换响应: status=200
+[01:55:35] 获取到JWT_C: ck0.ysuFDB2sCQ7TZWsZiIvATlQCay...
+[01:55:40] 第 33 轮注册
+[01:55:40] device_id=A1QK5tgAjmtUDRb5Pnnxp7c3pZDbyvE5 locale=ko-KR
+[01:55:46] 第 35 轮注册
+[01:55:46] device_id=vC4Ifp75AfG0m0vjYAtrnInw2ILfts2m locale=ko-KR
+[01:55:51] 第 34 轮注册
+[01:55:51] device_id=UnvzzZenOK9OPug3fZ8XDp4cfFIj0wr4 locale=ja-JP
+[01:55:52] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "ko", "message": "\uacc4\uc815 \ub610\ub294 \uc7a5\uce58 \uc791\uc5c5\uc774 \ub108\ubb34 \ube48\ubc88\ud569\ub2c8\ub2e4. \ub098\uc911\uc5d0 \ub2e4\uc2dc \uc2dc\ub3c4\ud574 \uc8fc\uc138\uc694"}]}
+[01:56:00] 第 36 轮注册
+[01:56:00] device_id=yFnnBXfFjkSFZUix5D7GIklTEVnaLsQk locale=ja-JP
+[01:56:04] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "ko", "message": "\uacc4\uc815 \ub610\ub294 \uc7a5\uce58 \uc791\uc5c5\uc774 \ub108\ubb34 \ube48\ubc88\ud569\ub2c8\ub2e4. \ub098\uc911\uc5d0 \ub2e4\uc2dc \uc2dc\ub3c4\ud574 \uc8fc\uc138\uc694"}]}
+[01:56:09] 发送验证码(尝试1): status=400
+[01:56:16] 第 36 轮注册
+[01:56:16] device_id=kcfFDM77NS9EpwPcLGkQW6oUFxeH8K7K locale=zh-TW
+[01:56:24] 发送验证码(尝试2): status=400
+[01:56:41] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "zh-TW", "message": "\u8cec\u865f\u6216\u8a2d\u5099\u64cd\u4f5c\u904e\u65bc\u983b\u7e41\uff0c\u8acb\u7a0d\u5f8c\u91cd\u8a66"}]}
+[01:56:44] 发送验证码(尝试3): status=400
+[01:56:45] 第 36 轮注册
+[01:56:45] device_id=EKD09jAUk2Wd0fY2iTjG4TFtEU3dQSdO locale=ja-JP
+[01:56:56] 第 35 轮注册
+[01:56:56] device_id=qdQ7Y6J9YnrsGM7loQwcWWeSjCsRQRgn locale=zh-CN
+[01:56:58] 第 36 轮注册
+[01:56:58] device_id=hKySPLfgg3d5MqDNlI8YclfvqxEdgtpp locale=en-US
+[01:57:12] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "zh", "message": "\u8d26\u53f7\u6216\u8bbe\u5907\u64cd\u4f5c\u8fc7\u4e8e\u9891\u7e41\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5"}]}
+[01:57:22] 第 38 轮注册
+[01:57:22] device_id=DdTnI2j1DrJknqfUzH4u8HHZG9Ktg8Ox locale=ko-KR
+[01:57:26] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "en", "message": "Account or device operation is too frequent, please try again later"}]}
+[01:57:30] 第 38 轮注册
+[01:57:30] device_id=MkxfMjBMMHo7D70eZBT81QOS6z97LN1A locale=en-US
