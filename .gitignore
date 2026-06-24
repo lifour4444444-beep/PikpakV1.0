@@ -3,3 +3,4 @@ __pycache__/
 *.pyo
 gui_config.json
 *.log
+*.onnx.data
