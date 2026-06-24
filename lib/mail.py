@@ -159,9 +159,8 @@ def create_mail_account(force_domain=None):
     password = "".join(random.choices(string.ascii_letters + string.digits, k=12))
 
     is_guerrilla = force_domain and force_domain in _GUERRILLA_DOMAINS
-    is_tempmailio = force_domain and force_domain in _get_tempmailio_domains()
 
-    if force_domain and not is_guerrilla and not is_tempmailio:
+    if force_domain and not is_guerrilla:
         providers = list(_MAILTM_PROVIDERS)
         random.shuffle(providers)
         for base_url in providers:
@@ -180,12 +179,6 @@ def create_mail_account(force_domain=None):
         except Exception:
             pass
 
-    if force_domain and is_tempmailio:
-        try:
-            return _try_create_tempmailio(local, force_domain)
-        except Exception:
-            pass
-
     candidates = []
 
     for base_url in _MAILTM_PROVIDERS:
@@ -198,10 +191,6 @@ def create_mail_account(force_domain=None):
 
     candidates.append(("guerrilla", _GUERRILLA_URL, _GUERRILLA_DOMAINS))
 
-    tempmailio_domains = _get_tempmailio_domains()
-    if tempmailio_domains:
-        candidates.append(("tempmailio", _TEMPMĀILIO_URL, tempmailio_domains))
-
     random.shuffle(candidates)
 
     for ptype, base_url, domains in candidates:
@@ -213,9 +202,6 @@ def create_mail_account(force_domain=None):
                     return result
             elif ptype == "guerrilla":
                 return _try_create_guerrilla()
-            elif ptype == "tempmailio":
-                domain = random.choice(domains)
-                return _try_create_tempmailio(local, domain)
         except Exception:
             continue
 
