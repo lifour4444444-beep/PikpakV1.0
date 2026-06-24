@@ -1,4 +1,4 @@
-﻿import random
+﻿﻿import random
 import re
 import string
 import time
@@ -73,7 +73,6 @@ def get_available_domains():
             continue
 
     domains.update(_GUERRILLA_DOMAINS)
-    domains.update(_get_tempmailio_domains())
 
     if domains:
         return sorted(domains)
