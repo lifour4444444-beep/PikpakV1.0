@@ -1,0 +1,1490 @@
+[20:09:09] 第 1 轮注册
+[20:09:09] device_id=zswtPBXmigyDvk4KeQVd6bOXu5gz3M0w locale=en-US
+[20:09:24] 第 1 轮注册
+[20:09:24] device_id=zj5986lTxZrlEBCUDBEIVJZ2dk7UAdUJ locale=en-US
+[20:09:31] [协议] 开始验证码求解
+[20:09:31] sess=s0u8TbmBFlPvO8ZlCSdlhNNDb5hrujNNnLZ_jJg4... sid=7475520463517896704
+[20:09:31] subcapclass=1408 bg=[672, 480]
+[20:09:31] instruction=请依次点击：
+[20:09:31] tdc_path=/tdc.js?app_data=7475520463517896704&t=1044513196...
+[20:09:31] pow_cfg={"prefix": "db1620b5a72607d3#", "md5": "29cb5723ba5b3bd7d3ea6d140f3620b0"}
+[20:09:32] 背景图: 672x480 jpeg 50.3KB
+[20:09:32] 参考条: 170x50 jpeg
+[20:09:33] YOLO检测到 5 个图标
+[20:09:34] 目标[1] 匹配: (436, 44)  SI=0.9997
+[20:09:34] 目标[2] 匹配: (518, 438)  SI=1.0000
+[20:09:34] 目标[3] 匹配: (599, 41)  SI=0.9998
+[20:09:34] 模型坐标: [{"x": 436, "y": 44}, {"x": 518, "y": 438}, {"x": 599, "y": 41}]
+[20:09:34] 映射坐标: [{"x": 436, "y": 44}, {"x": 518, "y": 438}, {"x": 599, "y": 41}]
+[20:09:34] collect=808chars eks=236chars
+[20:09:34] PoW nonce=21 0ms
+[20:09:34] 验证成功 ticket=tr03i70YLdxKYMc98-1VJ1LnJ7CNFC... randstr=@35B
+[20:09:36] 兑换响应: status=200
+[20:09:36] 获取到JWT_C: ck0.CAJJsiOAZVy206VcPjoF4qSGyF...
+[20:09:38] 发送验证码(尝试1): status=200
+[20:09:57] 绑定结果: 成功
+[20:09:57] 结果已保存: D:\腾讯天御V2验证码\PythonV1.0\batch_result_protocol.txt
+[23:18:56] 第 1 轮注册
+[23:18:56] device_id=1MEJ9OXD0guaqQnSQSYgdKPP9ujvQ9UN locale=en-US
+[23:20:19] 第 7 轮注册
+[23:20:19] 第 10 轮注册
+[23:20:19] 第 1 轮注册
+[23:20:19] device_id=J1mDEyklk7xVWKw72PmejlMhNWF6EF1w locale=zh-CN
+[23:20:19] device_id=9qTDWeW4yZcijs45YQT2XTRgBJKR2sKJ locale=zh-TW
+[23:20:19] device_id=KaufS3muzx6gYnvyVS8eZZN7gsG19TOo locale=en-US
+[23:20:19] 第 5 轮注册
+[23:20:19] device_id=wLfroayZcy4yXA6UBTOCxJQdXSeYtdI9 locale=ko-KR
+[23:20:19] 第 2 轮注册
+[23:20:19] device_id=BbZQTix8kQQdGX7XaV6n9uSRjbBmdqRK locale=zh-TW
+[23:20:20] 第 6 轮注册
+[23:20:20] device_id=MLaBcKJfw8Gai2rHaZ564cayDWduRDOA locale=ja-JP
+[23:20:20] 第 8 轮注册
+[23:20:20] device_id=B3aYkrmrv3K8LYWoEh1XwEOBmIrWOumU locale=ko-KR
+[23:20:21] 第 4 轮注册
+[23:20:21] device_id=clTojzICqrWmbBXeV79vuMnoTzEXyT7A locale=ja-JP
+[23:20:21] 第 3 轮注册
+[23:20:21] device_id=tjFSEyT58qoRmF6Dn62FrWfxOWnOp3t9 locale=zh-TW
+[23:20:21] 第 9 轮注册
+[23:20:21] device_id=5WyBhVWEFD7sCO6C1SHifP0RHF2x9smA locale=en-US
+[23:20:34] 初始captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "en", "message": "Account or device operation is too frequent, please try again later"}]}
+[23:20:35] 初始captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "ja", "message": "\u30a2\u30ab\u30a6\u30f3\u30c8\u307e\u305f\u306f\u30c7\u30d0\u30a4\u30b9\u306e\u64cd\u4f5c\u304c\u591a\u3059\u304e\u307e\u3059\u3002\u3057\u3070\u3089\u304f\u3057\u3066\u304b\u3089\u518d\u8a66\u884c\u3057\u3066\u304f\u3060\u3055\u3044"}]}
+[23:20:35] 初始captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "zh-TW", "message": "\u8cec\u865f\u6216\u8a2d\u5099\u64cd\u4f5c\u904e\u65bc\u983b\u7e41\uff0c\u8acb\u7a0d\u5f8c\u91cd\u8a66"}]}
+[23:20:35] 初始captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "en", "message": "Account or device operation is too frequent, please try again later"}]}
+[23:20:35] 初始captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "zh-TW", "message": "\u8cec\u865f\u6216\u8a2d\u5099\u64cd\u4f5c\u904e\u65bc\u983b\u7e41\uff0c\u8acb\u7a0d\u5f8c\u91cd\u8a66"}]}
+[23:20:36] 初始captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "zh-TW", "message": "\u8cec\u865f\u6216\u8a2d\u5099\u64cd\u4f5c\u904e\u65bc\u983b\u7e41\uff0c\u8acb\u7a0d\u5f8c\u91cd\u8a66"}]}
+[23:20:38] 初始captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "ko", "message": "\uacc4\uc815 \ub610\ub294 \uc7a5\uce58 \uc791\uc5c5\uc774 \ub108\ubb34 \ube48\ubc88\ud569\ub2c8\ub2e4. \ub098\uc911\uc5d0 \ub2e4\uc2dc \uc2dc\ub3c4\ud574 \uc8fc\uc138\uc694"}]}
+[23:20:38] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "ko", "message": "\uacc4\uc815 \ub610\ub294 \uc7a5\uce58 \uc791\uc5c5\uc774 \ub108\ubb34 \ube48\ubc88\ud569\ub2c8\ub2e4. \ub098\uc911\uc5d0 \ub2e4\uc2dc \uc2dc\ub3c4\ud574 \uc8fc\uc138\uc694"}]}
+[23:20:39] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "ja", "message": "\u30a2\u30ab\u30a6\u30f3\u30c8\u307e\u305f\u306f\u30c7\u30d0\u30a4\u30b9\u306e\u64cd\u4f5c\u304c\u591a\u3059\u304e\u307e\u3059\u3002\u3057\u3070\u3089\u304f\u3057\u3066\u304b\u3089\u518d\u8a66\u884c\u3057\u3066\u304f\u3060\u3055\u3044"}]}
+[23:20:41] captcha_token失败: {"error": "aborted", "error_code": 10, "error_description": "Your operation is too frequent, please try again later", "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "Your operation is too frequent, please try again later"}, {"@type": "type.googleapis.com/google.rpc.LocalizedMessage", "locale": "zh", "message": "\u8d26\u53f7\u6216\u8bbe\u5907\u64cd\u4f5c\u8fc7\u4e8e\u9891\u7e41\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5"}]}
+[23:20:48] 第 10 轮注册
+[23:20:48] device_id=GYcViXsL24onqwPE4SB4Mb2rIhgkh7hi locale=zh-TW
+[23:20:49] 第 10 轮注册
+[23:20:49] device_id=so4aTkhaXBET65Aph0HnC1SlVq0Gz1Sl locale=zh-TW
+[23:20:50] 第 10 轮注册
+[23:20:50] device_id=9rUfeyFhHR1drFmFqiYTxgGi5Mt0zNkq locale=ko-KR
+[23:20:50] 第 10 轮注册
+[23:20:50] device_id=flMcKvouPzwg5GPyHe0zjK7JxuuEGeXV locale=en-US
+[23:20:51] 第 10 轮注册
+[23:20:51] device_id=x3ECeQ94jXzQoKlTbDLoowQe9DpnwTsT locale=ja-JP
+[23:20:52] 第 10 轮注册
+[23:20:52] device_id=a2TEMl5Akx2chds7XvF8ezTgvLM5xybf locale=zh-CN
+[23:20:54] 第 10 轮注册
+[23:20:54] device_id=6dlq2s1iO7w9Y0eWlgBrwHOJcpfF4CcA locale=en-US
+[23:20:56] 第 10 轮注册
+[23:20:56] device_id=qxcIAyJh4rtSgEIZqgEXHi1POmWlYEyc locale=en-US
+[23:20:56] 第 10 轮注册
+[23:20:56] device_id=IW95SUYIMF45NrFPU0oYqjtDlClnWln7 locale=ko-KR
+[23:21:04] 第 10 轮注册
+[23:21:04] device_id=S1TsvdDFA3UhTjzSCJZFioQWB8k0TJMW locale=zh-TW
+[23:23:31] 第 8 轮注册
+[23:23:31] device_id=MqmFxZqvr7XlwRrwSg4pffcxvhS0CvIa locale=ja-JP
+[23:23:31] 第 7 轮注册
+[23:23:31] device_id=glHsCREBWKmnHTcG0Edzajutm5mHwpQC locale=en-US
+[23:23:31] 第 2 轮注册
+[23:23:31] device_id=8j4Jwk6ncH4NFaPO2JNwcG8GLAbB8r0Z locale=en-US
+[23:23:31] 第 9 轮注册
+[23:23:31] device_id=bIAvXXJmVkJxwJatNs5QHWFWYUTIDorR locale=zh-CN
+[23:23:32] 第 6 轮注册
+[23:23:32] device_id=GkqiLLzPe3gBZRNaeDut6aKjwza0DD6d locale=ja-JP
+[23:23:33] 第 4 轮注册
+[23:23:33] device_id=5oMRd0WiupFhpUQUQt0L1H1Iy2ZXPtBT locale=en-US
+[23:23:33] 第 3 轮注册
+[23:23:33] device_id=MS9BW1isMtxXXhU28HHsG45mt30LhTFK locale=ko-KR
+[23:23:34] 第 10 轮注册
+[23:23:34] device_id=ksmcOhHHFiBw2dYwBRhe89HOHb97emhn locale=ja-JP
+[23:23:34] 第 5 轮注册
+[23:23:34] device_id=D9lP3M7i1mwCvyZtJaS7f5CdZEJPhqiF locale=zh-CN
+[23:23:34] 第 1 轮注册
+[23:23:34] device_id=JzXd5N9kIlFETcUMHHdfnfvSWd0uyq2E locale=ja-JP
+[23:23:50] [协议] 开始验证码求解
+[23:23:55] [协议] 开始验证码求解
+[23:23:56] sess=s0CjuvtlnCJ8FE2Crl2SmbNiCUMHAUMjkcu1GZJ-... sid=7475569378814619648
+[23:23:56] subcapclass=1408 bg=[672, 480]
+[23:23:56] instruction=请依次点击：
+[23:23:56] tdc_path=/tdc.js?app_data=7475569378814619648&t=1817584183...
+[23:23:56] pow_cfg={"prefix": "a33b5b160ec74afb#", "md5": "afb01c03eeecc4c055d20c4cc7e6b1e2"}
+[23:23:56] 背景图: 672x480 jpeg 16.4KB
+[23:23:56] 参考条: 170x50 jpeg
+[23:23:57] YOLO检测到 5 个图标
+[23:23:57] 目标[1] 匹配: (279, 119)  SI=0.9999
+[23:23:57] 目标[2] 匹配: (443, 265)  SI=0.9832
+[23:23:57] 目标[3] 匹配: (39, 360)  SI=1.0000
+[23:23:57] 模型坐标: [{"x": 279, "y": 119}, {"x": 443, "y": 265}, {"x": 39, "y": 360}]
+[23:23:57] 映射坐标: [{"x": 279, "y": 119}, {"x": 443, "y": 265}, {"x": 39, "y": 360}]
+[23:23:58] collect=806chars eks=236chars
+[23:23:58] PoW nonce=231 0ms
+[23:24:00] [协议] 开始验证码求解
+[23:24:00] sess=s0hRLBTOf4KThKE4_hW_BTjQdXgd859njFJqTZOI... sid=7475569396568014848
+[23:24:00] subcapclass=1408 bg=[672, 480]
+[23:24:00] [协议] 开始验证码求解
+[23:24:00] instruction=请依次点击：
+[23:24:00] tdc_path=/tdc.js?app_data=7475569396568014848&t=1896531960...
+[23:24:00] pow_cfg={"prefix": "91aa959ce5e0f757#", "md5": "0c62b16458c516626c7d62f724edfbbc"}
+[23:24:01] 背景图: 672x480 jpeg 21.7KB
+[23:24:01] 参考条: 170x50 jpeg
+[23:24:01] [协议] 开始验证码求解
+[23:24:01] YOLO检测到 5 个图标
+[23:24:01] 目标[1] 匹配: (283, 125)  SI=1.0000
+[23:24:01] 目标[2] 匹配: (276, 361)  SI=1.0000
+[23:24:01] 目标[3] 匹配: (600, 204)  SI=1.0000
+[23:24:01] 模型坐标: [{"x": 283, "y": 125}, {"x": 276, "y": 361}, {"x": 600, "y": 204}]
+[23:24:01] 映射坐标: [{"x": 283, "y": 125}, {"x": 276, "y": 361}, {"x": 600, "y": 204}]
+[23:24:02] collect=812chars eks=236chars
+[23:24:02] PoW nonce=587 0ms
+[23:24:03] [协议] 开始验证码求解
+[23:24:03] [协议] 开始验证码求解
+[23:24:04] 验证成功 ticket=tr036HbHI-nVwrlpEAyp0iPq7cssdy... randstr=@O0i
+[23:24:06] sess=s0mB5aiRCzvByZJvM2yZiQ36CIL8bNteIDU68eQW... sid=7475569420377522176
+[23:24:06] subcapclass=1408 bg=[672, 480]
+[23:24:06] instruction=请依次点击：
+[23:24:06] tdc_path=/tdc.js?app_data=7475569420377522176&t=1931306838...
+[23:24:06] pow_cfg={"prefix": "18b0e3c227aeb8b3#", "md5": "8f846a82105ad720327f49b807dbb74a"}
+[23:24:06] sess=s0yfZI8W4nzKyriUXI7LVslRKK-PyJbStH5CQcr1... sid=7475569421112020992
+[23:24:06] subcapclass=1408 bg=[672, 480]
+[23:24:06] instruction=请依次点击：
+[23:24:06] tdc_path=/tdc.js?app_data=7475569421112020992&t=2087607256...
+[23:24:06] pow_cfg={"prefix": "524e6f9cedcaf567#", "md5": "5a62f99ac651ce63b3a046466b35464b"}
+[23:24:07] [协议] 开始验证码求解
+[23:24:09] 兑换响应: status=200
+[23:24:09] 获取到JWT_C: ck0.evV3kDGFa8SVHRqAAr3KZG6E9c...
+[23:24:09] sess=s0L4hX4ce5usK2L18gwEO0gi3ZwpEAJAHc0NSOcF... sid=7475569435573919744
+[23:24:09] subcapclass=1408 bg=[672, 480]
+[23:24:09] instruction=请依次点击：
+[23:24:09] tdc_path=/tdc.js?app_data=7475569435573919744&t=954656850...
+[23:24:09] pow_cfg={"prefix": "c95a5a7cf06f7e28#", "md5": "9bb36be7e3b47c0eb24d02a4c47561d8"}
+[23:24:10] 验证成功 ticket=tr03vxOYJmCgOWTvdPdZyC8PcUwlxG... randstr=@lIJ
+[23:24:10] sess=s0iN1F-TMFXM6d5rD67TzUC7aUK6FSTOPAd-XPsv... sid=7475569438137229312
+[23:24:10] subcapclass=1408 bg=[672, 480]
+[23:24:10] instruction=请依次点击：
+[23:24:10] tdc_path=/tdc.js?app_data=7475569438137229312&t=1772020427...
+[23:24:10] pow_cfg={"prefix": "19f34cb500952796#", "md5": "058f52236eba2ea1fc25687f5fa67ce5"}
+[23:24:11] sess=s00pBE3hLh5ew7XIsfl0_syaYZbP_VockJwzSEOj... sid=7475569444084908032
+[23:24:11] subcapclass=1408 bg=[672, 480]
+[23:24:11] instruction=请依次点击：
+[23:24:11] tdc_path=/tdc.js?app_data=7475569444084908032&t=172075364...
+[23:24:11] pow_cfg={"prefix": "87e4c83e5a9bf2da#", "md5": "0fcec9b5b974d9a3266a050f2e91e31a"}
+[23:24:12] 背景图: 672x480 jpeg 60.7KB
+[23:24:12] 参考条: 170x50 jpeg
+[23:24:12] 背景图: 672x480 jpeg 19.3KB
+[23:24:12] 参考条: 170x50 jpeg
+[23:24:12] YOLO检测到 5 个图标
+[23:24:12] YOLO检测到 5 个图标
+[23:24:12] sess=s0RiS0kfN8z0-xxLssOt3yL3aBQSN6s6-7vSzD0b... sid=7475569447394922496
+[23:24:12] subcapclass=1408 bg=[672, 480]
+[23:24:12] instruction=请依次点击：
+[23:24:12] tdc_path=/tdc.js?app_data=7475569447394922496&t=1371830784...
+[23:24:12] pow_cfg={"prefix": "51ee2aea0ecf8046#", "md5": "a4ac0aa6c83a403e7eec02ff1a45f288"}
+[23:24:13] 目标[1] 匹配: (596, 368)  SI=0.9992
+[23:24:13] 目标[2] 匹配: (432, 445)  SI=0.1019
+[23:24:13] 目标[3] 匹配: (121, 200)  SI=1.0000
+[23:24:13] 模型坐标: [{"x": 596, "y": 368}, {"x": 432, "y": 445}, {"x": 121, "y": 200}]
+[23:24:13] 映射坐标: [{"x": 596, "y": 368}, {"x": 432, "y": 445}, {"x": 121, "y": 200}]
+[23:24:13] 目标[1] 匹配: (358, 121)  SI=1.0000
+[23:24:13] 目标[2] 匹配: (277, 284)  SI=1.0000
+[23:24:13] 目标[3] 匹配: (598, 441)  SI=1.0000
+[23:24:13] 模型坐标: [{"x": 358, "y": 121}, {"x": 277, "y": 284}, {"x": 598, "y": 441}]
+[23:24:13] 映射坐标: [{"x": 358, "y": 121}, {"x": 277, "y": 284}, {"x": 598, "y": 441}]
+[23:24:13] 发送验证码(尝试1): status=200
+[23:24:13] collect=830chars eks=236chars
+[23:24:13] PoW nonce=649 1ms
+[23:24:14] collect=812chars eks=236chars
+[23:24:14] PoW nonce=487 0ms
+[23:24:14] 背景图: 672x480 jpeg 36.9KB
+[23:24:14] 参考条: 170x50 jpeg
+[23:24:14] YOLO检测到 5 个图标
+[23:24:15] 目标[1] 匹配: (518, 42)  SI=0.9998
+[23:24:15] 目标[2] 匹配: (441, 360)  SI=1.0000
+[23:24:15] 目标[3] 匹配: (277, 283)  SI=1.0000
+[23:24:15] 模型坐标: [{"x": 518, "y": 42}, {"x": 441, "y": 360}, {"x": 277, "y": 283}]
+[23:24:15] 映射坐标: [{"x": 518, "y": 42}, {"x": 441, "y": 360}, {"x": 277, "y": 283}]
+[23:24:15] collect=812chars eks=236chars
+[23:24:15] PoW nonce=581 0ms
+[23:24:15] 背景图: 672x480 jpeg 58.0KB
+[23:24:15] 参考条: 170x50 jpeg
+[23:24:16] YOLO检测到 5 个图标
+[23:24:16] 目标[1] 匹配: (601, 280)  SI=1.0000
+[23:24:16] 目标[2] 匹配: (601, 364)  SI=1.0000
+[23:24:16] 目标[3] 匹配: (520, 360)  SI=1.0000
+[23:24:16] 模型坐标: [{"x": 601, "y": 280}, {"x": 601, "y": 364}, {"x": 520, "y": 360}]
+[23:24:16] 映射坐标: [{"x": 601, "y": 280}, {"x": 601, "y": 364}, {"x": 520, "y": 360}]
+[23:24:16] 背景图: 672x480 jpeg 53.3KB
+[23:24:16] 参考条: 170x50 jpeg
+[23:24:16] YOLO检测到 5 个图标
+[23:24:17] collect=804chars eks=236chars
+[23:24:17] PoW nonce=815 1ms
+[23:24:17] 目标[1] 匹配: (120, 42)  SI=1.0000
+[23:24:17] 目标[2] 匹配: (442, 118)  SI=0.9206
+[23:24:17] 目标[3] 匹配: (200, 43)  SI=1.0000
+[23:24:17] 模型坐标: [{"x": 120, "y": 42}, {"x": 442, "y": 118}, {"x": 200, "y": 43}]
+[23:24:17] 映射坐标: [{"x": 120, "y": 42}, {"x": 442, "y": 118}, {"x": 200, "y": 43}]
+[23:24:17] collect=808chars eks=236chars
+[23:24:17] PoW nonce=2182 1ms
+[23:24:18] 验证成功 ticket=tr03GM-7J5l3hEvRhgGWLk7DZE8tB9... randstr=@A5m
+[23:24:18] [协议] 开始验证码求解
+[23:24:18] 验证成功 ticket=tr03zEj-PqvaI_JKD4t8Y26oKV_-h_... randstr=@iZN
+[23:24:20] 背景图: 672x480 jpeg 55.4KB
+[23:24:20] 参考条: 170x50 jpeg
+[23:24:20] YOLO检测到 5 个图标
+[23:24:21] 目标[1] 匹配: (357, 437)  SI=0.9999
+[23:24:21] 目标[2] 匹配: (205, 123)  SI=1.0000
+[23:24:21] 目标[3] 匹配: (40, 200)  SI=1.0000
+[23:24:21] 模型坐标: [{"x": 357, "y": 437}, {"x": 205, "y": 123}, {"x": 40, "y": 200}]
+[23:24:21] 映射坐标: [{"x": 357, "y": 437}, {"x": 205, "y": 123}, {"x": 40, "y": 200}]
+[23:24:21] collect=816chars eks=248chars
+[23:24:21] PoW nonce=557 0ms
+[23:24:22] 验证成功 ticket=tr038ln2jW3T1NbgXTMY51GivrfDOq... randstr=@pst
+[23:24:22] 验证成功 ticket=tr03xE1qWX8hQ2Tbx6TV2xpTP7YDCG... randstr=@YHP
+[23:24:23] 验证成功 ticket=tr03bjTCbeN7vB-Hh4-LhBwqoCYBYd... randstr=@B2M
+[23:24:24] 兑换响应: status=200
+[23:24:24] 获取到JWT_C: ck0.L5pmJNJ3QrsUvGNmMYeRbblbcz...
+[23:24:25] 兑换响应: status=200
+[23:24:25] 获取到JWT_C: ck0.ZIrCjr9Dmu52XmabdXvyVhjfgC...
+[23:24:26] sess=s0o1ulqP60TQ87gjdyMPPNxH39cY3tNRL3FJ97XN... sid=7475569503589289984
+[23:24:26] subcapclass=1408 bg=[672, 480]
+[23:24:26] instruction=请依次点击：
+[23:24:26] tdc_path=/tdc.js?app_data=7475569503589289984&t=230155143...
+[23:24:26] pow_cfg={"prefix": "9eb0a973c5c9c5d9#", "md5": "7954cbf02e41e67daa7528836702878c"}
+[23:24:27] 兑换响应: status=200
+[23:24:27] 获取到JWT_C: ck0.GgR6YXmv61tM2LFIc2wT-Z6fF6...
+[23:24:28] 兑换响应: status=200
+[23:24:28] 获取到JWT_C: ck0.ZM3XDQmSDuLH0cr9dy2d3QwhIu...
+[23:24:29] 兑换响应: status=200
+[23:24:29] 获取到JWT_C: ck0.YKWaCPtaFHKOMoc1vAnJTqZ8Do...
+[23:24:29] 发送验证码(尝试1): status=200
+[23:24:30] 发送验证码(尝试1): status=200
+[23:24:30] [协议] 开始验证码求解
+[23:24:33] 兑换响应: status=200
+[23:24:33] 获取到JWT_C: ck0.MS6Ox7sw08bfuoelP2puxRYuPO...
+[23:24:33] 发送验证码(尝试1): status=200
+[23:24:34] sess=s0PYoRwjKaBPBs_3BUuEBVy39kFvkKvlgPNvQzLQ... sid=7475569540108558336
+[23:24:34] subcapclass=1408 bg=[672, 480]
+[23:24:34] instruction=请依次点击：
+[23:24:34] tdc_path=/tdc.js?app_data=7475569540108558336&t=651949128...
+[23:24:34] pow_cfg={"prefix": "499aa134e7320a6a#", "md5": "5e8ec7882ca48cca253d0dd141e0563d"}
+[23:24:34] 发送验证码(尝试1): status=200
+[23:24:35] 背景图: 672x480 jpeg 69.9KB
+[23:24:35] 参考条: 170x50 jpeg
+[23:24:35] YOLO检测到 6 个图标
+[23:24:36] 目标[1] 匹配: (521, 440)  SI=1.0000
+[23:24:36] 目标[2] 匹配: (39, 200)  SI=1.0000
+[23:24:36] 目标[3] 匹配: (439, 122)  SI=1.0000
+[23:24:36] 模型坐标: [{"x": 521, "y": 440}, {"x": 39, "y": 200}, {"x": 439, "y": 122}]
+[23:24:36] 映射坐标: [{"x": 521, "y": 440}, {"x": 39, "y": 200}, {"x": 439, "y": 122}]
+[23:24:36] collect=832chars eks=236chars
+[23:24:36] PoW nonce=289 0ms
+[23:24:36] 背景图: 672x480 jpeg 53.6KB
+[23:24:36] 参考条: 170x50 jpeg
+[23:24:36] YOLO检测到 6 个图标
+[23:24:37] 目标[1] 匹配: (523, 48)  SI=1.0000
+[23:24:37] 目标[2] 匹配: (599, 42)  SI=1.0000
+[23:24:37] 目标[3] 匹配: (358, 43)  SI=1.0000
+[23:24:37] 模型坐标: [{"x": 523, "y": 48}, {"x": 599, "y": 42}, {"x": 358, "y": 43}]
+[23:24:37] 映射坐标: [{"x": 523, "y": 48}, {"x": 599, "y": 42}, {"x": 358, "y": 43}]
+[23:24:37] collect=834chars eks=248chars
+[23:24:37] PoW nonce=583 0ms
+[23:24:38] 发送验证码(尝试1): status=200
+[23:24:40] 验证成功 ticket=tr03hE5E9Jo_6W5xfDJYRbV1zmjDYo... randstr=@S9t
+[23:24:41] 验证成功 ticket=tr031gGr9ovnCSwZRk0h-Nhq2VSQS5... randstr=@mj6
+[23:24:45] 兑换响应: status=200
+[23:24:45] 获取到JWT_C: ck0.f_J1HfDRqEvJNowVqoijM6cWO1...
+[23:24:46] 验证成功 ticket=tr03lHwmDVaTa7VnDWo1HUYq_Or6hD... randstr=@PZU
+[23:24:47] 兑换响应: status=200
+[23:24:47] 获取到JWT_C: ck0.thw9wK33Uzj0kCgIT0C4_wyKtC...
+[23:24:50] 发送验证码(尝试1): status=200
+[23:24:51] 兑换响应: status=200
+[23:24:51] 获取到JWT_C: ck0.WtOWu9te8ZDxj_OOSujCfC6DSb...
+[23:24:53] 发送验证码(尝试1): status=200
+[23:24:59] 发送验证码(尝试1): status=200
+[23:25:02] 绑定结果: 成功
+[23:25:02] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:25:02] 绑定结果: 成功
+[23:25:02] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:25:05] 第 11 轮注册
+[23:25:05] device_id=Px7dkF7LjrTlzs9SyN7vMSHvj1HWSdzt locale=zh-CN
+[23:25:06] 第 12 轮注册
+[23:25:06] device_id=9GoJ4TZvM7U4HBSEXAQTYvtysHTvFUSt locale=zh-CN
+[23:25:06] 发送验证码(尝试1): status=200
+[23:25:18] 绑定结果: 成功
+[23:25:18] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:25:18] 绑定结果: 成功
+[23:25:18] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:25:20] 绑定结果: 成功
+[23:25:20] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:25:26] 第 13 轮注册
+[23:25:26] device_id=5S4nNNSSeJGSjqBsaJbbqFRUCF8pkwXC locale=en-US
+[23:25:27] 第 14 轮注册
+[23:25:27] device_id=iFl5d6wyiUCpG995wJ4Y5NjrFKUiPlC1 locale=ko-KR
+[23:25:28] 绑定结果: 成功
+[23:25:28] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:25:29] 绑定结果: 成功
+[23:25:29] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:25:33] 第 17 轮注册
+[23:25:33] device_id=UoEKbyxWWYOPM4kdDEzJhyys4NvaGfDj locale=ko-KR
+[23:25:34] 第 16 轮注册
+[23:25:34] device_id=oqdJMndJpJ20kaRMdHlsPXlxLfJ3jcV7 locale=zh-CN
+[23:25:37] [协议] 开始验证码求解
+[23:25:38] 第 15 轮注册
+[23:25:38] device_id=UuyrzfNfljclUOhql4avipwuQfw4GGVW locale=zh-TW
+[23:25:39] 绑定结果: 成功
+[23:25:39] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:25:45] 第 18 轮注册
+[23:25:45] device_id=iPkztwr5AlxxzQ7b4yOUBhcQx2iYEnvP locale=ja-JP
+[23:25:45] sess=s03LFeS8G98Gq1hM9_KqFP7dYF8fxvhfduVAXugv... sid=7475569837721047040
+[23:25:45] subcapclass=1408 bg=[672, 480]
+[23:25:45] instruction=请依次点击：
+[23:25:45] tdc_path=/tdc.js?app_data=7475569837721047040&t=2011504133...
+[23:25:45] pow_cfg={"prefix": "9c1a851931c8f189#", "md5": "416b4cd6b5f23192c5cb1263a0c8228f"}
+[23:25:46] 背景图: 672x480 jpeg 43.5KB
+[23:25:46] 参考条: 170x50 jpeg
+[23:25:46] YOLO检测到 5 个图标
+[23:25:47] 目标[1] 匹配: (39, 200)  SI=1.0000
+[23:25:47] 目标[2] 匹配: (442, 47)  SI=0.9996
+[23:25:47] 目标[3] 匹配: (366, 120)  SI=1.0000
+[23:25:47] 模型坐标: [{"x": 39, "y": 200}, {"x": 442, "y": 47}, {"x": 366, "y": 120}]
+[23:25:47] 映射坐标: [{"x": 39, "y": 200}, {"x": 442, "y": 47}, {"x": 366, "y": 120}]
+[23:25:47] collect=814chars eks=236chars
+[23:25:47] PoW nonce=3993 3ms
+[23:25:54] 验证成功 ticket=tr03gulRcN8tBVUxGZ29kTGZTaQ4qj... randstr=@fkg
+[23:25:54] [协议] 开始验证码求解
+[23:25:59] [协议] 开始验证码求解
+[23:26:00] 兑换响应: status=200
+[23:26:00] 获取到JWT_C: ck0.uaCTrmE6z8OmePoxm4_S3j2fir...
+[23:26:05] [协议] 开始验证码求解
+[23:26:05] 发送验证码(尝试1): status=200
+[23:26:07] sess=s0PE3K0ZiJ8qksS6XZgXy6EnjacoSPYqJBtjK_jP... sid=7475569926827147264
+[23:26:07] subcapclass=1408 bg=[672, 480]
+[23:26:07] instruction=请依次点击：
+[23:26:07] tdc_path=/tdc.js?app_data=7475569926827147264&t=729568989...
+[23:26:07] pow_cfg={"prefix": "febf578e8d2153c7#", "md5": "a1a47a08f7a614acb2c1013a390d890f"}
+[23:26:09] [协议] 开始验证码求解
+[23:26:10] sess=s0nmO5afHqoZDzk873i8B7EU6yc_g0cZ9htCRkzx... sid=7475569943143636992
+[23:26:10] subcapclass=1408 bg=[672, 480]
+[23:26:10] instruction=请依次点击：
+[23:26:10] tdc_path=/tdc.js?app_data=7475569943143636992&t=1018974042...
+[23:26:10] pow_cfg={"prefix": "3beaf4878d0cc66c#", "md5": "c8a6cee9345a7cdcbf1d5ecde0e74f67"}
+[23:26:11] [协议] 开始验证码求解
+[23:26:11] 背景图: 672x480 jpeg 15.9KB
+[23:26:11] 参考条: 170x50 jpeg
+[23:26:11] YOLO检测到 5 个图标
+[23:26:11] 背景图: 672x480 jpeg 75.9KB
+[23:26:11] 参考条: 170x50 jpeg
+[23:26:12] YOLO检测到 5 个图标
+[23:26:12] 目标[1] 匹配: (597, 45)  SI=1.0000
+[23:26:12] 目标[2] 匹配: (275, 283)  SI=1.0000
+[23:26:12] 目标[3] 匹配: (197, 439)  SI=1.0000
+[23:26:12] 模型坐标: [{"x": 597, "y": 45}, {"x": 275, "y": 283}, {"x": 197, "y": 439}]
+[23:26:12] 映射坐标: [{"x": 597, "y": 45}, {"x": 275, "y": 283}, {"x": 197, "y": 439}]
+[23:26:12] 目标[1] 匹配: (41, 355)  SI=0.9999
+[23:26:12] 目标[2] 匹配: (117, 280)  SI=1.0000
+[23:26:12] 目标[3] 匹配: (279, 122)  SI=1.0000
+[23:26:12] 模型坐标: [{"x": 41, "y": 355}, {"x": 117, "y": 280}, {"x": 279, "y": 122}]
+[23:26:12] 映射坐标: [{"x": 41, "y": 355}, {"x": 117, "y": 280}, {"x": 279, "y": 122}]
+[23:26:13] collect=824chars eks=236chars
+[23:26:13] PoW nonce=8709 6ms
+[23:26:13] collect=792chars eks=236chars
+[23:26:13] PoW nonce=384 0ms
+[23:26:14] sess=s09PDwPLXhzWnC-A_1hc5sm9vSpFhj27KBj7GbTa... sid=7475569959824916480
+[23:26:14] subcapclass=1408 bg=[672, 480]
+[23:26:14] instruction=请依次点击：
+[23:26:14] tdc_path=/tdc.js?app_data=7475569959824916480&t=2026942793...
+[23:26:14] pow_cfg={"prefix": "230ab7ef1d391f53#", "md5": "7d42c254a73bf8bb6bb698691ded54d3"}
+[23:26:19] sess=s0XQVaaHTUaOsTvILDZiJi9e2Kw39QxG3JG1ZtT2... sid=7475569977210478592
+[23:26:19] subcapclass=1408 bg=[672, 480]
+[23:26:19] instruction=请依次点击：
+[23:26:19] tdc_path=/tdc.js?app_data=7475569977210478592&t=1287449868...
+[23:26:19] pow_cfg={"prefix": "bc2367fa0073ca6f#", "md5": "0d28b422119b63ba229fb39108693735"}
+[23:26:20] 背景图: 672x480 jpeg 37.4KB
+[23:26:20] 参考条: 170x50 jpeg
+[23:26:20] [协议] 开始验证码求解
+[23:26:20] YOLO检测到 5 个图标
+[23:26:20] 验证成功 ticket=tr036sEei3v3r-F-8L3ajZaFEttg_J... randstr=@sDe
+[23:26:20] 目标[1] 匹配: (359, 360)  SI=1.0000
+[23:26:20] 目标[2] 匹配: (597, 438)  SI=0.9999
+[23:26:20] 目标[3] 匹配: (284, 280)  SI=1.0000
+[23:26:20] 模型坐标: [{"x": 359, "y": 360}, {"x": 597, "y": 438}, {"x": 284, "y": 280}]
+[23:26:20] 映射坐标: [{"x": 359, "y": 360}, {"x": 597, "y": 438}, {"x": 284, "y": 280}]
+[23:26:21] collect=768chars eks=248chars
+[23:26:21] PoW nonce=276 1ms
+[23:26:21] 背景图: 672x480 jpeg 64.9KB
+[23:26:21] 参考条: 170x50 jpeg
+[23:26:21] YOLO检测到 5 个图标
+[23:26:21] 目标[1] 匹配: (280, 282)  SI=1.0000
+[23:26:21] 目标[2] 匹配: (435, 123)  SI=0.9519
+[23:26:21] 目标[3] 匹配: (43, 46)  SI=1.0000
+[23:26:21] 模型坐标: [{"x": 280, "y": 282}, {"x": 435, "y": 123}, {"x": 43, "y": 46}]
+[23:26:21] 映射坐标: [{"x": 280, "y": 282}, {"x": 435, "y": 123}, {"x": 43, "y": 46}]
+[23:26:22] collect=806chars eks=236chars
+[23:26:22] PoW nonce=618 0ms
+[23:26:23] sess=s0wXSXU9NCt5xmQjy50FSHmdxOYrnqe2PrWjE_v-... sid=7475569995341484032
+[23:26:23] subcapclass=1408 bg=[672, 480]
+[23:26:23] instruction=请依次点击：
+[23:26:23] tdc_path=/tdc.js?app_data=7475569995341484032&t=1233040744...
+[23:26:23] pow_cfg={"prefix": "2e2e9175ade5df21#", "md5": "37e9a42c7d74dce5acd1f5c4b56a4762"}
+[23:26:24] 背景图: 672x480 jpeg 49.1KB
+[23:26:24] 参考条: 170x50 jpeg
+[23:26:24] YOLO检测到 5 个图标
+[23:26:24] 目标[1] 匹配: (516, 445)  SI=1.0000
+[23:26:24] 目标[2] 匹配: (439, 281)  SI=1.0000
+[23:26:24] 目标[3] 匹配: (40, 281)  SI=1.0000
+[23:26:24] 模型坐标: [{"x": 516, "y": 445}, {"x": 439, "y": 281}, {"x": 40, "y": 281}]
+[23:26:24] 映射坐标: [{"x": 516, "y": 445}, {"x": 439, "y": 281}, {"x": 40, "y": 281}]
+[23:26:25] collect=820chars eks=248chars
+[23:26:25] PoW nonce=820 1ms
+[23:26:26] 验证成功 ticket=tr031Tk6whmnFcD8xWtTLk7bK0tiv0... randstr=@AUT
+[23:26:26] sess=s0Sj2VWGiFVWfaOZQN3nixKm8PzU2BRNI1mDBCbW... sid=7475570009334329344
+[23:26:26] subcapclass=1408 bg=[672, 480]
+[23:26:26] instruction=请依次点击：
+[23:26:26] tdc_path=/tdc.js?app_data=7475570009334329344&t=1438969437...
+[23:26:26] pow_cfg={"prefix": "ce74220a1b005925#", "md5": "61c61ac7c4174e85db072e2063d8fa30"}
+[23:26:27] 验证成功 ticket=tr03wm2BcujKKtgc0jnPRf6JithH66... randstr=@uJ8
+[23:26:27] 背景图: 672x480 jpeg 64.0KB
+[23:26:27] 参考条: 170x50 jpeg
+[23:26:27] YOLO检测到 5 个图标
+[23:26:28] 目标[1] 匹配: (40, 284)  SI=1.0000
+[23:26:28] 目标[2] 匹配: (443, 362)  SI=0.9999
+[23:26:28] 目标[3] 匹配: (199, 42)  SI=1.0000
+[23:26:28] 模型坐标: [{"x": 40, "y": 284}, {"x": 443, "y": 362}, {"x": 199, "y": 42}]
+[23:26:28] 映射坐标: [{"x": 40, "y": 284}, {"x": 443, "y": 362}, {"x": 199, "y": 42}]
+[23:26:28] collect=806chars eks=236chars
+[23:26:28] PoW nonce=733 0ms
+[23:26:30] 验证成功 ticket=tr03fLBpXYtJve80mkGMbPXwRNWCnG... randstr=@HcI
+[23:26:32] 兑换响应: status=200
+[23:26:32] 获取到JWT_C: ck0.4Hlrnzsh8nEG5zOZK1eSmxP4se...
+[23:26:34] 兑换响应: status=200
+[23:26:34] 获取到JWT_C: ck0.K-ex01xvsHDsLEhtkb2yE9D5Mx...
+[23:26:36] 兑换响应: status=200
+[23:26:36] 获取到JWT_C: ck0.HJ0anJxxlcbqC8mRKd2kUtcW5w...
+[23:26:36] [协议] 开始验证码求解
+[23:26:37] 发送验证码(尝试1): status=200
+[23:26:37] 验证成功 ticket=tr03hh-jqKDlb4ABQ3DQSjL-4_RtuH... randstr=@9sm
+[23:26:41] 发送验证码(尝试1): status=200
+[23:26:43] sess=s0xMoLtJBPlX4YJMICIS6bEsR7qWGIpmT0m1qgXV... sid=7475570079553114112
+[23:26:43] subcapclass=1408 bg=[672, 480]
+[23:26:43] instruction=请依次点击：
+[23:26:43] tdc_path=/tdc.js?app_data=7475570079553114112&t=464211777...
+[23:26:43] pow_cfg={"prefix": "f2c3964842755c3#", "md5": "1008120906221b297922bc1ab1c026ba"}
+[23:26:44] 背景图: 672x480 jpeg 19.7KB
+[23:26:44] 参考条: 170x50 jpeg
+[23:26:44] YOLO检测到 5 个图标
+[23:26:45] 目标[1] 匹配: (277, 202)  SI=1.0000
+[23:26:45] 目标[2] 匹配: (283, 121)  SI=0.9996
+[23:26:45] 目标[3] 匹配: (519, 200)  SI=1.0000
+[23:26:45] 模型坐标: [{"x": 277, "y": 202}, {"x": 283, "y": 121}, {"x": 519, "y": 200}]
+[23:26:45] 映射坐标: [{"x": 277, "y": 202}, {"x": 283, "y": 121}, {"x": 519, "y": 200}]
+[23:26:45] 发送验证码(尝试1): status=200
+[23:26:45] collect=778chars eks=236chars
+[23:26:45] PoW nonce=202 0ms
+[23:26:46] 兑换响应: status=200
+[23:26:46] 获取到JWT_C: ck0.GoOp7EkvTMHfc5ptLraAc3Ot7-...
+[23:26:52] 发送验证码(尝试1): status=200
+[23:27:01] 兑换响应: status=200
+[23:27:01] 获取到JWT_C: ck0.R2BH0P_gUj4IyB3XBBu39kShet...
+[23:27:01] 验证成功 ticket=tr03lTCRG37TA-RzRz-eJoGziZD1ws... randstr=@EqI
+[23:27:07] 发送验证码(尝试1): status=200
+[23:27:07] 兑换响应: status=200
+[23:27:07] 获取到JWT_C: ck0.AyEyQvou1JotL_9wSx7x_fsmSD...
+[23:27:08] 绑定结果: 成功
+[23:27:08] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:27:10] 验证成功 ticket=tr03sFgfyRXyzvwssjxK4bVKQahHwF... randstr=@ayH
+[23:27:13] 绑定结果: 成功
+[23:27:13] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:27:13] 第 19 轮注册
+[23:27:13] device_id=2RoyweSPxG1noDGYmrzC3M7zKCZVLEKi locale=zh-CN
+[23:27:14] 发送验证码(尝试1): status=200
+[23:27:15] 兑换响应: status=200
+[23:27:15] 获取到JWT_C: ck0.5h9DJWoLUyW8KaCOGrEsUFl_Bd...
+[23:27:17] 第 20 轮注册
+[23:27:17] device_id=GvVqXWTds1mXcbWub2tRvlcw4Yke3UpC locale=zh-CN
+[23:27:20] 绑定结果: 成功
+[23:27:20] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:27:22] 发送验证码(尝试1): status=200
+[23:27:23] 第 21 轮注册
+[23:27:23] device_id=Kcr1rm1gsOvKO0K1dPdGa8tANlzml5Ny locale=en-US
+[23:27:25] 绑定结果: 成功
+[23:27:25] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:27:28] 第 22 轮注册
+[23:27:28] device_id=hVzMIY7wckCWccpMkXf4829m5Oakq3Dm locale=ko-KR
+[23:27:39] [协议] 开始验证码求解
+[23:27:40] [协议] 开始验证码求解
+[23:27:42] 绑定结果: 成功
+[23:27:42] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:27:44] 绑定结果: 成功
+[23:27:44] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:27:44] sess=s0gj9lCwJzzlcIbiG5pPkmNJA0ygs_-CO7baC5Lo... sid=7475570335889874944
+[23:27:44] subcapclass=1408 bg=[672, 480]
+[23:27:44] instruction=请依次点击：
+[23:27:44] tdc_path=/tdc.js?app_data=7475570335889874944&t=1348178514...
+[23:27:44] pow_cfg={"prefix": "b2faa7bd004cf868#", "md5": "abab20ff874d3b08c3bf23d93abae01d"}
+[23:27:45] 背景图: 672x480 jpeg 50.8KB
+[23:27:45] 参考条: 170x50 jpeg
+[23:27:45] 第 23 轮注册
+[23:27:45] device_id=rM2D5XBxIneNx0C2n9WMO86RyvjtPkNC locale=zh-CN
+[23:27:45] YOLO检测到 5 个图标
+[23:27:45] 目标[1] 匹配: (517, 362)  SI=0.9803
+[23:27:45] 目标[2] 匹配: (114, 440)  SI=0.9460
+[23:27:45] 目标[3] 匹配: (438, 276)  SI=1.0000
+[23:27:45] 模型坐标: [{"x": 517, "y": 362}, {"x": 114, "y": 440}, {"x": 438, "y": 276}]
+[23:27:45] 映射坐标: [{"x": 517, "y": 362}, {"x": 114, "y": 440}, {"x": 438, "y": 276}]
+[23:27:46] [协议] 开始验证码求解
+[23:27:46] collect=760chars eks=236chars
+[23:27:46] PoW nonce=309 0ms
+[23:27:50] 绑定结果: 成功
+[23:27:50] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:27:50] 第 24 轮注册
+[23:27:50] device_id=YyLzDBYjFHcBtDR6q9zODwfImmqHBVMZ locale=en-US
+[23:27:51] sess=s0PFqBzOY1rL6BNfohtYO6ZiIS5XLGGd21e30fvZ... sid=7475570349713711104
+[23:27:51] subcapclass=1408 bg=[672, 480]
+[23:27:51] instruction=请依次点击：
+[23:27:51] tdc_path=/tdc.js?app_data=7475570349713711104&t=1829348775...
+[23:27:51] pow_cfg={"prefix": "15dd7b3fa81776ee#", "md5": "f15f18b524e6bb4e593570a6c66d743f"}
+[23:27:52] 背景图: 672x480 jpeg 35.1KB
+[23:27:52] 参考条: 170x50 jpeg
+[23:27:52] YOLO检测到 5 个图标
+[23:27:52] 目标[1] 匹配: (279, 360)  SI=0.9993
+[23:27:52] 目标[2] 匹配: (119, 123)  SI=0.9999
+[23:27:52] 目标[3] 匹配: (198, 440)  SI=1.0000
+[23:27:52] 模型坐标: [{"x": 279, "y": 360}, {"x": 119, "y": 123}, {"x": 198, "y": 440}]
+[23:27:52] 映射坐标: [{"x": 279, "y": 360}, {"x": 119, "y": 123}, {"x": 198, "y": 440}]
+[23:27:53] collect=828chars eks=236chars
+[23:27:53] PoW nonce=536 0ms
+[23:27:53] 验证成功 ticket=tr03MG7RwBhmnixEOUS6kS7gHWhR68... randstr=@5NJ
+[23:27:54] 绑定结果: 成功
+[23:27:54] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:27:55] [协议] 开始验证码求解
+[23:27:55] sess=s0trpbBokabVKqTKkxQwtIAuAXLyuTCIcOY_nPjf... sid=7475570383700594688
+[23:27:55] subcapclass=1408 bg=[672, 480]
+[23:27:55] instruction=请依次点击：
+[23:27:55] tdc_path=/tdc.js?app_data=7475570383700594688&t=1724304459...
+[23:27:55] pow_cfg={"prefix": "25e100551637485#", "md5": "92dc3043438d73ee6b161e5c3c581284"}
+[23:27:56] 背景图: 672x480 jpeg 60.2KB
+[23:27:56] 参考条: 170x50 jpeg
+[23:27:56] YOLO检测到 5 个图标
+[23:27:57] 目标[1] 匹配: (121, 42)  SI=1.0000
+[23:27:57] 目标[2] 匹配: (439, 43)  SI=0.9999
+[23:27:57] 目标[3] 匹配: (277, 282)  SI=1.0000
+[23:27:57] 模型坐标: [{"x": 121, "y": 42}, {"x": 439, "y": 43}, {"x": 277, "y": 282}]
+[23:27:57] 映射坐标: [{"x": 121, "y": 42}, {"x": 439, "y": 43}, {"x": 277, "y": 282}]
+[23:27:57] collect=826chars eks=236chars
+[23:27:57] PoW nonce=340 0ms
+[23:27:58] 第 25 轮注册
+[23:27:58] device_id=xDUIFu2Lr24KDuTPrfwlOSyu1ZOb5bDH locale=zh-CN
+[23:27:59] 验证成功 ticket=tr03EobGYSQPySI2mMNGo-R_3beg3v... randstr=@XFa
+[23:28:00] sess=s0ol1oe8FyAynqVIbBDrPnvQ5HjFUhCSRgXLYBsE... sid=7475570400770973696
+[23:28:00] subcapclass=1408 bg=[672, 480]
+[23:28:00] instruction=请依次点击：
+[23:28:00] tdc_path=/tdc.js?app_data=7475570400770973696&t=1937752430...
+[23:28:00] pow_cfg={"prefix": "5921abf1feb9ebf9#", "md5": "31b6eaa6b037698ba30e0f0f31cb8131"}
+[23:28:01] 第 26 轮注册
+[23:28:01] device_id=eh26DqITsyj4XBJIi3miV7yIMe6DbyYv locale=zh-CN
+[23:28:01] 背景图: 672x480 jpeg 59.0KB
+[23:28:01] 参考条: 170x50 jpeg
+[23:28:01] YOLO检测到 6 个图标
+[23:28:02] 目标[1] 匹配: (518, 280)  SI=1.0000
+[23:28:02] 目标[2] 匹配: (116, 42)  SI=1.0000
+[23:28:02] 目标[3] 匹配: (203, 46)  SI=1.0000
+[23:28:02] 模型坐标: [{"x": 518, "y": 280}, {"x": 116, "y": 42}, {"x": 203, "y": 46}]
+[23:28:02] 映射坐标: [{"x": 518, "y": 280}, {"x": 116, "y": 42}, {"x": 203, "y": 46}]
+[23:28:02] collect=774chars eks=236chars
+[23:28:02] PoW nonce=856 0ms
+[23:28:03] 兑换响应: status=200
+[23:28:03] 获取到JWT_C: ck0.8gl8b4eqg6h4y5571_wjJbFLCw...
+[23:28:05] 验证成功 ticket=tr03aa3hajpuBfKWUqefFB2g3P9k8q... randstr=@h16
+[23:28:06] [协议] 开始验证码求解
+[23:28:09] 发送验证码(尝试1): status=200
+[23:28:10] 兑换响应: status=200
+[23:28:10] 获取到JWT_C: ck0.1E7SLpDrd3IMY-JMhjpLyvFZoJ...
+[23:28:11] 验证成功 ticket=tr03Y6gbvaRJ5Y_6GMb8Ummk8aXIqe... randstr=@0J5
+[23:28:11] sess=s0MjwPKG6Uk_uk_bZyO03pSkL2SfHZcRY-NfuJZT... sid=7475570450596294656
+[23:28:11] subcapclass=1408 bg=[672, 480]
+[23:28:11] instruction=请依次点击：
+[23:28:11] tdc_path=/tdc.js?app_data=7475570450596294656&t=1115677691...
+[23:28:11] pow_cfg={"prefix": "5673f203525d1ec9#", "md5": "da2ed5a64c535c0b57a8d2fcad152937"}
+[23:28:12] 背景图: 672x480 jpeg 55.1KB
+[23:28:12] 参考条: 170x50 jpeg
+[23:28:12] YOLO检测到 6 个图标
+[23:28:13] 目标[1] 匹配: (597, 439)  SI=1.0000
+[23:28:13] 目标[2] 匹配: (35, 125)  SI=0.3052
+[23:28:13] 目标[3] 匹配: (440, 441)  SI=0.9756
+[23:28:13] 模型坐标: [{"x": 597, "y": 439}, {"x": 35, "y": 125}, {"x": 440, "y": 441}]
+[23:28:13] 映射坐标: [{"x": 597, "y": 439}, {"x": 35, "y": 125}, {"x": 440, "y": 441}]
+[23:28:13] collect=820chars eks=248chars
+[23:28:13] PoW nonce=256 0ms
+[23:28:16] 发送验证码(尝试1): status=200
+[23:28:18] [协议] 开始验证码求解
+[23:28:19] 第 27 轮注册
+[23:28:19] device_id=VfpkOK99mInFR4N62Eyjj30ahpGdt4ZL locale=zh-CN
+[23:28:19] [协议] 开始验证码求解
+[23:28:23] sess=s0kTijj1tB-gJ7UJe7oeMFHz4M7tL-PEaBAUlIAS... sid=7475570498581962752
+[23:28:23] subcapclass=1408 bg=[672, 480]
+[23:28:23] instruction=请依次点击：
+[23:28:23] tdc_path=/tdc.js?app_data=7475570498581962752&t=801488850...
+[23:28:23] pow_cfg={"prefix": "9a0c4fb8545cde63#", "md5": "86aff69dc130819035413c0d1f97bf6a"}
+[23:28:23] 背景图: 672x480 jpeg 63.9KB
+[23:28:23] 参考条: 170x50 jpeg
+[23:28:24] YOLO检测到 5 个图标
+[23:28:24] 目标[1] 匹配: (278, 205)  SI=1.0000
+[23:28:24] 目标[2] 匹配: (203, 45)  SI=1.0000
+[23:28:24] 目标[3] 匹配: (519, 43)  SI=1.0000
+[23:28:24] 模型坐标: [{"x": 278, "y": 205}, {"x": 203, "y": 45}, {"x": 519, "y": 43}]
+[23:28:24] 映射坐标: [{"x": 278, "y": 205}, {"x": 203, "y": 45}, {"x": 519, "y": 43}]
+[23:28:24] collect=828chars eks=236chars
+[23:28:24] PoW nonce=401 0ms
+[23:28:24] 验证成功 ticket=tr03x4nMaiwtD7DsC9XURAhvIAO8jX... randstr=@4MX
+[23:28:26] 第 28 轮注册
+[23:28:26] device_id=tDrrycFMcKe5XJOqAVWgKbTO2lYaxi9F locale=zh-TW
+[23:28:27] sess=s0wqbb8qoTBmyjJqdI5E_SIYrw4ZqS4_K03-axS8... sid=7475570514944712704
+[23:28:27] subcapclass=1408 bg=[672, 480]
+[23:28:27] instruction=请依次点击：
+[23:28:27] tdc_path=/tdc.js?app_data=7475570514944712704&t=725534473...
+[23:28:27] pow_cfg={"prefix": "aaafd69ed1a9e195#", "md5": "29383199dd699f3302a5c32badbb803e"}
+[23:28:28] 背景图: 672x480 jpeg 54.9KB
+[23:28:28] 参考条: 170x50 jpeg
+[23:28:28] YOLO检测到 4 个图标
+[23:28:28] 目标[1] 匹配: (198, 200)  SI=1.0000
+[23:28:28] 目标[2] 匹配: (519, 439)  SI=1.0000
+[23:28:28] 目标[3] 匹配: (441, 360)  SI=0.0000
+[23:28:28] 模型坐标: [{"x": 198, "y": 200}, {"x": 519, "y": 439}, {"x": 441, "y": 360}]
+[23:28:28] 映射坐标: [{"x": 198, "y": 200}, {"x": 519, "y": 439}, {"x": 441, "y": 360}]
+[23:28:29] collect=816chars eks=236chars
+[23:28:29] PoW nonce=878 0ms
+[23:28:29] 兑换响应: status=200
+[23:28:29] 获取到JWT_C: ck0.qKvo694iV_Top_r2x4cN-EV7Zp...
+[23:28:31] 验证成功 ticket=tr03hNq6unCreDOGFj6EwbEDYug03j... randstr=@pCi
+[23:28:35] raw={"errorCode": "50", "randstr": "", "ticket": "", "traceId": "", "errMessage": "", "sess": "s0mXFfYBvNC_LaZCq8HpPlpdrpdODbnHu-guUn5WQVXQ5aplz7Gf0meDau7AyvL7zNMB6AfQ4HqwNNcH8rv8WZiPINxV3zUNmw7PysUQjCyy01d_l2zCwMb-5n6ExpvZrNRbYo3ThsUTkzLChqI-v6Iw2pz4q_KFHJa5Iylsoevp1Nth-S4OPOI3nU6d7QoUGkOhjnEZP7xbscg36csw2_9xT_61XFYuzuuow5jslgj5HwuIC-xScQXT_uYSaKckUboTYIteJAZtPyTqef2WHWXZN4LsHiZ41bLWqK2EA024y8m82t2rbNTo9HqelxPBNCBbKBYyxHItYcdXexgthhJ4g8TTR18B_dLS6FBhUzL0XuRTor6zlmJQ8xclP9dk31iFD0ss0H3HXJL8puiZ5jqPmz7aaRTuIx4LU-Z-1P1IkUZZHSasI50-j8zJBSbg8OghluEtCjZBQ2CeKzMBekcbpqhg-KxPKutiJ6cEyM7n7iXbJ5MEI-_czE8UZVPzdM"}
+[23:28:35] 发送验证码(尝试1): status=200
+[23:28:36] 兑换响应: status=200
+[23:28:36] 获取到JWT_C: ck0.UClKvthCK0EELeHN8S_hNrx0mV...
+[23:28:38] [协议] 开始验证码求解
+[23:28:38] [协议] 开始验证码求解
+[23:28:44] [协议] 开始验证码求解
+[23:28:45] 发送验证码(尝试1): status=200
+[23:28:45] 兑换响应: status=200
+[23:28:45] 获取到JWT_C: ck0.3QRSHZ5QceChQmyQkYf1V5G9X7...
+[23:28:47] sess=s0y5DH_q44mo0ETvLMFtmM8Xqjgp_JeHSGd9Tf0b... sid=7475570598104965120
+[23:28:47] subcapclass=1408 bg=[672, 480]
+[23:28:47] instruction=请依次点击：
+[23:28:47] tdc_path=/tdc.js?app_data=7475570598104965120&t=689995749...
+[23:28:47] pow_cfg={"prefix": "2af63432e7e1df1b#", "md5": "c9074e2ff9717198fc2b0a38b2a1282e"}
+[23:28:48] 背景图: 672x480 jpeg 64.7KB
+[23:28:48] 参考条: 170x50 jpeg
+[23:28:48] YOLO检测到 5 个图标
+[23:28:49] 目标[1] 匹配: (441, 39)  SI=1.0000
+[23:28:49] 目标[2] 匹配: (281, 274)  SI=1.0000
+[23:28:49] 目标[3] 匹配: (116, 200)  SI=1.0000
+[23:28:49] 模型坐标: [{"x": 441, "y": 39}, {"x": 281, "y": 274}, {"x": 116, "y": 200}]
+[23:28:49] 映射坐标: [{"x": 441, "y": 39}, {"x": 281, "y": 274}, {"x": 116, "y": 200}]
+[23:28:49] collect=814chars eks=236chars
+[23:28:49] PoW nonce=191 0ms
+[23:28:51] sess=s0XB1ZVWHKTboHH0p_ZEFLnjeRaS-UwgfRXsrRjd... sid=7475570615810039808
+[23:28:51] subcapclass=1408 bg=[672, 480]
+[23:28:51] instruction=请依次点击：
+[23:28:51] tdc_path=/tdc.js?app_data=7475570615810039808&t=2128475915...
+[23:28:51] pow_cfg={"prefix": "2db2153e5659d1bc#", "md5": "b242bc45838ad98a4b920663cfdb3865"}
+[23:28:52] sess=s02kxYcJOycSxySskHUZpKyqhAEQNdB63Loc8j3Z... sid=7475570611434409984
+[23:28:52] subcapclass=1408 bg=[672, 480]
+[23:28:52] instruction=请依次点击：
+[23:28:52] tdc_path=/tdc.js?app_data=7475570611434409984&t=1123178960...
+[23:28:52] pow_cfg={"prefix": "5c56616e64d51ac0#", "md5": "77751cbd157b744a232e9f18cb5618ac"}
+[23:28:52] 兑换响应: status=200
+[23:28:52] 获取到JWT_C: ck0.bWLb26DgoieZWnO3dr_jtXqgzx...
+[23:28:54] 绑定结果: 成功
+[23:28:54] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:28:55] 背景图: 672x480 jpeg 19.2KB
+[23:28:55] 参考条: 170x50 jpeg
+[23:28:55] YOLO检测到 5 个图标
+[23:28:55] 验证成功 ticket=tr03iITrve_1q9p0ueEiJL7MkpWcH8... randstr=@42q
+[23:28:55] 发送验证码(尝试1): status=200
+[23:28:55] 目标[1] 匹配: (41, 44)  SI=0.9988
+[23:28:55] 目标[2] 匹配: (118, 118)  SI=0.8799
+[23:28:55] 目标[3] 匹配: (281, 41)  SI=0.9965
+[23:28:55] 模型坐标: [{"x": 41, "y": 44}, {"x": 118, "y": 118}, {"x": 281, "y": 41}]
+[23:28:55] 映射坐标: [{"x": 41, "y": 44}, {"x": 118, "y": 118}, {"x": 281, "y": 41}]
+[23:28:56] collect=816chars eks=248chars
+[23:28:56] PoW nonce=396 0ms
+[23:28:58] 第 29 轮注册
+[23:28:58] device_id=EO8tWfEHqtNxzfr0J546IysGk4XDNhaH locale=en-US
+[23:28:59] 背景图: 672x480 jpeg 36.9KB
+[23:28:59] 参考条: 170x50 jpeg
+[23:28:59] YOLO检测到 5 个图标
+[23:28:59] 兑换响应: status=200
+[23:28:59] 获取到JWT_C: ck0.N6aVO6GhyxckumdooScwKctSBx...
+[23:28:59] [协议] 开始验证码求解
+[23:29:00] 目标[1] 匹配: (282, 206)  SI=1.0000
+[23:29:00] 目标[2] 匹配: (598, 196)  SI=1.0000
+[23:29:00] 目标[3] 匹配: (116, 438)  SI=1.0000
+[23:29:00] 模型坐标: [{"x": 282, "y": 206}, {"x": 598, "y": 196}, {"x": 116, "y": 438}]
+[23:29:00] 映射坐标: [{"x": 282, "y": 206}, {"x": 598, "y": 196}, {"x": 116, "y": 438}]
+[23:29:00] collect=798chars eks=236chars
+[23:29:00] PoW nonce=334 0ms
+[23:29:04] sess=s0QjqqQwKbtKh0avXLfPuRbEnGgt53_eaoxwaATY... sid=7475570670992936960
+[23:29:04] subcapclass=1408 bg=[672, 480]
+[23:29:04] instruction=请依次点击：
+[23:29:04] tdc_path=/tdc.js?app_data=7475570670992936960&t=1290890937...
+[23:29:04] pow_cfg={"prefix": "e9ca161d7dbf3ef8#", "md5": "a9710780379f81cb8f8966914b2c59eb"}
+[23:29:05] 背景图: 672x480 jpeg 39.3KB
+[23:29:05] 参考条: 170x50 jpeg
+[23:29:05] YOLO检测到 5 个图标
+[23:29:05] 验证成功 ticket=tr03Q6S7dq-J1HoQDMEJd6jGpU1p5e... randstr=@KKv
+[23:29:05] 目标[1] 匹配: (517, 438)  SI=1.0000
+[23:29:05] 目标[2] 匹配: (442, 438)  SI=1.0000
+[23:29:05] 目标[3] 匹配: (519, 365)  SI=1.0000
+[23:29:05] 模型坐标: [{"x": 517, "y": 438}, {"x": 442, "y": 438}, {"x": 519, "y": 365}]
+[23:29:05] 映射坐标: [{"x": 517, "y": 438}, {"x": 442, "y": 438}, {"x": 519, "y": 365}]
+[23:29:06] collect=788chars eks=236chars
+[23:29:06] PoW nonce=414 0ms
+[23:29:08] raw={"errorCode": "50", "randstr": "", "ticket": "", "traceId": "", "errMessage": "", "sess": "s0XDykYHhJCjqf9BKcxKObPsZKBuaCWSp3LgBHKuLHv_y8iadIGpL9dGqMHgJnep77iqWG1vrXQ2Ax-QueX58ttWgPMoZUIglV7neWiyrD6ErkCUDlLqXJjBWuM1oZJ50k7M-LGwUMobgjR_sHKBDxenhJhFHziwYspVBHDKW7xVn58G5oLgb7RjKkHjnXLNeDntBBnd_puFiaE4RfXJGscSNEU3QnXMXe3r-2VGsnhgBmovQaC4JmBhrq0QwheN1B5Ae8RzN02ggWxnfOydASh1_tgCTYVY0QqdjBzOQG3QHXqXd57NC-fIREleO4VNTiycVaPJ7QDg6u_atXf2f1HnxCgmsIsBMds2ayP3KSSNmrh4qtLNbhZnJ41LJHtfrx_6Dck8uXhGg9-1jHv9XH0PHfagK0ZGjsVqUKYJ6ZRphbqX4C-Ogan6KfrHmDEMPpjqtTE0d-owGTGIpVbBtkb3bvTG3eanYS_l_hHyM4whH012h5ng7VPA**"}
+[23:29:10] 验证成功 ticket=tr03TtEAbkPbV54f6gKUWS8j6tIVxu... randstr=@Ens
+[23:29:11] 兑换响应: status=200
+[23:29:11] 获取到JWT_C: ck0.-nxm0GMWkoMc9TV1nWmjtUwnWp...
+[23:29:11] [协议] 开始验证码求解
+[23:29:16] sess=s02ayPyl7yLvCzaAOUfTdJhwiS7x7kk4gcptgQfn... sid=7475570721598664704
+[23:29:16] subcapclass=1408 bg=[672, 480]
+[23:29:16] instruction=请依次点击：
+[23:29:16] tdc_path=/tdc.js?app_data=7475570721598664704&t=614862337...
+[23:29:16] pow_cfg={"prefix": "b24fef5472963004#", "md5": "342af8d9a91fc37081b9151797f5306f"}
+[23:29:16] 发送验证码(尝试1): status=200
+[23:29:17] 背景图: 672x480 jpeg 45.2KB
+[23:29:17] 参考条: 170x50 jpeg
+[23:29:17] YOLO检测到 5 个图标
+[23:29:17] 目标[1] 匹配: (275, 48)  SI=1.0000
+[23:29:17] 目标[2] 匹配: (199, 42)  SI=1.0000
+[23:29:17] 目标[3] 匹配: (198, 120)  SI=1.0000
+[23:29:17] 模型坐标: [{"x": 275, "y": 48}, {"x": 199, "y": 42}, {"x": 198, "y": 120}]
+[23:29:17] 映射坐标: [{"x": 275, "y": 48}, {"x": 199, "y": 42}, {"x": 198, "y": 120}]
+[23:29:18] collect=806chars eks=236chars
+[23:29:18] PoW nonce=419 0ms
+[23:29:21] 兑换响应: status=200
+[23:29:21] 获取到JWT_C: ck0.WfOv8pBVPqRyzE4v_wgg_bileP...
+[23:29:23] 验证成功 ticket=tr03dC5IFzgMJQdf7ddeSHsP2M0nK4... randstr=@6Ny
+[23:29:26] 发送验证码(尝试1): status=200
+[23:29:26] 发送验证码(尝试1): status=200
+[23:29:27] 兑换响应: status=200
+[23:29:27] 获取到JWT_C: ck0.c0sPLieMZ0hsMFyaRG8QXV_1dD...
+[23:29:32] 发送验证码(尝试1): status=200
+[23:29:35] 绑定结果: 成功
+[23:29:35] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:29:37] 绑定结果: 成功
+[23:29:37] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:29:38] 发送验证码(尝试1): status=200
+[23:29:40] 第 31 轮注册
+[23:29:40] device_id=TnZHFmFF04Mtbuv5C1KPe7BKRtb0lNrm locale=zh-TW
+[23:29:50] 第 30 轮注册
+[23:29:50] device_id=xXpkijK8SJWJ8M8W1NoYpkL3IuEhvtk0 locale=zh-CN
+[23:29:55] [协议] 开始验证码求解
+[23:29:59] 绑定结果: 成功
+[23:29:59] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:30:04] 第 32 轮注册
+[23:30:04] device_id=RJesAzZUQwTAmTtC7SfC84BfmZyKTplq locale=ja-JP
+[23:30:07] sess=s0hfqZxevkhljmTQUxN5-eilooftK5HEGBiFo0Rm... sid=7475570935641202688
+[23:30:07] subcapclass=1408 bg=[672, 480]
+[23:30:07] instruction=请依次点击：
+[23:30:07] tdc_path=/tdc.js?app_data=7475570935641202688&t=1784583343...
+[23:30:07] pow_cfg={"prefix": "64ebd6b9db10bb1#", "md5": "178502e248c896b6ef2741a1f7ff3e2a"}
+[23:30:08] 背景图: 672x480 jpeg 54.8KB
+[23:30:08] 参考条: 170x50 jpeg
+[23:30:08] YOLO检测到 5 个图标
+[23:30:09] 目标[1] 匹配: (283, 357)  SI=1.0000
+[23:30:09] 目标[2] 匹配: (598, 205)  SI=0.9997
+[23:30:09] 目标[3] 匹配: (119, 122)  SI=1.0000
+[23:30:09] 模型坐标: [{"x": 283, "y": 357}, {"x": 598, "y": 205}, {"x": 119, "y": 122}]
+[23:30:09] 映射坐标: [{"x": 283, "y": 357}, {"x": 598, "y": 205}, {"x": 119, "y": 122}]
+[23:30:09] collect=802chars eks=236chars
+[23:30:09] PoW nonce=8369 7ms
+[23:30:10] 绑定结果: 成功
+[23:30:10] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:30:18] 验证成功 ticket=tr037a64jcwiKWL_XOjRF9LPGfe5Rc... randstr=@Ye4
+[23:30:19] 第 33 轮注册
+[23:30:19] device_id=VhWckQ2hHZzQs9eePQ7QuyZvAutJRa2b locale=zh-CN
+[23:30:22] 绑定结果: 成功
+[23:30:22] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:30:24] [协议] 开始验证码求解
+[23:30:28] [协议] 开始验证码求解
+[23:30:28] [协议] 开始验证码求解
+[23:30:29] 第 34 轮注册
+[23:30:29] device_id=kdqrLavh0VpqaKnlF4aiPg148Pd9ZEdj locale=ja-JP
+[23:30:30] sess=s0Tra2GsCQRecrQbkY3H-DWvmt12GM1wyPIPvD0B... sid=7475571028440178688
+[23:30:30] subcapclass=1408 bg=[672, 480]
+[23:30:30] instruction=请依次点击：
+[23:30:30] tdc_path=/tdc.js?app_data=7475571028440178688&t=1910008930...
+[23:30:30] pow_cfg={"prefix": "e8b4ee92da65aead#", "md5": "81b262acc0be2aed1a58b45bc708b0ea"}
+[23:30:33] sess=s0sjadZJ2eZZRbMBFjtkyZxExrvNJNLCoQsiLKU1... sid=7475571043898449920
+[23:30:33] subcapclass=1408 bg=[672, 480]
+[23:30:33] instruction=请依次点击：
+[23:30:33] tdc_path=/tdc.js?app_data=7475571043898449920&t=1494049009...
+[23:30:33] pow_cfg={"prefix": "eca4fe63d5e279c7#", "md5": "adb0369b539c2329b10d93fec1897a87"}
+[23:30:35] sess=s0heNk9tVNT_4eYWNwPiemfWWoW6eqqdPxtEJXcJ... sid=7475571049753268224
+[23:30:35] subcapclass=1408 bg=[672, 480]
+[23:30:35] instruction=请依次点击：
+[23:30:35] tdc_path=/tdc.js?app_data=7475571049753268224&t=784746225...
+[23:30:35] pow_cfg={"prefix": "9b9892f30d4f3e62#", "md5": "d2634fb3f5bc102ceec45b1767d41164"}
+[23:30:37] 背景图: 672x480 jpeg 49.8KB
+[23:30:37] 参考条: 170x50 jpeg
+[23:30:37] YOLO检测到 5 个图标
+[23:30:38] 目标[1] 匹配: (204, 120)  SI=0.9999
+[23:30:38] 目标[2] 匹配: (599, 280)  SI=1.0000
+[23:30:38] 目标[3] 匹配: (40, 281)  SI=1.0000
+[23:30:38] 模型坐标: [{"x": 204, "y": 120}, {"x": 599, "y": 280}, {"x": 40, "y": 281}]
+[23:30:38] 映射坐标: [{"x": 204, "y": 120}, {"x": 599, "y": 280}, {"x": 40, "y": 281}]
+[23:30:38] 背景图: 672x480 jpeg 50.6KB
+[23:30:38] 参考条: 170x50 jpeg
+[23:30:38] collect=810chars eks=236chars
+[23:30:38] PoW nonce=51 0ms
+[23:30:38] YOLO检测到 5 个图标
+[23:30:39] 目标[1] 匹配: (440, 119)  SI=1.0000
+[23:30:39] 目标[2] 匹配: (601, 201)  SI=1.0000
+[23:30:39] 目标[3] 匹配: (357, 361)  SI=1.0000
+[23:30:39] 模型坐标: [{"x": 440, "y": 119}, {"x": 601, "y": 201}, {"x": 357, "y": 361}]
+[23:30:39] 映射坐标: [{"x": 440, "y": 119}, {"x": 601, "y": 201}, {"x": 357, "y": 361}]
+[23:30:39] collect=826chars eks=236chars
+[23:30:39] PoW nonce=722 0ms
+[23:30:39] [协议] 开始验证码求解
+[23:30:41] 背景图: 672x480 jpeg 37.4KB
+[23:30:41] 参考条: 170x50 jpeg
+[23:30:41] YOLO检测到 5 个图标
+[23:30:41] 目标[1] 匹配: (520, 47)  SI=1.0000
+[23:30:41] 目标[2] 匹配: (118, 437)  SI=1.0000
+[23:30:41] 目标[3] 匹配: (597, 275)  SI=1.0000
+[23:30:41] 模型坐标: [{"x": 520, "y": 47}, {"x": 118, "y": 437}, {"x": 597, "y": 275}]
+[23:30:41] 映射坐标: [{"x": 520, "y": 47}, {"x": 118, "y": 437}, {"x": 597, "y": 275}]
+[23:30:42] collect=814chars eks=236chars
+[23:30:42] PoW nonce=75 0ms
+[23:30:44] 兑换响应: status=200
+[23:30:44] 获取到JWT_C: ck0.6EY_mgXjswhuTPx1VAngzVhbjP...
+[23:30:47] 验证成功 ticket=tr03t_a_J1qze8LGOW-9dfBz9WDWSN... randstr=@HeZ
+[23:30:51] 发送验证码(尝试1): status=200
+[23:30:52] 验证成功 ticket=tr03ETnmjLd3AwFgR5kOkxKhkBRozy... randstr=@Snc
+[23:30:54] 兑换响应: status=200
+[23:30:54] 获取到JWT_C: ck0.KM74rS-XGI14k4pChfd6x77W6F...
+[23:31:00] 兑换响应: status=200
+[23:31:00] 获取到JWT_C: ck0.SH3t_xgBt7Xa1hlBw0HHNhwQHP...
+[23:31:02] [协议] 开始验证码求解
+[23:31:06] sess=s0ZD3FPq5GYLzlrJySl_ruyVsvJUyn60ue1HY20X... sid=7475571181139304448
+[23:31:06] subcapclass=1408 bg=[672, 480]
+[23:31:06] instruction=请依次点击：
+[23:31:06] tdc_path=/tdc.js?app_data=7475571181139304448&t=779034083...
+[23:31:06] pow_cfg={"prefix": "a7571db8f366fb50#", "md5": "3f3e2e7dcf097ef5889c60aed93411a2"}
+[23:31:07] 背景图: 672x480 jpeg 56.4KB
+[23:31:07] 参考条: 170x50 jpeg
+[23:31:07] YOLO检测到 5 个图标
+[23:31:07] 目标[1] 匹配: (121, 356)  SI=1.0000
+[23:31:07] 目标[2] 匹配: (360, 119)  SI=1.0000
+[23:31:07] 目标[3] 匹配: (39, 440)  SI=1.0000
+[23:31:07] 模型坐标: [{"x": 121, "y": 356}, {"x": 360, "y": 119}, {"x": 39, "y": 440}]
+[23:31:07] 映射坐标: [{"x": 121, "y": 356}, {"x": 360, "y": 119}, {"x": 39, "y": 440}]
+[23:31:08] collect=820chars eks=236chars
+[23:31:08] PoW nonce=597 1ms
+[23:31:10] 兑换响应: status=200
+[23:31:10] 获取到JWT_C: ck0.IF5WFfbAvLT7ppPctvylmsRJ8q...
+[23:31:10] 发送验证码(尝试1): status=200
+[23:31:12] sess=s0hZd-nqjW8n_ERgSTUYAwJSiBUa_9pZrT6VvvPc... sid=7475571207407902720
+[23:31:12] subcapclass=1408 bg=[672, 480]
+[23:31:12] instruction=请依次点击：
+[23:31:12] tdc_path=/tdc.js?app_data=7475571207407902720&t=810166144...
+[23:31:12] pow_cfg={"prefix": "c0c0dbfc6854e10b#", "md5": "fc970758197a292197f53963ced53daf"}
+[23:31:13] 背景图: 672x480 jpeg 57.2KB
+[23:31:13] 参考条: 170x50 jpeg
+[23:31:13] YOLO检测到 5 个图标
+[23:31:13] 验证成功 ticket=tr03MStblhNty-9CpIQRnMLucQ3OlP... randstr=@fyt
+[23:31:13] 目标[1] 匹配: (519, 121)  SI=1.0000
+[23:31:13] 目标[2] 匹配: (40, 440)  SI=1.0000
+[23:31:13] 目标[3] 匹配: (202, 205)  SI=0.9998
+[23:31:13] 模型坐标: [{"x": 519, "y": 121}, {"x": 40, "y": 440}, {"x": 202, "y": 205}]
+[23:31:13] 映射坐标: [{"x": 519, "y": 121}, {"x": 40, "y": 440}, {"x": 202, "y": 205}]
+[23:31:14] collect=810chars eks=236chars
+[23:31:14] PoW nonce=895 0ms
+[23:31:18] 兑换响应: status=200
+[23:31:18] 获取到JWT_C: ck0.XKxTvUVCsDK3i5feWlw2o2Y9KD...
+[23:31:20] 发送验证码(尝试1): status=200
+[23:31:21] 验证成功 ticket=tr035y19BGi-jL2_7xJ_JieQP1Kjok... randstr=@WWP
+[23:31:23] 绑定结果: 成功
+[23:31:23] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:31:26] 发送验证码(尝试1): status=200
+[23:31:26] 兑换响应: status=200
+[23:31:26] 获取到JWT_C: ck0.IHp4-vMlUvm8pkrhkljfYIpPvf...
+[23:31:27] 第 35 轮注册
+[23:31:27] device_id=3eySjml5LKnNfO5yEmX0owHzs1gw4dEY locale=en-US
+[23:31:34] 发送验证码(尝试1): status=200
+[23:31:53] [协议] 开始验证码求解
+[23:31:59] sess=s0VTQ9pJNcko38LBprKqWNfCNRdJbanqH-Retv1B... sid=7475571404504326144
+[23:31:59] subcapclass=1408 bg=[672, 480]
+[23:31:59] instruction=请依次点击：
+[23:31:59] tdc_path=/tdc.js?app_data=7475571404504326144&t=307051758...
+[23:31:59] pow_cfg={"prefix": "ce3e3d88777e06ff#", "md5": "f23d324e39c6a6fb19006c0fc28c409c"}
+[23:32:06] 发送验证码(尝试1): status=200
+[23:32:07] 背景图: 672x480 jpeg 59.8KB
+[23:32:07] 参考条: 170x50 jpeg
+[23:32:08] YOLO检测到 5 个图标
+[23:32:09] 目标[1] 匹配: (522, 42)  SI=1.0000
+[23:32:09] 目标[2] 匹配: (117, 199)  SI=1.0000
+[23:32:09] 目标[3] 匹配: (199, 122)  SI=0.9969
+[23:32:09] 模型坐标: [{"x": 522, "y": 42}, {"x": 117, "y": 199}, {"x": 199, "y": 122}]
+[23:32:09] 映射坐标: [{"x": 522, "y": 42}, {"x": 117, "y": 199}, {"x": 199, "y": 122}]
+[23:32:09] collect=768chars eks=236chars
+[23:32:09] PoW nonce=103 0ms
+[23:32:10] 绑定结果: 成功
+[23:32:10] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:32:18] 验证成功 ticket=tr035FklEU86PotySAsi77DDFLZNbP... randstr=@0Kc
+[23:32:30] 第 36 轮注册
+[23:32:30] device_id=9NQXeOPNur3vvG9s75dJLdyKBnw5guoo locale=en-US
+[23:32:30] 第 37 轮注册
+[23:32:30] device_id=n2MSu3IaSpAYAMZu6WNUvR5tgSSDKZMc locale=zh-TW
+[23:32:35] 第 38 轮注册
+[23:32:35] device_id=YoONQmqo2CcCepG0vgOlUEDAbAYuEqkV locale=ja-JP
+[23:32:37] 绑定结果: 成功
+[23:32:37] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:32:37] 绑定结果: 成功
+[23:32:37] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:32:40] 第 39 轮注册
+[23:32:40] device_id=a296yked1uFlOFd5IXlOKMugRE52sKsj locale=ko-KR
+[23:32:43] 第 40 轮注册
+[23:32:43] device_id=iLbieykgvdlab0DvEwM6Umr1D4Ea764e locale=en-US
+[23:32:54] 绑定结果: 成功
+[23:32:54] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:32:58] 第 41 轮注册
+[23:32:58] device_id=VP3eMuiXPXJvAQ393kNYKeklQmzHwia3 locale=ko-KR
+[23:32:59] [协议] 开始验证码求解
+[23:33:02] 兑换响应: status=200
+[23:33:02] 获取到JWT_C: ck0.Xf8DGUSByimFkEk72wY-8faIwo...
+[23:33:05] [协议] 开始验证码求解
+[23:33:06] sess=s0G6se60C8lt9wdtmQm7Uif_HfJrplWhDr-Mn4fr... sid=7475571684747825152
+[23:33:06] subcapclass=1408 bg=[672, 480]
+[23:33:06] instruction=请依次点击：
+[23:33:06] tdc_path=/tdc.js?app_data=7475571684747825152&t=796768014...
+[23:33:06] pow_cfg={"prefix": "624d0457d37db4dd#", "md5": "f06bf41f7f48229a0a0fd76015a085d1"}
+[23:33:06] [协议] 开始验证码求解
+[23:33:08] [协议] 开始验证码求解
+[23:33:10] 发送验证码(尝试1): status=200
+[23:33:11] sess=s087gI0hQX8slYpx78E_FRmRswMsr0J5IrVSB468... sid=7475571709317042176
+[23:33:11] subcapclass=1408 bg=[672, 480]
+[23:33:11] instruction=请依次点击：
+[23:33:11] tdc_path=/tdc.js?app_data=7475571709317042176&t=1992573851...
+[23:33:11] pow_cfg={"prefix": "e97afa286b92cad5#", "md5": "f177823fc8e03f085489a7ce967d810f"}
+[23:33:13] sess=s0JVRFcEKcQox5oySbVrft3G_fEKE0sJCDUWlAIG... sid=7475571716240220160
+[23:33:13] subcapclass=1408 bg=[672, 480]
+[23:33:13] instruction=请依次点击：
+[23:33:13] tdc_path=/tdc.js?app_data=7475571716240220160&t=550729711...
+[23:33:13] pow_cfg={"prefix": "129d0639bb93cf82#", "md5": "e6182258cc0c0f3b605aca3adce9e4ec"}
+[23:33:13] sess=s0YL4fZhESbFgHB0anI-lh7zDsm7-hXK2jNOzKVZ... sid=7475571717554003968
+[23:33:13] subcapclass=1408 bg=[672, 480]
+[23:33:13] instruction=请依次点击：
+[23:33:13] tdc_path=/tdc.js?app_data=7475571717554003968&t=1679421485...
+[23:33:13] pow_cfg={"prefix": "c62f42aff8ccb2a6#", "md5": "7fad544590995d744253237a26357670"}
+[23:33:17] 背景图: 672x480 jpeg 18.7KB
+[23:33:17] 参考条: 170x50 jpeg
+[23:33:17] YOLO检测到 5 个图标
+[23:33:18] 目标[1] 匹配: (359, 39)  SI=0.9993
+[23:33:18] 目标[2] 匹配: (440, 120)  SI=1.0000
+[23:33:18] 目标[3] 匹配: (274, 120)  SI=1.0000
+[23:33:18] 模型坐标: [{"x": 359, "y": 39}, {"x": 440, "y": 120}, {"x": 274, "y": 120}]
+[23:33:18] 映射坐标: [{"x": 359, "y": 39}, {"x": 440, "y": 120}, {"x": 274, "y": 120}]
+[23:33:18] collect=764chars eks=248chars
+[23:33:18] PoW nonce=51 0ms
+[23:33:21] 背景图: 672x480 jpeg 65.5KB
+[23:33:21] 参考条: 170x50 jpeg
+[23:33:21] YOLO检测到 6 个图标
+[23:33:22] 目标[1] 匹配: (359, 125)  SI=1.0000
+[23:33:22] 目标[2] 匹配: (179, 365)  SI=0.0040
+[23:33:22] 目标[3] 匹配: (443, 46)  SI=1.0000
+[23:33:22] 模型坐标: [{"x": 359, "y": 125}, {"x": 179, "y": 365}, {"x": 443, "y": 46}]
+[23:33:22] 映射坐标: [{"x": 359, "y": 125}, {"x": 179, "y": 365}, {"x": 443, "y": 46}]
+[23:33:23] collect=808chars eks=236chars
+[23:33:23] PoW nonce=84 1ms
+[23:33:25] 背景图: 672x480 jpeg 37.0KB
+[23:33:25] 参考条: 170x50 jpeg
+[23:33:25] 验证成功 ticket=tr03uwLZuNTfv9qQcAH0MH0HFecsM9... randstr=@I9L
+[23:33:25] 背景图: 672x480 jpeg 16.9KB
+[23:33:25] 参考条: 170x50 jpeg
+[23:33:26] YOLO检测到 5 个图标
+[23:33:26] YOLO检测到 5 个图标
+[23:33:27] [协议] 开始验证码求解
+[23:33:27] 目标[1] 匹配: (119, 121)  SI=1.0000
+[23:33:27] 目标[2] 匹配: (443, 46)  SI=1.0000
+[23:33:27] 目标[3] 匹配: (201, 284)  SI=0.9999
+[23:33:27] 模型坐标: [{"x": 119, "y": 121}, {"x": 443, "y": 46}, {"x": 201, "y": 284}]
+[23:33:27] 映射坐标: [{"x": 119, "y": 121}, {"x": 443, "y": 46}, {"x": 201, "y": 284}]
+[23:33:27] 目标[1] 匹配: (595, 200)  SI=1.0000
+[23:33:27] 目标[2] 匹配: (39, 280)  SI=1.0000
+[23:33:27] 目标[3] 匹配: (598, 282)  SI=1.0000
+[23:33:27] 模型坐标: [{"x": 595, "y": 200}, {"x": 39, "y": 280}, {"x": 598, "y": 282}]
+[23:33:27] 映射坐标: [{"x": 595, "y": 200}, {"x": 39, "y": 280}, {"x": 598, "y": 282}]
+[23:33:28] collect=832chars eks=236chars
+[23:33:28] PoW nonce=4427 11ms
+[23:33:28] collect=800chars eks=248chars
+[23:33:28] PoW nonce=767 1ms
+[23:33:30] 验证成功 ticket=tr03Ti5q0PgcouMUnd96wTSVM4KmVg... randstr=@Ytl
+[23:33:31] [协议] 开始验证码求解
+[23:33:31] sess=s0aKyT6hF0NhVGBnj1HSUIny_0xeIuufFNorpuDC... sid=7475571792156798976
+[23:33:31] subcapclass=1408 bg=[672, 480]
+[23:33:31] instruction=请依次点击：
+[23:33:31] tdc_path=/tdc.js?app_data=7475571792156798976&t=1680764349...
+[23:33:31] pow_cfg={"prefix": "7a1ce45d15375f61#", "md5": "b6e0c426c9448b56da405845d8f927ee"}
+[23:33:32] 第 42 轮注册
+[23:33:32] device_id=KQWnDjKSl41uvGIqZ5uZhEdDqmYv537c locale=zh-CN
+[23:33:33] 验证成功 ticket=tr037y35iYpujNne61qBmSsx8QxkAr... randstr=@JsL
+[23:33:36] 兑换响应: status=200
+[23:33:36] 获取到JWT_C: ck0.hQmfI9J-66cQ-8ZWAute6aRCXE...
+[23:33:37] sess=s0-N607iioRehywhv2D0mztlvdfwXoOuFROXbP8X... sid=7475571814181302272
+[23:33:37] subcapclass=1408 bg=[672, 480]
+[23:33:37] instruction=请依次点击：
+[23:33:37] tdc_path=/tdc.js?app_data=7475571814181302272&t=1705710614...
+[23:33:37] pow_cfg={"prefix": "34dc2c62f25c3722#", "md5": "f4f9f987e94aa90df035aa03503fc78a"}
+[23:33:38] 背景图: 672x480 jpeg 37.9KB
+[23:33:38] 参考条: 170x50 jpeg
+[23:33:38] YOLO检测到 5 个图标
+[23:33:39] 目标[1] 匹配: (439, 279)  SI=1.0000
+[23:33:39] 目标[2] 匹配: (434, 436)  SI=1.0000
+[23:33:39] 目标[3] 匹配: (198, 124)  SI=1.0000
+[23:33:39] 模型坐标: [{"x": 439, "y": 279}, {"x": 434, "y": 436}, {"x": 198, "y": 124}]
+[23:33:39] 映射坐标: [{"x": 439, "y": 279}, {"x": 434, "y": 436}, {"x": 198, "y": 124}]
+[23:33:40] collect=806chars eks=236chars
+[23:33:40] PoW nonce=599 0ms
+[23:33:40] 兑换响应: status=200
+[23:33:40] 获取到JWT_C: ck0.29YldTxXc2xVobZphc8XGr5Iil...
+[23:33:41] 验证成功 ticket=tr03hKz07xGHSxZzPH_1GjTZAj2tLT... randstr=@6Tl
+[23:33:42] 发送验证码(尝试1): status=200
+[23:33:43] 背景图: 672x480 jpeg 47.1KB
+[23:33:43] 参考条: 170x50 jpeg
+[23:33:43] YOLO检测到 5 个图标
+[23:33:44] 兑换响应: status=200
+[23:33:44] 获取到JWT_C: ck0.7c0CFo2J7kU4OkYwMZq1008aNf...
+[23:33:44] 目标[1] 匹配: (277, 279)  SI=1.0000
+[23:33:44] 目标[2] 匹配: (519, 442)  SI=1.0000
+[23:33:44] 目标[3] 匹配: (440, 441)  SI=1.0000
+[23:33:44] 模型坐标: [{"x": 277, "y": 279}, {"x": 519, "y": 442}, {"x": 440, "y": 441}]
+[23:33:44] 映射坐标: [{"x": 277, "y": 279}, {"x": 519, "y": 442}, {"x": 440, "y": 441}]
+[23:33:45] collect=810chars eks=236chars
+[23:33:45] PoW nonce=832 1ms
+[23:33:46] 验证成功 ticket=tr03EDyb3zMeGX1Vhf_dJr7P6M7u1O... randstr=@Mmb
+[23:33:47] 第 43 轮注册
+[23:33:47] device_id=1VEutGFVOcx79UV1q8UoAcFfqjVmZ4bk locale=ko-KR
+[23:33:48] 发送验证码(尝试1): status=200
+[23:33:50] 发送验证码(尝试1): status=200
+[23:33:50] 兑换响应: status=200
+[23:33:50] 获取到JWT_C: ck0.aCvxr0D1uXgjmgCJRvaeTdCPYA...
+[23:33:56] [协议] 开始验证码求解
+[23:33:57] 发送验证码(尝试1): status=200
+[23:34:03] 验证成功 ticket=tr03xtBV6OM3-51hsCFR9IHZ3R7rt1... randstr=@hJr
+[23:34:05] sess=s0tkgM1B386kzqg3EtHRdLPuoLrLR-K0KfVlE1Ew... sid=7475571932121255936
+[23:34:05] subcapclass=1408 bg=[672, 480]
+[23:34:05] instruction=请依次点击：
+[23:34:05] tdc_path=/tdc.js?app_data=7475571932121255936&t=299501334...
+[23:34:05] pow_cfg={"prefix": "b6491b7c1a352e#", "md5": "fd8c31818961576d5776b95321c03d59"}
+[23:34:08] 兑换响应: status=200
+[23:34:08] 获取到JWT_C: ck0.cza4f9gm6PVnLlKrdb1pF4-g9F...
+[23:34:13] 绑定结果: 成功
+[23:34:13] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:34:16] 发送验证码(尝试1): status=200
+[23:34:19] 第 44 轮注册
+[23:34:19] device_id=mzfJQDMgEdE6wmGfGcSdHr7KUgTzfR2M locale=ja-JP
+[23:34:21] 兑换响应: status=200
+[23:34:21] 获取到JWT_C: ck0.aexnLL7PdYbRROc60wLczXUZ6J...
+[23:34:27] 发送验证码(尝试1): status=200
+[23:34:28] [协议] 开始验证码求解
+[23:34:33] [协议] 开始验证码求解
+[23:34:37] 绑定结果: 成功
+[23:34:37] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:34:40] [协议] 开始验证码求解
+[23:34:40] 第 45 轮注册
+[23:34:40] device_id=GvxXk3FtLEALCsmD95ZFp4nDFfRx0DD5 locale=ko-KR
+[23:34:50] 绑定结果: 成功
+[23:34:50] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:34:54] 第 46 轮注册
+[23:34:54] device_id=kQA298sRnMUy6nIriLVfTJ5alsLR06Ir locale=en-US
+[23:34:54] [协议] 开始验证码求解
+[23:34:57] sess=s0maZM0bqr45yg17mbYbrG1D4AQbTNgcJ9ZmFwfV... sid=7475572148834979840
+[23:34:57] subcapclass=1408 bg=[672, 480]
+[23:34:57] instruction=请依次点击：
+[23:34:57] tdc_path=/tdc.js?app_data=7475572148834979840&t=514731412...
+[23:34:57] pow_cfg={"prefix": "a58256f58a2f7a6c#", "md5": "6f71362024a821967c413974443b8798"}
+[23:34:59] [协议] 开始验证码求解
+[23:35:15] [协议] 开始验证码求解
+[23:35:25] [协议] 开始验证码求解
+[23:35:26] 第 47 轮注册
+[23:35:26] device_id=D4l1k3AD6IfhKoAQOfIf485nuRjUQkoB locale=zh-CN
+[23:35:43] [协议] 开始验证码求解
+[23:35:43] 第 48 轮注册
+[23:35:43] device_id=QFUqLXmKZnEFgT9GK8DqxMAsqyVLEFrn locale=ko-KR
+[23:35:45] sess=s0ySP48OJsS-gLXGCyHa9j9rySfpngT3XB_UjHqv... sid=7475572351471583232
+[23:35:45] subcapclass=1408 bg=[672, 480]
+[23:35:45] instruction=请依次点击：
+[23:35:45] tdc_path=/tdc.js?app_data=7475572351471583232&t=2102868045...
+[23:35:45] pow_cfg={"prefix": "49fad201bbf8cb69#", "md5": "8178c449fee13550e43d01f51ff29611"}
+[23:35:46] [协议] 开始验证码求解
+[23:35:47] 第 49 轮注册
+[23:35:47] device_id=2emt4qvZ6pnrlqq9hEkiX3mcaa41NXlX locale=zh-TW
+[23:35:48] sess=s0pC-GcMlz0A1GKEYWjRqvV44M_JgA5lDNV-YLuY... sid=7475572357344317440
+[23:35:48] subcapclass=1408 bg=[672, 480]
+[23:35:48] instruction=请依次点击：
+[23:35:48] tdc_path=/tdc.js?app_data=7475572357344317440&t=893998708...
+[23:35:48] pow_cfg={"prefix": "d033f923478694d0#", "md5": "37b7129e0029ec4283dbc0effc604984"}
+[23:35:48] sess=s0FKmv624p7YKwCd-6gFphFpgOMlMbiM9hP7Qdie... sid=7475572365572087808
+[23:35:48] subcapclass=1408 bg=[672, 480]
+[23:35:48] instruction=请依次点击：
+[23:35:48] tdc_path=/tdc.js?app_data=7475572365572087808&t=1780537532...
+[23:35:48] pow_cfg={"prefix": "df0870c14a2711b2#", "md5": "23329b30a12863b3b508267e9653f5c7"}
+[23:35:50] sess=s0WjJebvd5JDFPDaeTPIfsRql_Bx3epq5-Pija28... sid=7475572374329237504
+[23:35:50] subcapclass=1408 bg=[672, 480]
+[23:35:50] instruction=请依次点击：
+[23:35:50] tdc_path=/tdc.js?app_data=7475572374329237504&t=309783075...
+[23:35:50] pow_cfg={"prefix": "f2b12dd251adc16c#", "md5": "6b665dee1b687b91f48a8cea2abfaa4b"}
+[23:35:54] 背景图: 672x480 jpeg 69.5KB
+[23:35:54] 参考条: 170x50 jpeg
+[23:35:54] 背景图: 672x480 jpeg 46.5KB
+[23:35:54] 参考条: 170x50 jpeg
+[23:35:54] YOLO检测到 5 个图标
+[23:35:55] YOLO检测到 5 个图标
+[23:35:56] 目标[1] 匹配: (278, 280)  SI=1.0000
+[23:35:56] 目标[2] 匹配: (277, 201)  SI=1.0000
+[23:35:56] 目标[3] 匹配: (519, 437)  SI=1.0000
+[23:35:56] 模型坐标: [{"x": 278, "y": 280}, {"x": 277, "y": 201}, {"x": 519, "y": 437}]
+[23:35:56] 映射坐标: [{"x": 278, "y": 280}, {"x": 277, "y": 201}, {"x": 519, "y": 437}]
+[23:35:56] 目标[1] 匹配: (40, 280)  SI=1.0000
+[23:35:56] 目标[2] 匹配: (198, 42)  SI=0.9999
+[23:35:56] 目标[3] 匹配: (517, 120)  SI=1.0000
+[23:35:56] 模型坐标: [{"x": 40, "y": 280}, {"x": 198, "y": 42}, {"x": 517, "y": 120}]
+[23:35:56] 映射坐标: [{"x": 40, "y": 280}, {"x": 198, "y": 42}, {"x": 517, "y": 120}]
+[23:35:56] collect=810chars eks=248chars
+[23:35:56] PoW nonce=742 0ms
+[23:35:56] collect=832chars eks=236chars
+[23:35:56] PoW nonce=138 1ms
+[23:35:58] 背景图: 672x480 jpeg 60.4KB
+[23:35:58] 参考条: 170x50 jpeg
+[23:35:59] YOLO检测到 5 个图标
+[23:36:00] 目标[1] 匹配: (442, 36)  SI=1.0000
+[23:36:00] 目标[2] 匹配: (357, 41)  SI=0.9992
+[23:36:00] 目标[3] 匹配: (594, 48)  SI=1.0000
+[23:36:00] 模型坐标: [{"x": 442, "y": 36}, {"x": 357, "y": 41}, {"x": 594, "y": 48}]
+[23:36:00] 映射坐标: [{"x": 442, "y": 36}, {"x": 357, "y": 41}, {"x": 594, "y": 48}]
+[23:36:00] collect=812chars eks=236chars
+[23:36:00] PoW nonce=493 0ms
+[23:36:02] 背景图: 672x480 jpeg 54.1KB
+[23:36:02] 参考条: 170x50 jpeg
+[23:36:03] YOLO检测到 5 个图标
+[23:36:03] 验证成功 ticket=tr03HaqJ4XETRGPTquaGf4HSh-wqkP... randstr=@0oG
+[23:36:03] 验证成功 ticket=tr03KdWTOAbI_qtegJC4UaBH4WN8JT... randstr=@G9M
+[23:36:04] 目标[1] 匹配: (278, 437)  SI=1.0000
+[23:36:04] 目标[2] 匹配: (41, 363)  SI=0.9999
+[23:36:04] 目标[3] 匹配: (275, 203)  SI=1.0000
+[23:36:04] 模型坐标: [{"x": 278, "y": 437}, {"x": 41, "y": 363}, {"x": 275, "y": 203}]
+[23:36:04] 映射坐标: [{"x": 278, "y": 437}, {"x": 41, "y": 363}, {"x": 275, "y": 203}]
+[23:36:04] collect=830chars eks=236chars
+[23:36:04] PoW nonce=395 1ms
+[23:36:07] [协议] 开始验证码求解
+[23:36:08] 兑换响应: status=200
+[23:36:08] 获取到JWT_C: ck0.58G5Ks6nmbqE8yuT29zlfdg5-G...
+[23:36:09] 验证成功 ticket=tr03TxKOc5KTOu4LcXDrkH71ml0pp3... randstr=@22M
+[23:36:12] 兑换响应: status=200
+[23:36:12] 获取到JWT_C: ck0.qLJLK6q9JVwuEyRSWLlLRru0wD...
+[23:36:12] sess=s0wyxb3DpG6tiFSNJ2ksOZAEYUgORP6YnMr0ixy2... sid=7475572467892195328
+[23:36:12] subcapclass=1408 bg=[672, 480]
+[23:36:12] instruction=请依次点击：
+[23:36:12] tdc_path=/tdc.js?app_data=7475572467892195328&t=1297282827...
+[23:36:12] pow_cfg={"prefix": "91f45c173bc5068c#", "md5": "e82f7d8c80dd31ab4194a85d62e93b4c"}
+[23:36:12] 验证成功 ticket=tr036cReYJocH0Uce-ECcArMK2MKcc... randstr=@uJo
+[23:36:16] 发送验证码(尝试1): status=200
+[23:36:18] 发送验证码(尝试1): status=200
+[23:36:20] 兑换响应: status=200
+[23:36:20] 获取到JWT_C: ck0.YQhdQ2SVI_n_oM1DDEMZSvl9Rf...
+[23:36:22] 背景图: 672x480 jpeg 49.0KB
+[23:36:22] 参考条: 170x50 jpeg
+[23:36:23] YOLO检测到 5 个图标
+[23:36:24] 目标[1] 匹配: (519, 358)  SI=1.0000
+[23:36:24] 目标[2] 匹配: (195, 282)  SI=1.0000
+[23:36:24] 目标[3] 匹配: (356, 362)  SI=1.0000
+[23:36:24] 模型坐标: [{"x": 519, "y": 358}, {"x": 195, "y": 282}, {"x": 356, "y": 362}]
+[23:36:24] 映射坐标: [{"x": 519, "y": 358}, {"x": 195, "y": 282}, {"x": 356, "y": 362}]
+[23:36:24] collect=822chars eks=236chars
+[23:36:24] PoW nonce=270 0ms
+[23:36:27] 发送验证码(尝试1): status=200
+[23:36:34] 验证成功 ticket=tr03rWPC-lHQgalbWXyPezREGmJRZn... randstr=@byW
+[23:36:39] 兑换响应: status=200
+[23:36:39] 获取到JWT_C: ck0.woErKvWaC74yLLVz9iAL-eaEOd...
+[23:36:46] 发送验证码(尝试1): status=200
+[23:36:51] 兑换响应: status=200
+[23:36:51] 获取到JWT_C: ck0.ANRIZ4p38edBb0isINsdSUXHEg...
+[23:36:57] 发送验证码(尝试1): status=200
+[23:36:58] [协议] 开始验证码求解
+[23:37:00] 绑定结果: 成功
+[23:37:00] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:37:01] 第 50 轮注册
+[23:37:01] device_id=Hw5KRNZVQmKY0wXuw7aTEKzJerfuC5WO locale=zh-TW
+[23:37:04] 第 51 轮注册
+[23:37:04] device_id=SFRQRiBn5S7YifHrdjFcYyxOrWqkJ2tY locale=zh-CN
+[23:37:04] sess=s0a6XDEKpOdjCmSrtI33oNA1jqbgdiN3yoe8VgUt... sid=7475572684545892352
+[23:37:04] subcapclass=1408 bg=[672, 480]
+[23:37:04] instruction=请依次点击：
+[23:37:04] tdc_path=/tdc.js?app_data=7475572684545892352&t=100369321...
+[23:37:04] pow_cfg={"prefix": "7d73e3ab11025b00#", "md5": "a91d42e0668472d50c5e1097fc831faa"}
+[23:37:10] 背景图: 672x480 jpeg 35.8KB
+[23:37:10] 参考条: 170x50 jpeg
+[23:37:10] YOLO检测到 5 个图标
+[23:37:11] 目标[1] 匹配: (435, 363)  SI=0.9998
+[23:37:11] 目标[2] 匹配: (280, 200)  SI=1.0000
+[23:37:11] 目标[3] 匹配: (362, 118)  SI=1.0000
+[23:37:11] 模型坐标: [{"x": 435, "y": 363}, {"x": 280, "y": 200}, {"x": 362, "y": 118}]
+[23:37:11] 映射坐标: [{"x": 435, "y": 363}, {"x": 280, "y": 200}, {"x": 362, "y": 118}]
+[23:37:12] collect=812chars eks=248chars
+[23:37:12] PoW nonce=96 0ms
+[23:37:18] 验证成功 ticket=tr0396TGYBG4gQeNjZB-n7pzhQm90p... randstr=@5pf
+[23:37:23] 第 52 轮注册
+[23:37:23] device_id=n8D5T8MeZy9YjpE2vDp1DrHSWCUtyDcn locale=ja-JP
+[23:37:26] 兑换响应: status=200
+[23:37:26] 获取到JWT_C: ck0._FpJC6r3TV1kZ82pE-K8_T09kP...
+[23:37:28] [协议] 开始验证码求解
+[23:37:33] 第 53 轮注册
+[23:37:33] device_id=NlmKoVxh6O83pYwyFDjx36DjLIDxxlYE locale=zh-TW
+[23:37:35] 发送验证码(尝试1): status=200
+[23:37:37] sess=s0yLjoe-xBIQKM3jNRVyO1kOUNuBd7ae_psTXtD1... sid=7475572821808959488
+[23:37:37] subcapclass=1408 bg=[672, 480]
+[23:37:37] instruction=请依次点击：
+[23:37:37] tdc_path=/tdc.js?app_data=7475572821808959488&t=118004692...
+[23:37:37] pow_cfg={"prefix": "e53d5bbda9b23a8d#", "md5": "fb3d1c5992d24d5cff3760f5063ebcb9"}
+[23:40:19] 第 1 轮注册
+[23:40:19] device_id=GnvptA7bu911z2w3M5UwwD71MANNzEwP locale=ko-KR
+[23:41:25] 第 1 轮注册
+[23:41:25] device_id=PxVE9Os8tMmQZ3oRt55Vpvyu2qeNYnRl locale=ja-JP
+[23:41:26] 第 9 轮注册
+[23:41:26] device_id=iq64n5SnCFhEiZfNlN8uojY5QltIJ8R2 locale=ja-JP
+[23:41:26] 第 3 轮注册
+[23:41:26] 第 10 轮注册
+[23:41:26] device_id=PDEDZX9KyREt5xMuzo8KPfF3k8rH8RwC locale=ja-JP
+[23:41:26] device_id=8Gcg7J1pALx5aYRDTzYVbXDaie0G0nSi locale=zh-CN
+[23:41:27] 第 7 轮注册
+[23:41:27] device_id=ygQ155AV9bGqJ0pjnXHV0olz3XN6aAbA locale=zh-TW
+[23:41:27] 第 4 轮注册
+[23:41:27] device_id=zMeZ9HlHnSYLhD54BRArXBJNjTyLEV7B locale=zh-CN
+[23:41:28] 第 2 轮注册
+[23:41:28] device_id=VTUcYNOPA83Hb5t5H6XqI6XVu8fCmfrO locale=zh-TW
+[23:41:28] 第 6 轮注册
+[23:41:28] device_id=6wXUa1iJYwbeWmU8lrxbitliKPKTDU9M locale=zh-CN
+[23:41:28] 第 5 轮注册
+[23:41:28] device_id=lXbvQjcm2wi2VbXUQRTv7JHV2oTpzKB0 locale=zh-CN
+[23:41:28] 第 8 轮注册
+[23:41:28] device_id=MK3xEp2Dz3ri32V6YT7txBWCivdD73ZW locale=ja-JP
+[23:41:47] [协议] 开始验证码求解
+[23:41:47] [协议] 开始验证码求解
+[23:41:52] [协议] 开始验证码求解
+[23:41:53] sess=s0MKLng49mP9QcycUnMy_BzSqdaTxo0vPa7dgDuh... sid=7475573894662610944
+[23:41:53] subcapclass=1408 bg=[672, 480]
+[23:41:53] instruction=请依次点击：
+[23:41:53] tdc_path=/tdc.js?app_data=7475573894662610944&t=880367816...
+[23:41:53] pow_cfg={"prefix": "ebb50e8d48cc1faa#", "md5": "fe40857f7bcb73ef27df1f023b8ff865"}
+[23:41:54] [协议] 开始验证码求解
+[23:41:54] [协议] 开始验证码求解
+[23:41:56] [协议] 开始验证码求解
+[23:41:56] sess=s034tQm-SB2TXlRJqcI_p980Kk9Cgk2WQ85jYdWD... sid=7475573899202514944
+[23:41:56] subcapclass=1408 bg=[672, 480]
+[23:41:56] instruction=请依次点击：
+[23:41:56] tdc_path=/tdc.js?app_data=7475573899202514944&t=1963654078...
+[23:41:56] pow_cfg={"prefix": "59de257ea768367d#", "md5": "005fc3497248e2b99b83baec94be94a5"}
+[23:42:00] sess=s09kAL7PYjKhCtof3FFqwHV2dyzTeGj220FeeOqc... sid=7475573925884317696
+[23:42:00] subcapclass=1408 bg=[672, 480]
+[23:42:00] instruction=请依次点击：
+[23:42:00] tdc_path=/tdc.js?app_data=7475573925884317696&t=644268479...
+[23:42:00] pow_cfg={"prefix": "f25f4b1152f9724e#", "md5": "3413a2e5d6871aeb7bc4ba22788e4912"}
+[23:42:01] sess=s0OdfqwEAb6MAebZEqBW2tt3mqGQsXggOc_eQ-d0... sid=7475573928579096576
+[23:42:01] subcapclass=1408 bg=[672, 480]
+[23:42:01] instruction=请依次点击：
+[23:42:01] tdc_path=/tdc.js?app_data=7475573928579096576&t=890506429...
+[23:42:01] pow_cfg={"prefix": "b64fa98676c99c92#", "md5": "d97df5d7806f93157ac648f9d72bd8f8"}
+[23:42:02] sess=s0b4BgmM9nqrf_JLVle4ibYndFFhINT3RSEbEbrW... sid=7475573929355042816
+[23:42:02] subcapclass=1408 bg=[672, 480]
+[23:42:02] instruction=请依次点击：
+[23:42:02] tdc_path=/tdc.js?app_data=7475573929355042816&t=587106290...
+[23:42:02] pow_cfg={"prefix": "88493131d956e424#", "md5": "0c24ecf60d6691b6f0d7b8b9abc0fc0a"}
+[23:42:04] 背景图: 672x480 jpeg 52.9KB
+[23:42:04] 背景图: 672x480 jpeg 63.8KB
+[23:42:04] 参考条: 170x50 jpeg
+[23:42:04] 参考条: 170x50 jpeg
+[23:42:05] YOLO检测到 5 个图标
+[23:42:05] YOLO检测到 5 个图标
+[23:42:06] 目标[1] 匹配: (44, 204)  SI=0.9999
+[23:42:06] 目标[2] 匹配: (199, 360)  SI=1.0000
+[23:42:06] 目标[3] 匹配: (437, 361)  SI=1.0000
+[23:42:06] 模型坐标: [{"x": 44, "y": 204}, {"x": 199, "y": 360}, {"x": 437, "y": 361}]
+[23:42:07] sess=s0YHPtx6zynspSkDp7zXHFpNRluzYVxbuHP_lZRO... sid=7475573945990090752
+[23:42:07] 映射坐标: [{"x": 44, "y": 204}, {"x": 199, "y": 360}, {"x": 437, "y": 361}]
+[23:42:07] subcapclass=1408 bg=[672, 480]
+[23:42:07] instruction=请依次点击：
+[23:42:07] tdc_path=/tdc.js?app_data=7475573945990090752&t=723792197...
+[23:42:07] pow_cfg={"prefix": "fd00a90b78b59579#", "md5": "7d8facf8197752bce10e5eba85d382d3"}
+[23:42:07] 目标[1] 匹配: (518, 199)  SI=1.0000
+[23:42:07] 目标[2] 匹配: (117, 42)  SI=1.0000
+[23:42:07] 目标[3] 匹配: (198, 41)  SI=1.0000
+[23:42:07] 模型坐标: [{"x": 518, "y": 199}, {"x": 117, "y": 42}, {"x": 198, "y": 41}]
+[23:42:07] 映射坐标: [{"x": 518, "y": 199}, {"x": 117, "y": 42}, {"x": 198, "y": 41}]
+[23:42:07] 背景图: 672x480 jpeg 17.3KB
+[23:42:07] 参考条: 170x50 jpeg
+[23:42:07] collect=818chars eks=236chars
+[23:42:07] collect=780chars eks=236chars
+[23:42:07] PoW nonce=514 1ms
+[23:42:07] PoW nonce=4216 5ms
+[23:42:07] YOLO检测到 5 个图标
+[23:42:08] 目标[1] 匹配: (127, 48)  SI=0.9970
+[23:42:08] 目标[2] 匹配: (279, 437)  SI=1.0000
+[23:42:08] 目标[3] 匹配: (596, 42)  SI=1.0000
+[23:42:08] 模型坐标: [{"x": 127, "y": 48}, {"x": 279, "y": 437}, {"x": 596, "y": 42}]
+[23:42:08] 映射坐标: [{"x": 127, "y": 48}, {"x": 279, "y": 437}, {"x": 596, "y": 42}]
+[23:42:09] collect=818chars eks=236chars
+[23:42:09] PoW nonce=643 0ms
+[23:42:09] 背景图: 672x480 jpeg 40.1KB
+[23:42:09] 参考条: 170x50 jpeg
+[23:42:10] YOLO检测到 5 个图标
+[23:42:10] [协议] 开始验证码求解
+[23:42:11] 目标[1] 匹配: (282, 46)  SI=0.9998
+[23:42:11] 目标[2] 匹配: (118, 361)  SI=1.0000
+[23:42:11] 目标[3] 匹配: (596, 355)  SI=1.0000
+[23:42:11] 模型坐标: [{"x": 282, "y": 46}, {"x": 118, "y": 361}, {"x": 596, "y": 355}]
+[23:42:11] 映射坐标: [{"x": 282, "y": 46}, {"x": 118, "y": 361}, {"x": 596, "y": 355}]
+[23:42:11] 背景图: 672x480 jpeg 57.8KB
+[23:42:11] 参考条: 170x50 jpeg
+[23:42:11] collect=814chars eks=236chars
+[23:42:11] PoW nonce=483 0ms
+[23:42:11] YOLO检测到 5 个图标
+[23:42:12] 目标[1] 匹配: (280, 365)  SI=1.0000
+[23:42:12] 目标[2] 匹配: (196, 280)  SI=1.0000
+[23:42:12] 目标[3] 匹配: (278, 205)  SI=1.0000
+[23:42:12] 模型坐标: [{"x": 280, "y": 365}, {"x": 196, "y": 280}, {"x": 278, "y": 205}]
+[23:42:12] 映射坐标: [{"x": 280, "y": 365}, {"x": 196, "y": 280}, {"x": 278, "y": 205}]
+[23:42:12] [协议] 开始验证码求解
+[23:42:13] collect=778chars eks=236chars
+[23:42:13] PoW nonce=810 1ms
+[23:42:14] 验证成功 ticket=tr03ljLD7fWbyM91gRt9_qw_GrzoJn... randstr=@208
+[23:42:14] 验证成功 ticket=tr03nbfNNDRSsfBpq8ZxXbzsni4q9I... randstr=@4l0
+[23:42:15] sess=s00MlpDkA9c3O8UautoRUfIXLnjoeYFCHj9li_Bx... sid=7475573988483977216
+[23:42:15] subcapclass=1408 bg=[672, 480]
+[23:42:15] instruction=请依次点击：
+[23:42:15] tdc_path=/tdc.js?app_data=7475573988483977216&t=559091117...
+[23:42:15] pow_cfg={"prefix": "91afebe422923ce2#", "md5": "12f4a4cdedcefb473b6a2a647c128d02"}
+[23:42:15] 背景图: 672x480 jpeg 55.8KB
+[23:42:15] 参考条: 170x50 jpeg
+[23:42:15] YOLO检测到 5 个图标
+[23:42:16] 目标[1] 匹配: (599, 41)  SI=1.0000
+[23:42:16] 目标[2] 匹配: (520, 121)  SI=1.0000
+[23:42:16] 目标[3] 匹配: (453, 465)  SI=0.9264
+[23:42:16] 模型坐标: [{"x": 599, "y": 41}, {"x": 520, "y": 121}, {"x": 453, "y": 465}]
+[23:42:16] 映射坐标: [{"x": 599, "y": 41}, {"x": 520, "y": 121}, {"x": 453, "y": 465}]
+[23:42:17] collect=824chars eks=236chars
+[23:42:17] PoW nonce=342 0ms
+[23:42:17] 验证成功 ticket=tr03HNUtoMEQILztdteRreLGNu1t0J... randstr=@HAC
+[23:42:18] 验证成功 ticket=tr03r0oUalV5sq0v5RQ_tjRWemlOlt... randstr=@1jx
+[23:42:18] [协议] 开始验证码求解
+[23:42:19] 兑换响应: status=200
+[23:42:19] 获取到JWT_C: ck0.7WddF1mSWxc-W9maIx4TgbtWjE...
+[23:42:20] sess=s0GmxmEpG70j5joCCCv7BnOCdAZu3_vLRfqGSL5D... sid=7475574005745901568
+[23:42:20] subcapclass=1408 bg=[672, 480]
+[23:42:20] instruction=请依次点击：
+[23:42:20] tdc_path=/tdc.js?app_data=7475574005745901568&t=2026287436...
+[23:42:20] pow_cfg={"prefix": "d988a727cf0ec31#", "md5": "c7672e854e37ce4be5ea4d2a37821566"}
+[23:42:21] 验证成功 ticket=tr03qFVHEMx7M7j9EPVbTGpRANz8wC... randstr=@U32
+[23:42:21] 背景图: 672x480 jpeg 62.7KB
+[23:42:21] 参考条: 170x50 jpeg
+[23:42:22] YOLO检测到 5 个图标
+[23:42:22] 兑换响应: status=200
+[23:42:22] 获取到JWT_C: ck0._jMCKGsIbT7ALrfDj0FSlh_DMV...
+[23:42:23] 目标[1] 匹配: (598, 276)  SI=0.9998
+[23:42:23] 目标[2] 匹配: (201, 202)  SI=1.0000
+[23:42:23] 目标[3] 匹配: (44, 44)  SI=0.7368
+[23:42:23] 模型坐标: [{"x": 598, "y": 276}, {"x": 201, "y": 202}, {"x": 44, "y": 44}]
+[23:42:23] 映射坐标: [{"x": 598, "y": 276}, {"x": 201, "y": 202}, {"x": 44, "y": 44}]
+[23:42:23] [协议] 开始验证码求解
+[23:42:23] collect=808chars eks=236chars
+[23:42:23] PoW nonce=7751 10ms
+[23:42:25] 兑换响应: status=200
+[23:42:25] 获取到JWT_C: ck0.LuFyDouxce_g8L09zpKh4hiJmP...
+[23:42:26] 发送验证码(尝试1): status=200
+[23:42:26] 兑换响应: status=200
+[23:42:26] 获取到JWT_C: ck0.mOMuZjJSGPCr5T-kKSnTRRoN21...
+[23:42:27] 兑换响应: status=200
+[23:42:27] 获取到JWT_C: ck0.geGVQ2G2zw4z5uBvRBeIc2ptO_...
+[23:42:29] sess=s0SuuLLxvPMlRBY_1VAiB1VDZ08u8b6OvWPAp4To... sid=7475574045944111104
+[23:42:29] subcapclass=1408 bg=[672, 480]
+[23:42:29] instruction=请依次点击：
+[23:42:29] tdc_path=/tdc.js?app_data=7475574045944111104&t=798720273...
+[23:42:29] pow_cfg={"prefix": "83f2f4b477756c90#", "md5": "3bdd8481ddf6395c53f80b0ef5fb28bd"}
+[23:42:29] raw={"errorCode": "50", "randstr": "", "ticket": "", "traceId": "", "errMessage": "", "sess": "s0t2O73xz4sN0SwZV2Crr8RpuzpBkjNMRtu57f_5GMBOcY5V_MtJIuE_BZhzdFZFwIfr-iPqrOF_bASbBAfE1OFWJOLPYWRSKpk1ZAaXl4MkFOvenck7qN5clGNwzRYVkPFW-wjJemU6CIAEipP48B5-LDJaZLbepesjLg7zGUCWqSJxaiPcgILnT10Idqles2dVLHHEY0Kw-9DQf5-Bf3qLGZeQ7JGvNmU97UFIAxQkMz_5bRaNJ8Fefdc-LZbOzr71gQ_0UEftEG0EXKzkpTjwuvH8TczT7kU5Qu_b-xqjcvF3DumgBemK64uKPqmoDPXvhWuu6SJA60C9VoaVw_X7z95aVep5CkMOD9LYQEL9OXMtD2vAQRl8TcJT8y7mawgAxsQbPb6uNDHm79xRyX5E7WRok9q3Cg_Q3_LGL93IE2MdfHkYIZ50JOOuh5I63BZr8kFXfyKjeZRrn03F0341mP1gq5iqxwZBVfs9FGvZTAakd6RejCMB0mbiU0PwB3"}
+[23:42:31] 背景图: 672x480 jpeg 36.3KB
+[23:42:31] 参考条: 170x50 jpeg
+[23:42:31] 发送验证码(尝试1): status=200
+[23:42:31] YOLO检测到 6 个图标
+[23:42:32] [协议] 开始验证码求解
+[23:42:32] 目标[1] 匹配: (280, 281)  SI=1.0000
+[23:42:32] 目标[2] 匹配: (599, 360)  SI=1.0000
+[23:42:32] 目标[3] 匹配: (278, 120)  SI=1.0000
+[23:42:32] 模型坐标: [{"x": 280, "y": 281}, {"x": 599, "y": 360}, {"x": 278, "y": 120}]
+[23:42:32] 映射坐标: [{"x": 280, "y": 281}, {"x": 599, "y": 360}, {"x": 278, "y": 120}]
+[23:42:33] collect=822chars eks=236chars
+[23:42:33] PoW nonce=584 1ms
+[23:42:33] 发送验证码(尝试1): status=200
+[23:42:33] 发送验证码(尝试1): status=200
+[23:42:33] sess=s0O4mbXQU0zcSCqN-Y6q-GAr4tb4rOqF4YEPwO4d... sid=7475574064312356864
+[23:42:33] subcapclass=1408 bg=[672, 480]
+[23:42:33] instruction=请依次点击：
+[23:42:33] tdc_path=/tdc.js?app_data=7475574064312356864&t=1777687497...
+[23:42:33] pow_cfg={"prefix": "33164c492d7c1fcc#", "md5": "143a878b30f6d74c6634851846ae007b"}
+[23:42:34] 验证成功 ticket=tr03lHp3-p0yazN8jQmp_hAc0pE_YG... randstr=@uSb
+[23:42:36] 发送验证码(尝试1): status=200
+[23:42:39] 背景图: 672x480 jpeg 17.8KB
+[23:42:39] 参考条: 170x50 jpeg
+[23:42:39] YOLO检测到 5 个图标
+[23:42:40] 目标[1] 匹配: (40, 119)  SI=1.0000
+[23:42:40] 目标[2] 匹配: (275, 198)  SI=1.0000
+[23:42:40] 目标[3] 匹配: (45, 46)  SI=1.0000
+[23:42:40] 模型坐标: [{"x": 40, "y": 119}, {"x": 275, "y": 198}, {"x": 45, "y": 46}]
+[23:42:40] 映射坐标: [{"x": 40, "y": 119}, {"x": 275, "y": 198}, {"x": 45, "y": 46}]
+[23:42:40] 背景图: 672x480 jpeg 39.3KB
+[23:42:40] 参考条: 170x50 jpeg
+[23:42:41] collect=798chars eks=236chars
+[23:42:41] PoW nonce=185 0ms
+[23:42:41] YOLO检测到 5 个图标
+[23:42:42] 目标[1] 匹配: (517, 438)  SI=1.0000
+[23:42:42] 目标[2] 匹配: (442, 438)  SI=1.0000
+[23:42:42] 目标[3] 匹配: (519, 365)  SI=1.0000
+[23:42:42] 模型坐标: [{"x": 517, "y": 438}, {"x": 442, "y": 438}, {"x": 519, "y": 365}]
+[23:42:42] 映射坐标: [{"x": 517, "y": 438}, {"x": 442, "y": 438}, {"x": 519, "y": 365}]
+[23:42:42] 兑换响应: status=200
+[23:42:42] collect=816chars eks=236chars
+[23:42:42] 获取到JWT_C: ck0.UHGgq6RFPMuANos-niTjdH-Y0k...
+[23:42:42] PoW nonce=8092 11ms
+[23:42:42] 验证成功 ticket=tr03SpFBxsVda8jnYcLrljJ_FrnxBd... randstr=@3sU
+[23:42:47] 兑换响应: status=200
+[23:42:47] 获取到JWT_C: ck0.sHyakQhCSzDXxGvoswvVSMDtwg...
+[23:42:49] 验证成功 ticket=tr03vJc4nhAjhFNw6Vi1WcDFXlTCAd... randstr=@RWC
+[23:42:50] 验证成功 ticket=tr03faHKVXV_ND1SHDoDTWKVMiwHAQ... randstr=@KWT
+[23:42:52] 发送验证码(尝试1): status=200
+[23:42:56] 兑换响应: status=200
+[23:42:56] 获取到JWT_C: ck0.izzIukcBM3v2Ou_SOD2BBNl41s...
+[23:42:56] 兑换响应: status=200
+[23:42:56] 获取到JWT_C: ck0.izzIukcBM3v2Ou_SOD2BBAMD5B...
+[23:43:02] 发送验证码(尝试1): status=200
+[23:43:03] 发送验证码(尝试1): status=200
+[23:43:17] sess=s0gg-XEWrJ0xGvc-OXjtX4jnsyEygCDTVLhsVEjC... sid=7475574246067527680
+[23:43:17] subcapclass=1408 bg=[672, 480]
+[23:43:17] instruction=请依次点击：
+[23:43:17] tdc_path=/tdc.js?app_data=7475574246067527680&t=967151910...
+[23:43:17] pow_cfg={"prefix": "4cc0ad304852f532#", "md5": "31c902d78cb205e2d6da85a50d3d0530"}
+[23:43:23] 发送验证码(尝试1): status=200
+[23:43:24] 绑定结果: 成功
+[23:43:24] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:43:27] 背景图: 672x480 jpeg 51.3KB
+[23:43:27] 参考条: 170x50 jpeg
+[23:43:27] YOLO检测到 5 个图标
+[23:43:28] 目标[1] 匹配: (278, 361)  SI=1.0000
+[23:43:28] 目标[2] 匹配: (599, 127)  SI=1.0000
+[23:43:28] 目标[3] 匹配: (119, 203)  SI=1.0000
+[23:43:28] 模型坐标: [{"x": 278, "y": 361}, {"x": 599, "y": 127}, {"x": 119, "y": 203}]
+[23:43:28] 映射坐标: [{"x": 278, "y": 361}, {"x": 599, "y": 127}, {"x": 119, "y": 203}]
+[23:43:29] collect=812chars eks=236chars
+[23:43:29] PoW nonce=300 0ms
+[23:43:34] 绑定结果: 成功
+[23:43:34] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:43:36] 验证成功 ticket=tr039LPcvi6dM1rHR9f5Q1qBTG9PxY... randstr=@BfP
+[23:43:37] 绑定结果: 成功
+[23:43:37] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:43:41] 兑换响应: status=200
+[23:43:41] 获取到JWT_C: ck0.04RfEzHDZCcgq15LddGH12vQWb...
+[23:43:46] 绑定结果: 成功
+[23:43:46] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:44:11] 绑定结果: 成功
+[23:44:11] 结果已保存: D:\腾讯天御V2验证码\PikpakV1.0\batch_result_protocol.txt
+[23:44:25] 发送验证码(尝试1): status=200

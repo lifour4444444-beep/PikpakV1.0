@@ -1,0 +1,17 @@
+{
+  "delay": 0,
+  "workers": 10,
+  "max_rounds": 1,
+  "yolo_path": "YOLO5\\best.onnx",
+  "siamese_path": "Siamese\\IconCompare.onnx",
+  "v8_js": "v8_submit.js",
+  "result_file": "batch_result_protocol.txt",
+  "proxy_gateway": "",
+  "proxy_list": "",
+  "proxy_rotate": 1,
+  "domain": "随机",
+  "invite_link": "https://mypikpak.com/s/YOUR_SHARE_ID",
+  "invite_share_id": "",
+  "invite_pass_code_token": "",
+  "invite_trace_file_ids": ""
+}
