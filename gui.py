@@ -206,6 +206,14 @@ class App(tk.Tk):
                 side=tk.LEFT, padx=(4, 0))
             self._config_vars[key] = var
 
+        self._var_stagger = tk.BooleanVar(value=True)
+        row = ttk.Frame(frm)
+        row.pack(fill=tk.X, pady=1)
+        ttk.Label(row, text='错开启动', width=14).pack(side=tk.LEFT)
+        ttk.Checkbutton(row, text='开', variable=self._var_stagger,
+                        style='TCheckbutton').pack(side=tk.LEFT, padx=(4, 0))
+        self._config_vars['stagger'] = self._var_stagger
+
         frm2 = ttk.LabelFrame(scroll_frame, text='┃ 邮箱域名', padding=10)
         frm2.pack(fill=tk.X, padx=4, pady=(0, 6))
 
@@ -250,7 +258,7 @@ class App(tk.Tk):
         ttk.Label(row, text='代理网关', width=14).pack(side=tk.LEFT)
         self._ent_gateway = ttk.Entry(row, textvariable=self._var_gateway, font=('Consolas', 8))
         self._ent_gateway.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(4, 0))
-        self._gateway_placeholder = '如: socks5h://user:pass@host:port'
+        self._gateway_placeholder = '如: socks5h://user:pass@host:port  (多个用逗号/换行分隔，自动组成代理池)'
         self._setup_entry_placeholder(self._ent_gateway, self._gateway_placeholder)
 
         frm5 = ttk.LabelFrame(scroll_frame, text='┃ 邀请链接', padding=10)
@@ -529,6 +537,7 @@ class App(tk.Tk):
             'delay': self._config_vars['delay'].get(),
             'workers': self._config_vars['workers'].get(),
             'max_rounds': self._config_vars['max'].get(),
+            'stagger': self._var_stagger.get(),
             'yolo_path': self._var_yolo.get(),
             'siamese_path': self._var_siamese.get(),
             'v8_js': self._var_v8.get(),
@@ -556,6 +565,7 @@ class App(tk.Tk):
             self._config_vars['delay'].set(cfg.get('delay', _worker.DELAY_MINUTES))
             self._config_vars['workers'].set(cfg.get('workers', 1))
             self._config_vars['max'].set(cfg.get('max_rounds', 0))
+            self._var_stagger.set(cfg.get('stagger', True))
             self._var_yolo.set(cfg.get('yolo_path', _worker.YOLO_MODEL_PATH))
             self._var_siamese.set(cfg.get('siamese_path', _worker.SIAMESE_MODEL_PATH))
             self._var_v8.set(cfg.get('v8_js', _worker.V8_SUBMIT_JS))
@@ -659,7 +669,11 @@ class App(tk.Tk):
             self._append_log(f'  |  上限: {self._config_vars["max"].get() or "无限"}', 'info')
             self._append_log(f'  |  域名: {self._var_domain.get()}\n', 'info')
             if _worker.PROXY_GATEWAY:
-                self._append_log(f'  代理: 网关 ({_worker.PROXY_GATEWAY[:50]}...)\n', 'info')
+                proxy_count = len([u.strip() for u in _worker.PROXY_GATEWAY.replace('\n', ',').split(',') if u.strip()])
+                if proxy_count > 1:
+                    self._append_log(f'  代理: 代理池 ×{proxy_count} 条\n', 'info')
+                else:
+                    self._append_log(f'  代理: 网关 ({_worker.PROXY_GATEWAY[:50]}...)\n', 'info')
             else:
                 self._append_log('  代理: 直连\n', 'warn')
             self._append_log('━' * 50 + '\n\n', 'header')
@@ -690,24 +704,30 @@ class App(tk.Tk):
             first_round = True
             rate_limit_count = 0
             try:
+                _worker.acquire_proxy(worker_id)
+                stagger_done = False
                 while not self._stop_flag.is_set():
                     if not first_round:
-                        self._msg_queue.put(
-                            ('ui', 'log', f'\n⏳ 等待 {_worker.DELAY_MINUTES} 分钟...\n', 'info'))
-                        for _ in range(_worker.DELAY_MINUTES * 60):
-                            if self._stop_flag.is_set():
-                                return
-                            time.sleep(1)
+                        if _worker.DELAY_MINUTES > 0:
+                            self._msg_queue.put(
+                                ('ui', 'log', f'\n⏳ 等待 {_worker.DELAY_MINUTES} 分钟...\n', 'info'))
+                            for _ in range(_worker.DELAY_MINUTES * 60):
+                                if self._stop_flag.is_set():
+                                    return
+                                time.sleep(1)
                     first_round = False
 
-                    stagger_delay = (worker_id - 1) * random.uniform(5, 55) / max(1, workers - 1) if workers > 1 else 0
-                    if stagger_delay > 0:
-                        self._msg_queue.put(
-                            ('ui', 'log', '[Worker-{}] ⏱ 错开启动，等待 {:.0f}秒\n'.format(worker_id, stagger_delay), 'info'))
-                        for _ in range(int(stagger_delay)):
-                            if self._stop_flag.is_set():
-                                return
-                            time.sleep(1)
+                    if not stagger_done:
+                        stagger_done = True
+                        if self._var_stagger.get() and workers > 1:
+                            stagger_delay = (worker_id - 1) * random.uniform(5, 55) / (workers - 1)
+                            if stagger_delay > 0:
+                                self._msg_queue.put(
+                                    ('ui', 'log', '[Worker-{}] ⏱ 错开启动，等待 {:.0f}秒\n'.format(worker_id, stagger_delay), 'info'))
+                                for _ in range(int(stagger_delay)):
+                                    if self._stop_flag.is_set():
+                                        return
+                                    time.sleep(1)
 
                     round_num = _next_round()
                     if max_rounds > 0 and round_num > max_rounds:
@@ -720,13 +740,7 @@ class App(tk.Tk):
 
                     _worker.pin_proxy()
 
-                    current_ip = '获取失败'
-                    for retry in range(3):
-                        current_ip = _worker.get_current_ip()
-                        if current_ip != '获取失败':
-                            break
-                        if retry < 2:
-                            time.sleep(3)
+                    current_ip = _worker.get_current_ip()
                     self._msg_queue.put(
                         ('ui', 'log', f'🌐 出口IP: {current_ip}\n', 'email'))
                     self._msg_queue.put(
@@ -755,28 +769,58 @@ class App(tk.Tk):
                         rate_limit_count += 1
 
                         self._msg_queue.put(
-                            ('ui', 'log', '  [Worker-{}] ⛔ 频率限制 [{}]，延迟重试，本轮重新开始\n'.format(worker_id, _rl_err.endpoint), 'warn'))
+                            ('ui', 'log', f'  [Worker-{worker_id}] ⛔ 频率限制 [{_rl_err.endpoint}] (第{rate_limit_count}/3次)，立即重试\n', 'warn'))
 
                         _worker.unpin_proxy()
-                        _worker.force_rotate_proxy()
+                        _worker.force_rotate_proxy(worker_id=worker_id)
                         _worker.pin_proxy()
 
                         if rate_limit_count >= 3:
                             with round_lock:
                                 self._fail_count += 1
                             self._msg_queue.put(
-                                ('ui', 'log', '[Worker-{}] 频率限制重试3次无效，跳过本轮\n'.format(worker_id), 'warn'))
+                                ('ui', 'log', f'[Worker-{worker_id}] 频率限制重试3次无效，跳过本轮\n', 'warn'))
                             rate_limit_count = 0
                             first_round = False
                             continue
-                        first_round = True
+
+                        for retry_i in range(2):
+                            try:
+                                _worker.set_worker_id(worker_id)
+                                acct = _worker.run_batch_round(round_num)
+                                rate_limit_count = 0
+                                if acct:
+                                    with round_lock:
+                                        self._success_count += 1
+                                    self._msg_queue.put(('ui', 'account', acct))
+                                else:
+                                    with round_lock:
+                                        self._fail_count += 1
+                                break
+                            except _worker.RateLimitError as _rl_err2:
+                                rate_limit_count += 1
+                                self._msg_queue.put(
+                                    ('ui', 'log', f'  [Worker-{worker_id}] ⛔ 频率限制 [{_rl_err2.endpoint}] (第{rate_limit_count}/3次)，立即重试\n', 'warn'))
+                                _worker.unpin_proxy()
+                                _worker.force_rotate_proxy(worker_id=worker_id)
+                                _worker.pin_proxy()
+                                if rate_limit_count >= 3:
+                                    with round_lock:
+                                        self._fail_count += 1
+                                    self._msg_queue.put(
+                                        ('ui', 'log', f'[Worker-{worker_id}] 频率限制重试3次无效，跳过本轮\n', 'warn'))
+                                    rate_limit_count = 0
+                                    break
+                        else:
+                            continue
+                        first_round = False
                         continue
                     except Exception as e:
                         with round_lock:
                             self._fail_count += 1
                         self._msg_queue.put(
                             ('ui', 'log', f'\n[系统] 运行出错: {e}\n', 'error'))
-                        _worker.force_rotate_proxy()
+                        _worker.force_rotate_proxy(worker_id=worker_id)
 
                     with round_lock:
                         self._round_count = round_num
@@ -787,7 +831,7 @@ class App(tk.Tk):
                     if max_rounds > 0 and self._round_count >= max_rounds:
                         break
             finally:
-                _worker.unpin_proxy()
+                _worker.release_proxy(worker_id)
 
         threads = []
         for i in range(1, workers + 1):

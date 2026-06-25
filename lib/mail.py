@@ -42,7 +42,7 @@ def _get_tempmailio_domains():
     try:
         resp = make_request("GET", _TEMPMĀILIO_URL, "/api/v2/domains",
                             headers={"Accept": "application/json"},
-                            timeout=15, use_proxy=True)
+                            timeout=30, use_proxy=False)
         data = _safe_data(resp)
         domains = data.get("domains", []) if isinstance(data, dict) else []
         _TEMPMĀILIO_DOMAINS_CACHE = domains
@@ -220,15 +220,12 @@ def _try_create_guerrilla(force_domain=None):
 
 def _try_create_tempmailio(local, domain):
     import requests
-    from .http_client import get_proxy_dict
 
-    proxies = get_proxy_dict()
     resp = requests.post(
         _TEMPMĀILIO_URL + "/api/v2/email/new",
         json={"local_part": local, "domain": domain},
         headers={"Accept": "application/json", "Content-Type": "application/json"},
-        timeout=15,
-        proxies=proxies,
+        timeout=30,
     )
     data = _safe_json(resp)
     if not isinstance(data, dict):
@@ -434,6 +431,8 @@ def _fetch_code_mailtm(token, base_url, stop_check=None):
                 except Exception as e:
                     last_error = e
 
+            if poll_count > 20:
+                raise RuntimeError(f"收取验证码超时: 已轮询{poll_count}次未收到验证码")
             time.sleep(3)
         except Exception as e:
             last_error = e
@@ -519,6 +518,8 @@ def _fetch_code_guerrilla(sid_token, stop_check=None):
                 except Exception as e:
                     last_error = e
 
+            if poll_count > 20:
+                raise RuntimeError(f"收取验证码超时: 已轮询{poll_count}次未收到验证码")
             time.sleep(3)
         except Exception as e:
             last_error = e
@@ -535,26 +536,15 @@ def _fetch_code_tempmailio(email, stop_check=None):
     poll_count = 0
     seen_ids = set()
 
-    def _tempmailio_get(url, timeout=15):
-        proxies = get_proxy_dict()
+    def _tempmailio_get(url, timeout=30):
         for attempt in range(3):
             try:
                 return requests.get(
                     url,
                     headers={"Accept": "application/json"},
                     timeout=timeout,
-                    proxies=proxies,
                 )
-            except requests.exceptions.SSLError:
-                force_rotate_proxy()
-                proxies = get_proxy_dict()
-                if attempt < 2:
-                    time.sleep(2)
-            except requests.exceptions.ConnectionError as e:
-                err_str = str(e).lower()
-                if 'ssl' in err_str or 'wrong_version' in err_str:
-                    force_rotate_proxy()
-                    proxies = get_proxy_dict()
+            except (requests.exceptions.SSLError, requests.exceptions.ConnectionError):
                 if attempt < 2:
                     time.sleep(2)
         return requests.get(
@@ -589,6 +579,8 @@ def _fetch_code_tempmailio(email, stop_check=None):
                 if code:
                     return code
 
+            if poll_count > 20:
+                raise RuntimeError(f"收取验证码超时: 已轮询{poll_count}次未收到验证码")
             time.sleep(3)
         except Exception as e:
             last_error = e
@@ -648,6 +640,8 @@ def _fetch_code_1secmail(token, stop_check=None):
                 except Exception:
                     pass
 
+            if poll_count > 20:
+                raise RuntimeError(f"收取验证码超时: 已轮询{poll_count}次未收到验证码")
             time.sleep(3)
         except Exception as e:
             time.sleep(5)

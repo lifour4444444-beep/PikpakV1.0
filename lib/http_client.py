@@ -3,6 +3,7 @@ import random
 import re
 import threading
 import time
+from collections import OrderedDict
 
 import requests
 from urllib3.util.retry import Retry
@@ -52,6 +53,10 @@ class ProxyManager:
         self._gateway = ''
         self._gateway_original = ''
         self._tls = threading.local()
+        self._pool = []
+        self._pool_available = []
+        self._worker_proxy = {}
+        self._pool_lock = threading.Lock()
 
     def configure(self, gateway='', rotate_every=1):
         with self._lock:
@@ -59,10 +64,104 @@ class ProxyManager:
                 gateway = 'socks5h://' + gateway[len('socks5://'):]
             self._gateway = gateway
             self._gateway_original = gateway
+        self._init_pool_from_gateway(gateway)
+
+    def _init_pool_from_gateway(self, gateway):
+        with self._pool_lock:
+            self._pool.clear()
+            self._pool_available.clear()
+            self._worker_proxy.clear()
+            if not gateway:
+                return
+            urls = [u.strip() for u in re.split(r'[\n,;]+', gateway) if u.strip()]
+            if not urls:
+                return
+            fixed = []
+            for u in urls:
+                if u.startswith('socks5://') and not u.startswith('socks5h://'):
+                    u = 'socks5h://' + u[len('socks5://'):]
+                fixed.append(u)
+            self._pool = fixed
+            self._pool_available = list(range(len(fixed)))
+
+    def acquire(self, worker_id):
+        with self._pool_lock:
+            if not self._pool:
+                with self._lock:
+                    if self._gateway:
+                        proxy = {'http': self._gateway, 'https': self._gateway}
+                    else:
+                        proxy = None
+                self._tls.pinned = proxy
+                self._worker_proxy[worker_id] = -1
+                return proxy
+
+            if worker_id in self._worker_proxy:
+                return self._tls.pinned
+
+            if not self._pool_available:
+                idx = random.choice(range(len(self._pool)))
+            else:
+                idx = self._pool_available.pop(0)
+
+            gateway = self._pool[idx]
+            proxy = {'http': gateway, 'https': gateway}
+            self._tls.pinned = proxy
+            self._worker_proxy[worker_id] = idx
+            return proxy
+
+    def release(self, worker_id):
+        with self._pool_lock:
+            idx = self._worker_proxy.pop(worker_id, None)
+            if idx is not None and idx >= 0 and idx not in self._pool_available:
+                self._pool_available.append(idx)
+        self._tls.pinned = None
+
+    def force_rotate(self, worker_id=None):
+        with self._lock:
+            if not self._gateway:
+                return None
+            with self._pool_lock:
+                if self._pool and worker_id is not None:
+                    old_idx = self._worker_proxy.get(worker_id)
+                    if old_idx is not None and old_idx >= 0:
+                        if old_idx in self._pool_available:
+                            self._pool_available.remove(old_idx)
+                    available = [i for i in range(len(self._pool))
+                                 if i != old_idx and i not in self._pool_available and i not in self._worker_proxy.values()]
+                    if not available:
+                        available = [i for i in range(len(self._pool)) if i != old_idx]
+                    if available:
+                        new_idx = random.choice(available)
+                        gateway = self._pool[new_idx]
+                        proxy = {'http': gateway, 'https': gateway}
+                        self._tls.pinned = proxy
+                        self._worker_proxy[worker_id] = new_idx
+                        if old_idx is not None and old_idx >= 0 and old_idx not in self._pool_available:
+                            self._pool_available.append(old_idx)
+                        return proxy
+            if re.search(r'region-Rand', self._gateway_original, re.IGNORECASE):
+                proxy = {'http': self._gateway, 'https': self._gateway}
+                self._tls.pinned = proxy
+                return proxy
+            new_region = random.choice(self._GATEWAY_REGIONS)
+            rotated = re.sub(
+                r'region-[A-Za-z]+',
+                f'region-{new_region}',
+                self._gateway_original,
+            )
+            self._gateway = rotated
+            proxy = {'http': rotated, 'https': rotated}
+            self._tls.pinned = proxy
+            return proxy
 
     @property
     def enabled(self):
-        return bool(self._gateway)
+        with self._lock:
+            if self._gateway:
+                return True
+        with self._pool_lock:
+            return bool(self._pool)
 
     def pin(self):
         with self._lock:
@@ -75,21 +174,6 @@ class ProxyManager:
 
     def unpin(self):
         self._tls.pinned = None
-
-    def force_rotate(self):
-        with self._lock:
-            if not self._gateway:
-                return None
-            new_region = random.choice(self._GATEWAY_REGIONS)
-            rotated = re.sub(
-                r'region-[A-Z]{2}',
-                f'region-{new_region}',
-                self._gateway_original,
-            )
-            self._gateway = rotated
-            proxy = {'http': rotated, 'https': rotated}
-            self._tls.pinned = proxy
-            return proxy
 
     @property
     def pinned_url(self):
@@ -119,7 +203,7 @@ _proxy_manager = ProxyManager()
 
 _proxy_cooldown_until = 0.0
 _proxy_cooldown_lock = threading.Lock()
-_proxy_semaphore = threading.Semaphore(3)
+_proxy_semaphore = threading.Semaphore(20)
 
 
 def configure_proxy(gateway=''):
@@ -128,6 +212,17 @@ def configure_proxy(gateway=''):
 
 def get_proxy_dict():
     return _proxy_manager.get() if _proxy_manager.enabled else None
+
+
+def acquire_proxy(worker_id):
+    result = _proxy_manager.acquire(worker_id)
+    _close_session()
+    return result
+
+
+def release_proxy(worker_id):
+    _proxy_manager.release(worker_id)
+    _close_session()
 
 
 def pin_proxy():
@@ -141,10 +236,31 @@ def unpin_proxy():
     _close_session()
 
 
-def force_rotate_proxy():
-    result = _proxy_manager.force_rotate()
+def force_rotate_proxy(worker_id=None):
+    result = _proxy_manager.force_rotate(worker_id=worker_id)
     _close_session()
     return result
+
+
+def get_current_ip():
+    proxies = _proxy_manager.get() if _proxy_manager.enabled else None
+    if _proxy_manager.enabled:
+        _wait_proxy_cooldown()
+        _proxy_semaphore.acquire()
+    try:
+        for url, parser in _IP_SERVICES:
+            try:
+                resp = requests.get(url, headers={'Connection': 'close'},
+                                   timeout=8, proxies=proxies)
+                ip = parser(resp)
+                if ip and re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip):
+                    return ip
+            except Exception:
+                continue
+    finally:
+        if _proxy_manager.enabled:
+            _proxy_semaphore.release()
+    return '获取失败'
 
 
 def _wait_proxy_cooldown():
@@ -286,27 +402,6 @@ _IP_SERVICES = [
     ('https://ifconfig.me/ip', lambda r: r.text.strip()),
     ('https://icanhazip.com', lambda r: r.text.strip()),
 ]
-
-
-def get_current_ip():
-    proxies = _proxy_manager.get() if _proxy_manager.enabled else None
-    if _proxy_manager.enabled:
-        _wait_proxy_cooldown()
-        _proxy_semaphore.acquire()
-    try:
-        for url, parser in _IP_SERVICES:
-            try:
-                resp = requests.get(url, headers={'Connection': 'close'},
-                                   timeout=8, proxies=proxies)
-                ip = parser(resp)
-                if ip and re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip):
-                    return ip
-            except Exception:
-                continue
-    finally:
-        if _proxy_manager.enabled:
-            _proxy_semaphore.release()
-    return '获取失败'
 
 
 def http_get_raw(url_text, referer=None, timeout=15, use_proxy=False, retries=3):

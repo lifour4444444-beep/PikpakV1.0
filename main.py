@@ -40,7 +40,7 @@ from lib.utils import (
     solve_pow_single,
     LOCALES,
 )
-from lib.http_client import make_request, http_get_raw, get_user_agent, refresh_user_agent, get_chrome_version, configure_proxy, get_current_ip, get_proxy_dict, pin_proxy, unpin_proxy, force_rotate_proxy
+from lib.http_client import make_request, http_get_raw, get_user_agent, refresh_user_agent, get_chrome_version, configure_proxy, get_current_ip, get_proxy_dict, pin_proxy, unpin_proxy, force_rotate_proxy, acquire_proxy, release_proxy
 from lib.mail import create_mail_account, fetch_verification_code
 import lib.mail
 
@@ -1205,17 +1205,38 @@ def main():
                 ok = run_batch_round(round_num)
             except RateLimitError as e:
                 rate_limit_count += 1
-                delays = [10, 50, 60]
-                idx = min(rate_limit_count, len(delays)) - 1
-                wait_seconds = delays[idx] + random.randint(0, delays[idx] // 2)
-                _log(f'⛔ 触发频率限制 [{e.endpoint}] (第{rate_limit_count}次)，等待{wait_seconds}秒后重试，本轮重新开始')
+                _log(f'⛔ 触发频率限制 [{e.endpoint}] (第{rate_limit_count}/3次)，立即重试')
                 _debug(f'频率限制响应: {json.dumps(e.data)}')
-                time.sleep(wait_seconds)
                 unpin_proxy()
+                force_rotate_proxy()
+                pin_proxy()
                 if rate_limit_count >= 3:
-                    _log('⚠ 频率限制重试3次无效，跳过本轮，等待下一轮')
+                    _log('⚠ 频率限制重试3次无效，跳过本轮')
                     fail_count += 1
                     rate_limit_count = 0
+                    ok = False
+                    continue
+                for retry_i in range(2):
+                    try:
+                        ok = run_batch_round(round_num)
+                        rate_limit_count = 0
+                        break
+                    except RateLimitError as e2:
+                        rate_limit_count += 1
+                        _log(f'⛔ 触发频率限制 [{e2.endpoint}] (第{rate_limit_count}/3次)，立即重试')
+                        _debug(f'频率限制响应: {json.dumps(e2.data)}')
+                        unpin_proxy()
+                        force_rotate_proxy()
+                        pin_proxy()
+                        if rate_limit_count >= 3:
+                            _log('⚠ 频率限制重试3次无效，跳过本轮')
+                            fail_count += 1
+                            rate_limit_count = 0
+                            ok = False
+                            break
+                else:
+                    ok = False
+                    continue
                 continue
             rate_limit_count = 0
             if ok:
