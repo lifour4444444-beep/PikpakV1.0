@@ -14,7 +14,14 @@ class YOLOv5:
         IOUThresh: float,
         Resize: typing.Optional[typing.Tuple[int, int]] = None,
     ) -> None:
-        self.OSession = onnxruntime.InferenceSession(OnnxPath)
+        try:
+            self.OSession = onnxruntime.InferenceSession(OnnxPath)
+        except Exception as e:
+            raise RuntimeError(
+                f'YOLO模型加载失败: {OnnxPath}\n'
+                f'错误: {e}\n'
+                f'可能原因: 1) 模型文件损坏 2) onnxruntime版本不兼容 3) 缺少VC运行库'
+            ) from e
         self.InputName = [i.name for i in self.OSession.get_inputs()]
         self.CFThresh = CFThresh
         self.IOUThresh = IOUThresh

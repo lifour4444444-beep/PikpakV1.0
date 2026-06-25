@@ -25,6 +25,12 @@ const fs = require('fs');
 const zlib = require('zlib');
 const crypto = require('crypto');
 
+var nodeVersion = process.versions.node.split('.').map(Number);
+if (nodeVersion[0] < 12) {
+  console.error(JSON.stringify({ error: '需要 Node.js 12+，当前版本: ' + process.version }));
+  process.exit(1);
+}
+
 const proxyUrl = process.env.SOCKS5_PROXY || '';
 let proxyAgent = null;
 if (proxyUrl) {
@@ -33,6 +39,7 @@ if (proxyUrl) {
     proxyAgent = new SocksProxyAgent(proxyUrl);
   } catch (e) {
     console.error('SOCKS5_PROXY init failed:', e.message);
+    console.error('请运行: npm install');
   }
 }
 
@@ -42,11 +49,16 @@ if (!inputPath) {
   process.exit(1);
 }
 
+if (!fs.existsSync(inputPath)) {
+  console.error(JSON.stringify({ error: '输入文件不存在: ' + inputPath }));
+  process.exit(1);
+}
+
 const input = JSON.parse(fs.readFileSync(inputPath, 'utf-8'));
 
 // ============ HTTP Utility ============
 function httpGet(url, referer) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(function(resolve, reject) {
     try {
       const parsed = new URL(url);
       const client = parsed.protocol === 'https:' ? https : http;

@@ -1,9 +1,17 @@
+import sys
+if sys.version_info < (3, 9):
+    import tkinter as _tk
+    _tk.Tk().withdraw()
+    import tkinter.messagebox as _mb
+    _mb.showerror('版本错误', f'需要 Python 3.9+\n当前版本: {sys.version}')
+    sys.exit(1)
+
 import json
 import io
 import os
 import queue
 import random
-import sys
+import subprocess
 import threading
 import time
 import tkinter as tk
@@ -68,6 +76,7 @@ class App(tk.Tk):
 
         self._build_style()
         self._build_ui()
+        self._check_environment()
         self._load_config()
         self._log_buf = []
         self._log_max_lines = 3000
@@ -243,24 +252,6 @@ class App(tk.Tk):
         self._ent_gateway.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(4, 0))
         self._gateway_placeholder = '如: socks5h://user:pass@host:port'
         self._setup_entry_placeholder(self._ent_gateway, self._gateway_placeholder)
-
-        self._proxy_list_text = tk.Text(frm4, height=3, font=('Consolas', 8),
-                                        bg='#161b22', fg='#c9d1d9',
-                                        insertbackground='#c9d1d9',
-                                        relief='solid', borderwidth=1, wrap=tk.NONE)
-        self._proxy_list_text.pack(fill=tk.X, pady=(4, 2))
-        self._proxy_placeholder = 'http://1.2.3.4:8080\nhttp://5.6.7.8:3128\nsocks5://user:pass@host:1080'
-        self._setup_text_placeholder(self._proxy_list_text, self._proxy_placeholder)
-        if _worker.PROXY_LIST:
-            self._proxy_list_text.insert('1.0', '\n'.join(_worker.PROXY_LIST))
-
-        row = ttk.Frame(frm4)
-        row.pack(fill=tk.X, pady=1)
-        ttk.Label(row, text='轮换频率', width=14).pack(side=tk.LEFT)
-        self._var_rotate = tk.IntVar(value=_worker.PROXY_ROTATE_EVERY)
-        ttk.Spinbox(row, from_=1, to=100, textvariable=self._var_rotate, width=10).pack(
-            side=tk.LEFT, padx=(4, 0))
-        ttk.Label(row, text='次/换', foreground='#8b949e').pack(side=tk.LEFT, padx=4)
 
         frm5 = ttk.LabelFrame(scroll_frame, text='┃ 邀请链接', padding=10)
         frm5.pack(fill=tk.X, padx=4, pady=(0, 6))
@@ -483,7 +474,7 @@ class App(tk.Tk):
 
         threading.Thread(target=_fetch, daemon=True).start()
 
-    def _apply_config(self):
+    def _apply_config(self, callback=None):
         _worker.DELAY_MINUTES = self._config_vars['delay'].get()
         _worker.YOLO_MODEL_PATH = self._var_yolo.get()
         _worker.SIAMESE_MODEL_PATH = self._var_siamese.get()
@@ -491,22 +482,11 @@ class App(tk.Tk):
         _worker.RESULT_FILE = self._var_result.get()
         _worker.VERBOSE = self._var_verbose.get()
 
-        proxy_list = [l.strip() for l in
-                      self._proxy_list_text.get('1.0', tk.END).split('\n') if l.strip()]
-        if proxy_list == self._proxy_placeholder.split('\n'):
-            proxy_list = []
         gateway = self._var_gateway.get().strip()
         if gateway == self._gateway_placeholder:
             gateway = ''
-        try:
-            rotate = self._var_rotate.get()
-        except Exception:
-            rotate = 1
-        _worker.PROXY_LIST = proxy_list
         _worker.PROXY_GATEWAY = gateway
-        _worker.PROXY_ROTATE_EVERY = rotate
-        _worker.configure_proxy(proxy_list=proxy_list, gateway=gateway,
-                                rotate_every=rotate)
+        _worker.configure_proxy(gateway=gateway)
 
         domain_choice = self._var_domain.get()
         import lib.mail
@@ -517,29 +497,33 @@ class App(tk.Tk):
 
         invite_link = self._var_invite_link.get().strip()
         if invite_link:
-            try:
-                self._append_log(f'[配置] 解析邀请链接: {invite_link}\n', 'info')
-                parsed = _worker.parse_invite_link(invite_link)
-                _worker.INVITE_SHARE_ID = parsed['share_id']
-                _worker.INVITE_PASS_CODE_TOKEN = parsed['pass_code_token']
-                _worker.INVITE_TRACE_FILE_IDS = parsed['trace_file_ids']
-                self._append_log(
-                    f'[配置] share_id={parsed["share_id"]}, '
-                    f'trace_id={parsed["trace_file_ids"]}\n', 'info')
-                if parsed.get('warning'):
-                    self._append_log(f'[配置] ⚠ {parsed["warning"]}\n', 'warn')
-            except Exception as e:
-                self._append_log(f'[配置] 邀请链接解析失败: {e}\n', 'error')
-                messagebox.showwarning('邀请链接', f'解析失败: {e}\n\n将使用默认邀请参数')
+            def _parse_invite():
+                try:
+                    self._msg_queue.put(('ui', 'log', f'[配置] 解析邀请链接: {invite_link}\n', 'info'))
+                    parsed = _worker.parse_invite_link(invite_link)
+                    _worker.INVITE_SHARE_ID = parsed['share_id']
+                    _worker.INVITE_PASS_CODE_TOKEN = parsed['pass_code_token']
+                    _worker.INVITE_TRACE_FILE_IDS = parsed['trace_file_ids']
+                    self._msg_queue.put(('ui', 'log',
+                        f'[配置] share_id={parsed["share_id"]}, '
+                        f'trace_id={parsed["trace_file_ids"]}\n', 'info'))
+                    if parsed.get('warning'):
+                        self._msg_queue.put(('ui', 'log', f'[配置] ⚠ {parsed["warning"]}\n', 'warn'))
+                except Exception as e:
+                    self._msg_queue.put(('ui', 'log', f'[配置] 邀请链接解析失败: {e}\n', 'error'))
+                    self._msg_queue.put(('ui', 'invite_error', str(e)))
+                if callback:
+                    self.after(0, callback)
+
+            threading.Thread(target=_parse_invite, daemon=True).start()
+        else:
+            if callback:
+                self.after(0, callback)
 
         self._lbl_domain.configure(
             text=f'域名: {domain_choice}' if domain_choice != '随机' else '')
 
     def _save_config(self):
-        try:
-            rotate = self._var_rotate.get()
-        except Exception:
-            rotate = 1
         self._apply_config()
         cfg = {
             'delay': self._config_vars['delay'].get(),
@@ -550,8 +534,6 @@ class App(tk.Tk):
             'v8_js': self._var_v8.get(),
             'result_file': self._var_result.get(),
             'proxy_gateway': '' if self._var_gateway.get() == self._gateway_placeholder else self._var_gateway.get(),
-            'proxy_list': '' if self._proxy_list_text.get('1.0', tk.END).strip() == self._proxy_placeholder else self._proxy_list_text.get('1.0', tk.END).strip(),
-            'proxy_rotate': rotate,
             'domain': self._var_domain.get(),
             'invite_link': self._var_invite_link.get(),
             'invite_share_id': _worker.INVITE_SHARE_ID,
@@ -579,11 +561,6 @@ class App(tk.Tk):
             self._var_v8.set(cfg.get('v8_js', _worker.V8_SUBMIT_JS))
             self._var_result.set(cfg.get('result_file', _worker.RESULT_FILE))
             self._var_gateway.set(cfg.get('proxy_gateway', ''))
-            proxy_list = cfg.get('proxy_list', '')
-            if proxy_list:
-                self._proxy_list_text.delete('1.0', tk.END)
-                self._proxy_list_text.insert('1.0', proxy_list)
-            self._var_rotate.set(cfg.get('proxy_rotate', 1))
             saved_domain = cfg.get('domain', '随机')
             self._var_domain.set(saved_domain)
             self._var_invite_link.set(cfg.get('invite_link', ''))
@@ -659,38 +636,39 @@ class App(tk.Tk):
             messagebox.showerror('错误', '请填写邀请链接')
             return
 
-        self._apply_config()
-        self._running = True
-        self._stop_flag.clear()
-        _worker._stop_event.clear()
-        self._round_count = 0
-
-        _worker.set_captcha_callback(
-            lambda data: self._msg_queue.put(('ui', 'captcha_image', data)))
-
         self._btn_start.configure(state=tk.DISABLED)
-        self._btn_stop.configure(state=tk.NORMAL)
-        self._lbl_status.configure(text='● 运行中', fg='#3fb950')
+        self._lbl_status.configure(text='● 准备中...', fg='#d2991d')
+        self._append_log('[系统] 正在应用配置...\n', 'info')
 
-        workers = self._config_vars['workers'].get()
-        self._append_log('━' * 50 + '\n', 'header')
-        self._append_log('  PikPak 批量邀请注册\n', 'header')
-        self._append_log(f'  并发: {workers}  |  间隔: {_worker.DELAY_MINUTES}min', 'info')
-        self._append_log(f'  |  上限: {self._config_vars["max"].get() or "无限"}', 'info')
-        self._append_log(f'  |  域名: {self._var_domain.get()}\n', 'info')
-        if _worker.PROXY_GATEWAY:
-            self._append_log(f'  代理: 网关 ({_worker.PROXY_GATEWAY[:50]}...)\n', 'info')
-        elif _worker.PROXY_LIST:
-            self._append_log(
-                f'  代理: {len(_worker.PROXY_LIST)}个(每{_worker.PROXY_ROTATE_EVERY}次轮换)\n',
-                'info')
-        else:
-            self._append_log('  代理: 直连\n', 'warn')
-        self._append_log('━' * 50 + '\n\n', 'header')
+        def _after_config():
+            self._running = True
+            self._stop_flag.clear()
+            _worker._stop_event.clear()
+            self._round_count = 0
 
-        sys.stdout = self._log_handler
-        self._worker_thread = threading.Thread(target=self._worker_loop, daemon=True)
-        self._worker_thread.start()
+            _worker.set_captcha_callback(
+                lambda data: self._msg_queue.put(('ui', 'captcha_image', data)))
+
+            self._btn_stop.configure(state=tk.NORMAL)
+            self._lbl_status.configure(text='● 运行中', fg='#3fb950')
+
+            workers = self._config_vars['workers'].get()
+            self._append_log('━' * 50 + '\n', 'header')
+            self._append_log('  PikPak 批量邀请注册\n', 'header')
+            self._append_log(f'  并发: {workers}  |  间隔: {_worker.DELAY_MINUTES}min', 'info')
+            self._append_log(f'  |  上限: {self._config_vars["max"].get() or "无限"}', 'info')
+            self._append_log(f'  |  域名: {self._var_domain.get()}\n', 'info')
+            if _worker.PROXY_GATEWAY:
+                self._append_log(f'  代理: 网关 ({_worker.PROXY_GATEWAY[:50]}...)\n', 'info')
+            else:
+                self._append_log('  代理: 直连\n', 'warn')
+            self._append_log('━' * 50 + '\n\n', 'header')
+
+            sys.stdout = self._log_handler
+            self._worker_thread = threading.Thread(target=self._worker_loop, daemon=True)
+            self._worker_thread.start()
+
+        self._apply_config(callback=_after_config)
 
     def _stop(self):
         self._stop_flag.set()
@@ -702,9 +680,6 @@ class App(tk.Tk):
         workers = self._config_vars['workers'].get()
         round_lock = threading.Lock()
         round_counter = [0]
-        rate_limit_lock = threading.Lock()
-        rate_limit_paused = threading.Event()
-        rate_limit_paused.set()
 
         def _next_round():
             with round_lock:
@@ -716,17 +691,12 @@ class App(tk.Tk):
             rate_limit_count = 0
             try:
                 while not self._stop_flag.is_set():
-                    if not rate_limit_paused.wait(timeout=1):
-                        continue
-
                     if not first_round:
                         self._msg_queue.put(
                             ('ui', 'log', f'\n⏳ 等待 {_worker.DELAY_MINUTES} 分钟...\n', 'info'))
                         for _ in range(_worker.DELAY_MINUTES * 60):
                             if self._stop_flag.is_set():
                                 return
-                            if not rate_limit_paused.wait(timeout=1):
-                                continue
                             time.sleep(1)
                     first_round = False
 
@@ -783,15 +753,6 @@ class App(tk.Tk):
                                 self._fail_count += 1
                     except _worker.RateLimitError:
                         rate_limit_count += 1
-                        delays = [30, 90, 180]
-                        idx = min(rate_limit_count, len(delays)) - 1
-                        wait_seconds = delays[idx] + random.randint(0, delays[idx] // 2)
-
-                        with rate_limit_lock:
-                            if rate_limit_paused.is_set():
-                                rate_limit_paused.clear()
-                                self._msg_queue.put(
-                                    ('ui', 'log', '\n⛔ 全局频率限制触发，所有Worker暂停{}秒\n'.format(wait_seconds), 'warn'))
 
                         current_ip = '获取失败'
                         for _ in range(3):
@@ -800,29 +761,20 @@ class App(tk.Tk):
                                 break
                             time.sleep(2)
                         self._msg_queue.put(
-                            ('ui', 'log', '  [Worker-{}] 当前出口IP: {}\n'.format(worker_id, current_ip), 'warn'))
-
-                        for _ in range(wait_seconds):
-                            if self._stop_flag.is_set():
-                                return
-                            time.sleep(1)
+                            ('ui', 'log', '  [Worker-{}] ⛔ 频率限制，当前IP: {}\n'.format(worker_id, current_ip), 'warn'))
 
                         _worker.unpin_proxy()
                         _worker.force_rotate_proxy()
+                        _worker.pin_proxy()
 
                         new_ip = '获取失败'
-                        for _ in range(3):
+                        for _ in range(5):
                             new_ip = _worker.get_current_ip()
-                            if new_ip != '获取失败':
+                            if new_ip != '获取失败' and new_ip != current_ip:
                                 break
-                            time.sleep(2)
+                            time.sleep(3)
                         self._msg_queue.put(
                             ('ui', 'log', '  [Worker-{}] 切换后IP: {}\n'.format(worker_id, new_ip), 'warn'))
-
-                        with rate_limit_lock:
-                            rate_limit_paused.set()
-                            self._msg_queue.put(
-                                ('ui', 'log', '✅ 全局暂停结束，Worker恢复运行\n', 'info'))
 
                         if rate_limit_count >= 3:
                             with round_lock:
@@ -891,6 +843,9 @@ class App(tk.Tk):
                         png_data = msg[2]
                         threading.Thread(target=self._show_captcha_bg,
                                          args=(png_data,), daemon=True).start()
+                    elif ui_type == 'invite_error':
+                        err = msg[2] if len(msg) > 2 else ''
+                        messagebox.showwarning('邀请链接', f'解析失败: {err}\n\n将使用默认邀请参数')
                     elif ui_type == 'stop':
                         self._finish()
                     elif ui_type == 'done':
@@ -931,6 +886,63 @@ class App(tk.Tk):
             self._captcha_canvas.create_image(90, 90, image=self._captcha_photo, anchor='center')
         except Exception:
             pass
+
+    def _check_environment(self):
+        warnings = []
+
+        try:
+            result = subprocess.run(
+                ['node', '--version'], capture_output=True, text=True, timeout=5,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
+            node_ver = result.stdout.strip()
+            major = int(node_ver.lstrip('v').split('.')[0])
+            if major < 12:
+                warnings.append(f'Node.js 版本过低 ({node_ver})，需要 v12+')
+        except FileNotFoundError:
+            warnings.append('未安装 Node.js，请安装 https://nodejs.org/')
+        except Exception:
+            warnings.append('Node.js 检测失败，可能未正确安装')
+
+        v8_js = _worker.V8_SUBMIT_JS
+        if not os.path.exists(v8_js):
+            warnings.append(f'v8_submit.js 不存在: {v8_js}')
+
+        node_modules = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'node_modules')
+        socks_agent = os.path.join(node_modules, 'socks-proxy-agent')
+        if not os.path.exists(socks_agent):
+            warnings.append('Node.js 依赖未安装，请运行: npm install')
+
+        yolo_path = _worker.YOLO_MODEL_PATH
+        siamese_path = _worker.SIAMESE_MODEL_PATH
+        if not os.path.exists(yolo_path):
+            warnings.append(f'YOLO模型不存在: {yolo_path}')
+        if not os.path.exists(siamese_path):
+            warnings.append(f'Siamese模型不存在: {siamese_path}')
+
+        try:
+            import onnxruntime
+        except ImportError:
+            warnings.append('onnxruntime 未安装，请运行: pip install onnxruntime')
+        except Exception as e:
+            if 'DLL' in str(e) or 'LoadLibrary' in str(e):
+                warnings.append(f'onnxruntime 加载失败(缺少VC运行库): {e}')
+            else:
+                warnings.append(f'onnxruntime 加载失败: {e}')
+
+        try:
+            import socks
+        except ImportError:
+            warnings.append('PySocks 未安装，代理功能不可用。请运行: pip install PySocks')
+
+        if warnings:
+            self.after(100, lambda: self._show_env_warnings(warnings))
+
+    def _show_env_warnings(self, warnings):
+        msg = '检测到以下兼容性问题：\n\n'
+        for i, w in enumerate(warnings, 1):
+            msg += f'{i}. {w}\n'
+        msg += '\n部分功能可能无法正常使用。'
+        messagebox.showwarning('环境检查', msg)
 
     def _on_close(self):
         if self._running:

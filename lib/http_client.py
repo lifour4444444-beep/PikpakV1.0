@@ -1,10 +1,8 @@
 import json
 import random
 import re
-import string
 import threading
 import time
-import urllib.parse
 
 import requests
 from urllib3.util.retry import Retry
@@ -13,41 +11,32 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 
 
 class ProxyManager:
+    _GATEWAY_REGIONS = [
+        'SG', 'US', 'JP', 'KR', 'DE', 'GB', 'FR', 'CA', 'AU', 'NL',
+        'HK', 'TW', 'IN', 'BR', 'IT', 'ES', 'SE', 'CH', 'NO', 'FI',
+    ]
+
     def __init__(self):
         self._lock = threading.Lock()
-        self._proxies = []
-        self._index = 0
         self._gateway = ''
-        self._rotate_every = 1
-        self._request_count = 0
+        self._gateway_original = ''
         self._tls = threading.local()
 
-    def configure(self, proxy_list=None, gateway='', rotate_every=1):
+    def configure(self, gateway='', rotate_every=1):
         with self._lock:
-            self._proxies = proxy_list or []
+            if gateway.startswith('socks5://') and not gateway.startswith('socks5h://'):
+                gateway = 'socks5h://' + gateway[len('socks5://'):]
             self._gateway = gateway
-            self._rotate_every = rotate_every
-            self._index = 0
-            self._request_count = 0
+            self._gateway_original = gateway
 
     @property
     def enabled(self):
-        return bool(self._proxies or self._gateway)
+        return bool(self._gateway)
 
     def pin(self):
         with self._lock:
             if self._gateway:
                 proxy = {'http': self._gateway, 'https': self._gateway}
-            elif self._proxies:
-                used = set()
-                seen = 0
-                while True:
-                    candidate = random.choice(self._proxies)
-                    seen += 1
-                    if candidate not in used or seen >= len(self._proxies):
-                        break
-                    used.add(candidate)
-                proxy = {'http': candidate, 'https': candidate}
             else:
                 proxy = None
         self._tls.pinned = proxy
@@ -58,16 +47,18 @@ class ProxyManager:
 
     def force_rotate(self):
         with self._lock:
-            if self._gateway:
-                proxy = {'http': self._gateway, 'https': self._gateway}
-                self._tls.pinned = proxy
-                return proxy
-            if not self._proxies:
+            if not self._gateway:
                 return None
-            self._index = (self._index + 1) % len(self._proxies)
-            proxy_url = self._proxies[self._index]
-            self._tls.pinned = {'http': proxy_url, 'https': proxy_url}
-            return self._tls.pinned
+            new_region = random.choice(self._GATEWAY_REGIONS)
+            rotated = re.sub(
+                r'region-[A-Z]{2}',
+                f'region-{new_region}',
+                self._gateway_original,
+            )
+            self._gateway = rotated
+            proxy = {'http': rotated, 'https': rotated}
+            self._tls.pinned = proxy
+            return proxy
 
     @property
     def pinned_url(self):
@@ -79,33 +70,18 @@ class ProxyManager:
     def get(self):
         pinned = getattr(self._tls, 'pinned', None)
         if pinned is not None:
+            with self._lock:
+                if self._gateway:
+                    current_gw = {'http': self._gateway, 'https': self._gateway}
+                    if pinned.get('http') != current_gw.get('http'):
+                        self._tls.pinned = current_gw
+                        return current_gw
             return pinned
 
         with self._lock:
             if self._gateway:
                 return {'http': self._gateway, 'https': self._gateway}
-
-            if not self._proxies:
-                return None
-
-            if self._rotate_every > 1:
-                self._request_count += 1
-                if self._request_count % self._rotate_every == 0:
-                    self._index = (self._index + 1) % len(self._proxies)
-            else:
-                self._index = (self._index + 1) % len(self._proxies)
-
-            proxy_url = self._proxies[self._index]
-            return {'http': proxy_url, 'https': proxy_url}
-
-    def random(self):
-        with self._lock:
-            if self._gateway:
-                return {'http': self._gateway, 'https': self._gateway}
-            if not self._proxies:
-                return None
-            proxy_url = random.choice(self._proxies)
-            return {'http': proxy_url, 'https': proxy_url}
+            return None
 
 
 _proxy_manager = ProxyManager()
@@ -115,8 +91,8 @@ _proxy_cooldown_lock = threading.Lock()
 _proxy_semaphore = threading.Semaphore(3)
 
 
-def configure_proxy(proxy_list=None, gateway='', rotate_every=1):
-    _proxy_manager.configure(proxy_list=proxy_list, gateway=gateway, rotate_every=rotate_every)
+def configure_proxy(gateway=''):
+    _proxy_manager.configure(gateway=gateway)
 
 
 def get_proxy_dict():
@@ -182,7 +158,7 @@ def _get_session():
     return s
 
 
-def make_request(method, base_url, path, headers=None, body=None, timeout=30, use_proxy=True, retries=3):
+def make_request(method, base_url, path, headers=None, body=None, timeout=30, use_proxy=True, retries=3, params=None):
     url = base_url + path
     request_headers = {
         'Accept': '*/*',
@@ -213,7 +189,7 @@ def make_request(method, base_url, path, headers=None, body=None, timeout=30, us
             _wait_proxy_cooldown()
             _proxy_semaphore.acquire()
             try:
-                resp = _do_request(session, method, url, request_headers, body_bytes, timeout, proxies)
+                resp = _do_request(session, method, url, request_headers, body_bytes, timeout, proxies, params)
             except requests.exceptions.SSLError as e:
                 last_error = e
                 _trigger_proxy_cooldown(5 + attempt * 3)
@@ -243,7 +219,7 @@ def make_request(method, base_url, path, headers=None, body=None, timeout=30, us
                 _proxy_semaphore.release()
         else:
             try:
-                resp = _do_request(session, method, url, request_headers, body_bytes, timeout, proxies)
+                resp = _do_request(session, method, url, request_headers, body_bytes, timeout, proxies, params)
             except requests.exceptions.Timeout as e:
                 last_error = e
                 if attempt < retries:
@@ -263,11 +239,11 @@ def make_request(method, base_url, path, headers=None, body=None, timeout=30, us
     raise RuntimeError(f'请求失败(重试{retries}次): {last_error}')
 
 
-def _do_request(session, method, url, headers, body, timeout, proxies):
+def _do_request(session, method, url, headers, body, timeout, proxies, params=None):
     if method == 'GET':
-        return session.get(url, headers=headers, timeout=timeout, proxies=proxies)
+        return session.get(url, headers=headers, timeout=timeout, proxies=proxies, params=params)
     elif method == 'POST':
-        return session.post(url, headers=headers, data=body, timeout=timeout, proxies=proxies)
+        return session.post(url, headers=headers, data=body, timeout=timeout, proxies=proxies, params=params)
     else:
         raise ValueError(f'Unsupported HTTP method: {method}')
 

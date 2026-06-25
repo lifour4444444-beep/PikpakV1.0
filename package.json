@@ -1,0 +1,9 @@
+{
+  "name": "pikpak-reg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PikPak registration tool - V8 sandbox dependencies",
+  "dependencies": {
+    "socks-proxy-agent": "^8.0.0"
+  }
+}

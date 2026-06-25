@@ -8,6 +8,11 @@ PikPak 全协议注册 + 腾讯天御V2验证码 (Python 版本)
 用法: python main.py
 """
 
+import sys
+if sys.version_info < (3, 9):
+    print(f"❌ 需要 Python 3.9+，当前版本: {sys.version}")
+    sys.exit(1)
+
 import base64
 import hashlib
 import io
@@ -17,7 +22,6 @@ import random
 import re
 import subprocess
 import struct
-import sys
 import tempfile
 import threading
 import time
@@ -40,7 +44,7 @@ from lib.http_client import make_request, http_get_raw, USER_AGENT, configure_pr
 from lib.mail import create_mail_account, fetch_verification_code
 import lib.mail
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 from models.yolov5_detector import YOLOv5
 from models.siamese_compare import ONNXSiamese
 
@@ -100,6 +104,18 @@ BASE_URL = 'https://user.mypikpak.com'
 DRIVE_BASE_URL = 'https://api-drive.mypikpak.com'
 DEFAULT_CLIENT_ID = 'YUMx5nI8ZU8Ap8pm'
 
+
+def _pikpak_headers(device_id, extra=None):
+    h = {
+        'x-client-id': DEFAULT_CLIENT_ID,
+        'x-protocol-version': '301',
+        'x-device-id': device_id,
+        'x-device-sign': f'wdi10.{device_id}{uuid.uuid4().hex}',
+    }
+    if extra:
+        h.update(extra)
+    return h
+
 PREHANDLE_URL = 'https://ca.turing.captcha.qcloud.com/cap_union_prehandle'
 VERIFY_URL = 'https://turing.captcha.qcloud.com/cap_union_new_verify'
 
@@ -122,9 +138,7 @@ LOG_FILE = os.path.join(_BASE_DIR, 'debug.log')
 YOLO_MODEL_PATH = os.path.join(_DATA_DIR, 'YOLO5', 'best.onnx')
 SIAMESE_MODEL_PATH = os.path.join(_DATA_DIR, 'Siamese', 'IconCompare.onnx')
 
-PROXY_LIST = []
 PROXY_GATEWAY = ''
-PROXY_ROTATE_EVERY = 1
 
 
 def _debug(msg):
@@ -356,10 +370,14 @@ def run_tdc(sess, sid, subcapclass, tdc_path, pow_cfg, ans):
         if PROXY_GATEWAY:
             env['SOCKS5_PROXY'] = PROXY_GATEWAY
 
+        startup_kwargs = {}
+        if os.name == 'nt':
+            startup_kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+
         result = subprocess.run(
             ['node', V8_SUBMIT_JS, tmp_path],
             capture_output=True, text=True, timeout=120, encoding='utf-8',
-            env=env,
+            env=env, **startup_kwargs,
         )
 
         if result.returncode != 0:
@@ -691,13 +709,12 @@ def exchange_ticket_for_jwt(device_id, ticket, randstr, step2_jwt, locale):
     })
 
     try:
-        resp = make_request('GET', BASE_URL, '/credit/v1/report?' + params, headers={
+        resp = make_request('GET', BASE_URL, '/credit/v1/report?' + params, headers=_pikpak_headers(device_id, {
             'accept-language': locale,
             'x-captcha-token': step2_jwt,
-            'x-device-id': device_id,
             'Origin': 'https://mypikpak.com',
             'Referer': 'https://mypikpak.com/',
-        })
+        }))
         _debug(f'兑换响应: status={resp["status_code"]}')
 
         if resp['status_code'] == 200 and resp['data'].get('captcha_token') and \
@@ -719,12 +736,11 @@ def get_initial_captcha_token(device_id, locale):
     captcha_sign = calculate_captcha_sign(
         DEFAULT_CLIENT_ID, client_version, package_name, device_id, timestamp)
 
-    return make_request('POST', BASE_URL, '/v1/shield/captcha/init', headers={
+    return make_request('POST', BASE_URL, '/v1/shield/captcha/init', headers=_pikpak_headers(device_id, {
         'accept-language': locale,
-        'x-device-id': device_id,
         'Origin': 'https://mypikpak.com',
         'Referer': 'https://mypikpak.com/',
-    }, body={
+    }), body={
         'client_id': DEFAULT_CLIENT_ID,
         'action': 'POST:/v1/auth/verification',
         'device_id': device_id,
@@ -739,12 +755,11 @@ def get_initial_captcha_token(device_id, locale):
 
 
 def init_captcha_token(device_id, action, meta, locale, captcha_token):
-    return make_request('POST', BASE_URL, '/v1/shield/captcha/init', headers={
+    return make_request('POST', BASE_URL, '/v1/shield/captcha/init', headers=_pikpak_headers(device_id, {
         'accept-language': locale,
-        'x-device-id': device_id,
         'Origin': 'https://mypikpak.com',
         'Referer': 'https://mypikpak.com/',
-    }, body={
+    }), body={
         'client_id': DEFAULT_CLIENT_ID,
         'action': action,
         'device_id': device_id,
@@ -754,12 +769,11 @@ def init_captcha_token(device_id, action, meta, locale, captcha_token):
 
 
 def send_verification(device_id, captcha_token, email, locale):
-    return make_request('POST', BASE_URL, '/v1/auth/verification', headers={
+    return make_request('POST', BASE_URL, '/v1/auth/verification', headers=_pikpak_headers(device_id, {
         'accept-language': locale,
         'x-captcha-token': captcha_token,
-        'x-device-id': device_id,
         'Referer': 'https://mypikpak.com/',
-    }, body={
+    }), body={
         'email': email,
         'target': 'ANY',
         'usage': 'REGISTER',
@@ -795,10 +809,9 @@ def send_verification_with_retry(device_id, captcha_token, email, locale, max_re
 
 
 def verify_code_request(device_id, verification_id, verification_code):
-    return make_request('POST', BASE_URL, '/v1/auth/verification/verify', headers={
-        'x-device-id': device_id,
+    return make_request('POST', BASE_URL, '/v1/auth/verification/verify', headers=_pikpak_headers(device_id, {
         'Referer': 'https://mypikpak.com/',
-    }, body={
+    }), body={
         'verification_id': verification_id,
         'verification_code': verification_code,
         'client_id': DEFAULT_CLIENT_ID,
@@ -806,10 +819,9 @@ def verify_code_request(device_id, verification_id, verification_code):
 
 
 def signup(device_id, email, verification_code, verification_token, password):
-    return make_request('POST', BASE_URL, '/v1/auth/signup', headers={
-        'x-device-id': device_id,
+    return make_request('POST', BASE_URL, '/v1/auth/signup', headers=_pikpak_headers(device_id, {
         'Referer': 'https://mypikpak.com/',
-    }, body={
+    }), body={
         'email': email,
         'verification_code': verification_code,
         'verification_token': verification_token,
@@ -952,13 +964,12 @@ INVITE_TRACE_FILE_IDS = ''
 
 
 def bind_invite(access_token, user_id, captcha_token, device_id):
-    return make_request('POST', DRIVE_BASE_URL, '/drive/v1/share/restore', headers={
+    return make_request('POST', DRIVE_BASE_URL, '/drive/v1/share/restore', headers=_pikpak_headers(device_id, {
         'authorization': f'Bearer {access_token}',
         'x-captcha-token': captcha_token,
-        'x-device-id': device_id,
         'x-user-id': user_id,
         'Referer': 'https://mypikpak.com/',
-    }, body={
+    }), body={
         'share_id': INVITE_SHARE_ID,
         'pass_code_token': INVITE_PASS_CODE_TOKEN,
         'params': {'trace_file_ids': INVITE_TRACE_FILE_IDS},
@@ -1123,8 +1134,6 @@ def main():
     _log(f'间隔: {DELAY_MINUTES}min | 模型: YOLOv5+Siamese | 验证码: 协议版')
     if PROXY_GATEWAY:
         _log(f'代理: 网关 ({PROXY_GATEWAY[:50]}...)')
-    elif PROXY_LIST:
-        _log(f'代理: {len(PROXY_LIST)}个 (每{PROXY_ROTATE_EVERY}次轮换)')
     else:
         _log('代理: 直连')
     _log(f'详情日志: {LOG_FILE}')
@@ -1138,11 +1147,24 @@ def main():
         node_ver = subprocess.run(
             ['node', '--version'], capture_output=True, text=True, timeout=5)
         _log(f'Node.js {node_ver.stdout.strip()}')
+        major = int(node_ver.stdout.strip().lstrip('v').split('.')[0])
+        if major < 12:
+            _log('✗ Node.js 版本过低，需要 v12+')
+            sys.exit(1)
+    except FileNotFoundError:
+        _log('✗ Node.js 未安装，请安装 https://nodejs.org/')
+        sys.exit(1)
     except Exception:
         _log('✗ Node.js 不可用')
         sys.exit(1)
 
-    configure_proxy(proxy_list=PROXY_LIST, gateway=PROXY_GATEWAY, rotate_every=PROXY_ROTATE_EVERY)
+    node_modules = os.path.join(_BASE_DIR, 'node_modules')
+    socks_agent = os.path.join(node_modules, 'socks-proxy-agent')
+    if not os.path.exists(socks_agent):
+        _log('✗ Node.js 依赖未安装，请运行: npm install')
+        sys.exit(1)
+
+    configure_proxy(gateway=PROXY_GATEWAY)
 
     round_num = 0
     success_count = 0

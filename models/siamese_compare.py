@@ -7,7 +7,14 @@ from PIL import Image
 class ONNXSiamese:
 
     def __init__(self, ONNX: str) -> None:
-        self.OSession = onnxruntime.InferenceSession(ONNX)
+        try:
+            self.OSession = onnxruntime.InferenceSession(ONNX)
+        except Exception as e:
+            raise RuntimeError(
+                f'Siamese模型加载失败: {ONNX}\n'
+                f'错误: {e}\n'
+                f'可能原因: 1) 模型文件损坏 2) onnxruntime版本不兼容 3) 缺少VC运行库'
+            ) from e
 
     def Compare(self, Img0: Image.Image, Img1: Image.Image) -> float:
         return self.OSession.run(
