@@ -40,7 +40,7 @@ from lib.utils import (
     solve_pow_single,
     LOCALES,
 )
-from lib.http_client import make_request, http_get_raw, USER_AGENT, configure_proxy, get_current_ip, get_proxy_dict, pin_proxy, unpin_proxy, force_rotate_proxy
+from lib.http_client import make_request, http_get_raw, get_user_agent, refresh_user_agent, get_chrome_version, configure_proxy, get_current_ip, get_proxy_dict, pin_proxy, unpin_proxy, force_rotate_proxy
 from lib.mail import create_mail_account, fetch_verification_code
 import lib.mail
 
@@ -105,12 +105,34 @@ DRIVE_BASE_URL = 'https://api-drive.mypikpak.com'
 DEFAULT_CLIENT_ID = 'YUMx5nI8ZU8Ap8pm'
 
 
+_device_sign_cache = {}
+
 def _pikpak_headers(device_id, extra=None):
+    sign = _device_sign_cache.get(device_id)
+    if sign is None:
+        sign = f'wdi10.{device_id}{"x" * 32}'
+        _device_sign_cache[device_id] = sign
     h = {
         'x-client-id': DEFAULT_CLIENT_ID,
         'x-protocol-version': '301',
         'x-device-id': device_id,
-        'x-device-sign': f'wdi10.{device_id}{uuid.uuid4().hex}',
+        'x-device-sign': sign,
+        'x-client-version': '1.0.0',
+        'x-device-model': f'chrome%2F{get_chrome_version()}.0.0.0',
+        'x-device-name': 'PC-Chrome',
+        'x-net-work-type': 'NONE',
+        'x-os-version': 'Win32',
+        'x-platform-version': '1',
+        'x-provider-name': 'NONE',
+        'x-sdk-version': '8.1.4',
+        'sec-ch-ua': f'"Google Chrome";v="{get_chrome_version()}", "Chromium";v="{get_chrome_version()}", "Not)A;Brand";v="24"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-site',
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache',
     }
     if extra:
         h.update(extra)
@@ -249,7 +271,7 @@ def fetch_prehandle(sess='', subsid=1):
         'protocol': 'https',
         'accver': '1',
         'showtype': 'popup',
-        'ua': base64.b64encode(USER_AGENT.encode('utf-8')).decode('ascii'),
+        'ua': base64.b64encode(get_user_agent().encode('utf-8')).decode('ascii'),
         'noheader': '1',
         'fb': '0',
         'isJsVersion': '3',
@@ -278,7 +300,7 @@ def fetch_prehandle(sess='', subsid=1):
     for attempt in range(4):
         try:
             resp = requests.get(url, headers={
-                'User-Agent': USER_AGENT,
+                'User-Agent': get_user_agent(),
                 'Referer': 'https://user.mypikpak.com/',
                 'Accept': '*/*',
             }, timeout=15, proxies=get_proxy_dict())
@@ -439,7 +461,7 @@ def submit_verify(sess, sid, subcapclass, collect, eks, ans, pow_answer, pow_cal
     for attempt in range(4):
         try:
             resp = requests.post(VERIFY_URL, data=body.encode('utf-8'), headers={
-                'User-Agent': USER_AGENT,
+                'User-Agent': get_user_agent(),
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Referer': 'https://user.mypikpak.com/',
                 'Origin': 'https://user.mypikpak.com',
@@ -794,7 +816,7 @@ def send_verification_with_retry(device_id, captcha_token, email, locale, max_re
         data_str = str(resp.get('data', ''))
         if 'too frequent' in data_str.lower() or 'try again later' in data_str.lower():
             delay = 10 + attempt * 5
-            _log(f'  ⚠ 频率限制, {delay}s后重试...')
+            _log(f'  ⚠ 频率限制 [/v1/auth/verification], {delay}s后重试...')
             if _is_stopped(): raise RuntimeError('用户停止')
             time.sleep(delay)
             continue
@@ -863,7 +885,7 @@ def parse_invite_link(link):
             use_proxy = (attempt == 0)
             proxies = get_proxy_dict() if use_proxy else None
             resp = requests.get(url, headers={
-                'User-Agent': USER_AGENT,
+                'User-Agent': get_user_agent(),
                 'Referer': 'https://mypikpak.com/',
             }, timeout=20, proxies=proxies)
             break
@@ -991,11 +1013,12 @@ def append_result(email, password, access_token='', user_id='', invite_ok=None):
 def run_batch_round(round_num):
     _debug(f'第 {round_num} 轮注册')
 
+    refresh_user_agent()
     device_id = generate_device_id()
     locale = random_item(LOCALES)
     password = random_password()
 
-    _debug(f'device_id={device_id} locale={locale}')
+    _debug(f'device_id={device_id} locale={locale} ua={get_user_agent()[:40]}...')
 
     _log('  创建邮箱...', end='')
     if _is_stopped(): return False
@@ -1010,7 +1033,7 @@ def run_batch_round(round_num):
     if init_resp['status_code'] != 200 or not init_resp['data'].get('captcha_token'):
         _debug(f'初始captcha_token失败: {json.dumps(init_resp["data"])}')
         if is_rate_limited(init_resp['data']):
-            raise RateLimitError(init_resp['data'])
+            raise RateLimitError(init_resp['data'], endpoint='/v1/shield/captcha/init')
         _log(' ✗')
         return False
     initial_token = init_resp['data']['captcha_token']
@@ -1028,7 +1051,7 @@ def run_batch_round(round_num):
     if captcha_resp['status_code'] != 200 or not captcha_resp['data'].get('captcha_token'):
         _debug(f'captcha_token失败: {json.dumps(captcha_resp["data"])}')
         if is_rate_limited(captcha_resp['data']):
-            raise RateLimitError(captcha_resp['data'])
+            raise RateLimitError(captcha_resp['data'], endpoint='/v1/shield/captcha/init(action)')
         _log(' ✗')
         return False
     _log(' ✓')
@@ -1083,6 +1106,8 @@ def run_batch_round(round_num):
     verify_result = verify_code_request(device_id, verification_id, code)
     if verify_result['status_code'] != 200 or not verify_result['data'].get('verification_token'):
         _debug(f'验证码校验失败: {json.dumps(verify_result["data"])}')
+        if is_rate_limited(verify_result['data']):
+            raise RateLimitError(verify_result['data'], endpoint='/v1/auth/verification/verify')
         _log(' ✗')
         return False
     _log(' ✓')
@@ -1095,6 +1120,8 @@ def run_batch_round(round_num):
 
     if signup_resp['status_code'] != 200:
         _debug(f'注册失败: {json.dumps(signup_resp["data"])}')
+        if is_rate_limited(signup_resp['data']):
+            raise RateLimitError(signup_resp['data'], endpoint='/v1/auth/signup')
         _log(' ✗')
         return False
     _log(' ✓')
@@ -1177,19 +1204,17 @@ def main():
             try:
                 ok = run_batch_round(round_num)
             except RateLimitError as e:
-                fail_count += 1
                 rate_limit_count += 1
                 delays = [10, 50, 60]
                 idx = min(rate_limit_count, len(delays)) - 1
                 wait_seconds = delays[idx] + random.randint(0, delays[idx] // 2)
-                _log(f'⛔ 触发频率限制(第{rate_limit_count}次)，等待{wait_seconds}秒后重试')
+                _log(f'⛔ 触发频率限制 [{e.endpoint}] (第{rate_limit_count}次)，等待{wait_seconds}秒后重试，本轮重新开始')
                 _debug(f'频率限制响应: {json.dumps(e.data)}')
-                _log(f'  当前出口IP: {get_current_ip()}')
                 time.sleep(wait_seconds)
                 unpin_proxy()
-                _log(f'  切换后IP: {get_current_ip()}')
                 if rate_limit_count >= 3:
                     _log('⚠ 频率限制重试3次无效，跳过本轮，等待下一轮')
+                    fail_count += 1
                     rate_limit_count = 0
                 continue
             rate_limit_count = 0

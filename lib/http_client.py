@@ -7,7 +7,38 @@ import time
 import requests
 from urllib3.util.retry import Retry
 
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36'
+def random_user_agent():
+    major = random.randint(100, 149)
+    build = random.randint(5000, 7500)
+    patch = random.randint(10, 200)
+    chrome_ver = f'{major}.0.{build}.{patch}'
+    platform = random.choice([
+        f'Windows NT 10.0; {"Win64; x64" if random.random() > 0.3 else "WOW64"}',
+        f'Macintosh; Intel Mac OS X 10_{random.randint(13, 15)}_{random.randint(0, 7)}',
+        'X11; Linux x86_64',
+    ])
+    return f'Mozilla/5.0 ({platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{chrome_ver} Safari/537.36'
+
+
+_ua_tls = threading.local()
+
+
+def refresh_user_agent():
+    _ua_tls.ua = random_user_agent()
+
+
+def get_user_agent():
+    ua = getattr(_ua_tls, 'ua', None)
+    if not ua:
+        ua = random_user_agent()
+        _ua_tls.ua = ua
+    return ua
+
+
+def get_chrome_version():
+    ua = get_user_agent()
+    m = re.search(r'Chrome/(\d+)\.', ua)
+    return m.group(1) if m else '149'
 
 
 class ProxyManager:
@@ -163,7 +194,7 @@ def make_request(method, base_url, path, headers=None, body=None, timeout=30, us
     request_headers = {
         'Accept': '*/*',
         'Content-Type': 'application/json',
-        'User-Agent': USER_AGENT,
+        'User-Agent': get_user_agent(),
     }
     if headers:
         request_headers.update(headers)
@@ -280,7 +311,7 @@ def get_current_ip():
 
 def http_get_raw(url_text, referer=None, timeout=15, use_proxy=False, retries=3):
     request_headers = {
-        'User-Agent': USER_AGENT,
+        'User-Agent': get_user_agent(),
         'Accept': '*/*',
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'zh-CN,zh;q=0.9',

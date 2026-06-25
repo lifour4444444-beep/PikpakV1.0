@@ -751,30 +751,15 @@ class App(tk.Tk):
                         else:
                             with round_lock:
                                 self._fail_count += 1
-                    except _worker.RateLimitError:
+                    except _worker.RateLimitError as _rl_err:
                         rate_limit_count += 1
 
-                        current_ip = '获取失败'
-                        for _ in range(3):
-                            current_ip = _worker.get_current_ip()
-                            if current_ip != '获取失败':
-                                break
-                            time.sleep(2)
                         self._msg_queue.put(
-                            ('ui', 'log', '  [Worker-{}] ⛔ 频率限制，当前IP: {}\n'.format(worker_id, current_ip), 'warn'))
+                            ('ui', 'log', '  [Worker-{}] ⛔ 频率限制 [{}]，延迟重试，本轮重新开始\n'.format(worker_id, _rl_err.endpoint), 'warn'))
 
                         _worker.unpin_proxy()
                         _worker.force_rotate_proxy()
                         _worker.pin_proxy()
-
-                        new_ip = '获取失败'
-                        for _ in range(5):
-                            new_ip = _worker.get_current_ip()
-                            if new_ip != '获取失败' and new_ip != current_ip:
-                                break
-                            time.sleep(3)
-                        self._msg_queue.put(
-                            ('ui', 'log', '  [Worker-{}] 切换后IP: {}\n'.format(worker_id, new_ip), 'warn'))
 
                         if rate_limit_count >= 3:
                             with round_lock:
@@ -784,9 +769,6 @@ class App(tk.Tk):
                             rate_limit_count = 0
                             first_round = False
                             continue
-                        with round_lock:
-                            self._fail_count += 1
-                            round_counter[0] -= 1
                         first_round = True
                         continue
                     except Exception as e:

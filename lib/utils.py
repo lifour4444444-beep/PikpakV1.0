@@ -28,9 +28,11 @@ COUNTRY_CODES = ['US', 'JP', 'HK', 'SG', 'TW']
 
 
 class RateLimitError(Exception):
-    def __init__(self, data=None):
-        super().__init__('PikPak 服务端限流，请停止批处理并稍后再试')
+    def __init__(self, data=None, endpoint=''):
+        msg = f'频率限制 [{endpoint}]' if endpoint else 'PikPak 服务端限流'
+        super().__init__(msg)
         self.data = data
+        self.endpoint = endpoint
 
 
 def random_item(items):
@@ -54,7 +56,7 @@ def random_password():
 
 
 def generate_device_id():
-    return random_string(32, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
+    return uuid.uuid4().hex
 
 
 def calculate_captcha_sign(client_id, client_version, package_name, device_id, timestamp):
