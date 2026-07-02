@@ -8,3 +8,5 @@ gui_config.json
 node_modules/
 .trae/
 .vscode/
+*.md
+skill/

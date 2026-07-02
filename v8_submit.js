@@ -57,8 +57,14 @@ if (!fs.existsSync(inputPath)) {
 const input = JSON.parse(fs.readFileSync(inputPath, 'utf-8'));
 
 // ============ HTTP Utility ============
-function httpGet(url, referer) {
+function httpGet(url, referer, timeoutMs) {
+  timeoutMs = timeoutMs || 15000;
   return new Promise(function(resolve, reject) {
+    var timer = setTimeout(function() {
+      req && req.destroy();
+      reject(new Error('HTTP timeout after ' + timeoutMs + 'ms: ' + url));
+    }, timeoutMs);
+    var req;
     try {
       const parsed = new URL(url);
       const client = parsed.protocol === 'https:' ? https : http;
@@ -68,18 +74,23 @@ function httpGet(url, referer) {
         path: parsed.pathname + parsed.search,
         method: 'GET',
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
           'Accept': '*/*',
           'Accept-Encoding': 'gzip, deflate',
-          'Accept-Language': 'zh-CN,zh;q=0.9',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
           'Referer': referer || 'https://user.mypikpak.com/',
+          'Sec-Fetch-Dest': 'script',
+          'Sec-Fetch-Mode': 'no-cors',
+          'Sec-Fetch-Site': 'cross-site',
+          'Cache-Control': 'no-cache',
         },
       };
       if (proxyAgent) {
         reqOptions.agent = proxyAgent;
       }
 
-      const req = client.request(reqOptions, (res) => {
+      req = client.request(reqOptions, (res) => {
+        clearTimeout(timer);
         const chunks = [];
         res.on('data', c => chunks.push(c));
         res.on('end', () => {
@@ -94,9 +105,13 @@ function httpGet(url, referer) {
           }
         });
       });
-      req.on('error', reject);
+      req.on('error', function(err) {
+        clearTimeout(timer);
+        reject(err);
+      });
       req.end();
     } catch (e) {
+      clearTimeout(timer);
       reject(e);
     }
   });
@@ -104,24 +119,42 @@ function httpGet(url, referer) {
 
 // ============ V8 Mock Window ============
 function createMockWindow() {
-  var _chromeBuild = 149 + Math.floor(Math.random() * 3);
+  var _chromeBuild = 130 + Math.floor(Math.random() * 20);
+  var _localeSet = ['en-US', 'zh-CN', 'ja-JP', 'ko-KR'];
+  var _lang = _localeSet[Math.floor(Math.random() * _localeSet.length)];
+  var _hwConcurrency = [4, 6, 8, 12, 16][Math.floor(Math.random() * 5)];
+  var _deviceMem = [4, 8, 16, 32][Math.floor(Math.random() * 4)];
+  var _canvasFpSeed = Date.now() + Math.random();
   var mockNavigator = {
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/' + _chromeBuild + '.0.0.0 Safari/537.36',
-    platform: 'Win32', maxTouchPoints: 0, language: 'zh-CN',
-    languages: ['zh-CN', 'zh', 'en'], hardwareConcurrency: 8,
+    platform: 'Win32', maxTouchPoints: 0, language: _lang,
+    languages: [_lang, _lang.split('-')[0], 'en-US', 'en'], hardwareConcurrency: _hwConcurrency,
     cookieEnabled: true, doNotTrack: null,
     webdriver: false, vendor: 'Google Inc.',
     appVersion: '5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/' + _chromeBuild + '.0.0.0 Safari/537.36',
-    onLine: true, plugins: { length: 5 }, mimeTypes: { length: 4 },
-    getBattery: function() { return Promise.resolve({ charging: true, level: 1 }); },
+    onLine: true,
+    plugins: [
+      { name: 'Chrome PDF Plugin', filename: 'internal-pdf-viewer', description: 'Portable Document Format' },
+      { name: 'Chrome PDF Viewer', filename: 'mhjfbmdgcfjbbpaeojofohoefgiehjai', description: '' },
+      { name: 'Native Client', filename: 'internal-nacl-plugin', description: '' },
+    ],
+    mimeTypes: [
+      { type: 'application/pdf', suffixes: 'pdf', description: 'Portable Document Format' },
+      { type: 'application/x-google-chrome-pdf', suffixes: 'pdf', description: 'Portable Document Format' },
+    ],
+    getBattery: function() { return Promise.resolve({ charging: true, level: 0.85 + Math.random() * 0.15 }); },
     sendBeacon: function() { return true; },
-    connection: { effectiveType: '4g', rtt: 50 },
-    deviceMemory: 8,
+    connection: { effectiveType: '4g', rtt: 20 + Math.floor(Math.random() * 60), downlink: 5 + Math.random() * 15 },
+    deviceMemory: _deviceMem,
+    javaEnabled: function() { return false; },
   };
-  var _screenW = 1920 + Math.floor(Math.random() * 10 - 5);
-  var _screenH = 1080 + Math.floor(Math.random() * 10 - 5);
+  var _screenResolutions = [[1366, 768], [1440, 900], [1536, 864], [1600, 900], [1680, 1050], [1920, 1080], [2560, 1440]];
+  var _resIdx = Math.floor(Math.random() * _screenResolutions.length);
+  var _screenW = _screenResolutions[_resIdx][0];
+  var _screenH = _screenResolutions[_resIdx][1];
+  var _taskbarH = [30, 40, 48][Math.floor(Math.random() * 3)];
   var mockScreen = {
-    width: _screenW, height: _screenH, availWidth: _screenW, availHeight: _screenH - 40,
+    width: _screenW, height: _screenH, availWidth: _screenW, availHeight: _screenH - _taskbarH,
     colorDepth: 24, pixelDepth: 24,
     orientation: { type: 'landscape-primary', angle: 0 },
   };
@@ -130,7 +163,20 @@ function createMockWindow() {
     textBaseline: 'alphabetic', textAlign: 'start',
     fillRect: function() {}, fillText: function() {}, strokeText: function() {},
     measureText: function(t) { return { width: t.length * 6 }; },
-    getImageData: function(x,y,w,h) { return { data: new Uint8Array(w*h*4), width: w, height: h }; },
+    getImageData: function(x,y,w,h) {
+      var totalPixels = w * h;
+      var data = new Uint8ClampedArray(totalPixels * 4);
+      var fpHash = crypto.createHash('md5').update(_canvasFpSeed.toString()).digest('hex');
+      for (var i = 0; i < totalPixels && i < fpHash.length; i++) {
+        var idx = i * 4;
+        var val = fpHash.charCodeAt(i % fpHash.length);
+        data[idx] = val & 0xff;
+        data[idx + 1] = (val * 3) & 0xff;
+        data[idx + 2] = (val * 7) & 0xff;
+        data[idx + 3] = 255;
+      }
+      return { data: data, width: w, height: h };
+    },
     beginPath: function() {}, moveTo: function() {}, lineTo: function() {}, stroke: function() {},
     arc: function() {}, fill: function() {}, closePath: function() {},
     save: function() {}, restore: function() {}, translate: function() {}, scale: function() {},
@@ -146,10 +192,49 @@ function createMockWindow() {
     lineWidth: 1, lineCap: 'butt', lineJoin: 'miter', miterLimit: 10,
     shadowBlur: 0, shadowColor: 'rgba(0,0,0,0)', shadowOffsetX: 0, shadowOffsetY: 0,
   };
+  var _gpuModels = ['GeForce GTX 1060', 'GeForce GTX 1650', 'GeForce RTX 2060', 'GeForce RTX 3060', 'GeForce GTX 970'];
+  var _gpuModel = _gpuModels[Math.floor(Math.random() * _gpuModels.length)];
+  var _webglExtensions = [
+    'ANGLE_instanced_arrays', 'EXT_blend_minmax', 'EXT_color_buffer_half_float',
+    'EXT_float_blend', 'EXT_frag_depth', 'EXT_shader_texture_lod',
+    'EXT_texture_compression_bptc', 'EXT_texture_compression_rgtc',
+    'EXT_texture_filter_anisotropic', 'EXT_sRGB', 'OES_element_index_uint',
+    'OES_fbo_render_mipmap', 'OES_standard_derivatives', 'OES_texture_float',
+    'OES_texture_float_linear', 'OES_texture_half_float', 'OES_texture_half_float_linear',
+    'OES_vertex_array_object', 'WEBGL_color_buffer_float', 'WEBGL_compressed_texture_s3tc',
+    'WEBGL_compressed_texture_s3tc_srgb', 'WEBGL_debug_renderer_info',
+    'WEBGL_debug_shaders', 'WEBGL_depth_texture', 'WEBGL_draw_buffers',
+    'WEBGL_lose_context', 'WEBGL_multi_draw'
+  ];
   var mockWebGL = {
-    getParameter: function() { return 0; }, getExtension: function() { return null; },
-    getSupportedExtensions: function() { return []; },
-    getShaderPrecisionFormat: function() { return { precision: 23, rangeMin: 127, rangeMax: 127 }; },
+    getParameter: function(pname) {
+      var map = {};
+      map[0x1B00] = 'WebGL 1.0 (OpenGL ES 2.0 Chromium)';
+      map[0x1B01] = 'ANGLE (' + _gpuModel + ' Direct3D11 vs_5_0 ps_5_0)';
+      map[0x1B02] = 'Google Inc. (NVIDIA)';
+      map[0x1B03] = 'WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)';
+      map[0x0D33] = 16384;
+      map[0x0D3A] = [16384, 16384];
+      map[0x8872] = 16;
+      map[0x8876] = _webglExtensions.length;
+      map[0x8824] = 16;
+      map[0x0A22] = [1, 1];
+      map[0x0A23] = [1, 1023];
+      map[0x84FF] = 16;
+      return map[pname] !== undefined ? map[pname] : 0;
+    },
+    getExtension: function(name) {
+      if (!_webglExtensions.includes(name)) return null;
+      return { MAX_TEXTURE_MAX_ANISOTROPY_EXT: 0x84FF, TEXTURE_MAX_ANISOTROPY_EXT: 0x84FE, UNMASKED_RENDERER_WEBGL: 0x9246, UNMASKED_VENDOR_WEBGL: 0x9245 };
+    },
+    getSupportedExtensions: function() { return _webglExtensions; },
+    getShaderPrecisionFormat: function(sType, pType) {
+      if (sType === 35633 || sType === 35632) {
+        if (pType === 35639) return { precision: 127, rangeMin: 127, rangeMax: 127 };
+        if (pType === 35641) return { precision: 23, rangeMin: 127, rangeMax: 127 };
+      }
+      return { precision: 23, rangeMin: 127, rangeMax: 127 };
+    },
     createBuffer: function() { return {}; }, bindBuffer: function() {}, bufferData: function() {},
     createProgram: function() { return {}; }, createShader: function() { return {}; },
     shaderSource: function() {}, compileShader: function() {},
@@ -163,27 +248,31 @@ function createMockWindow() {
     enableVertexAttribArray: function() {}, vertexAttribPointer: function() {},
     drawArrays: function() {}, clear: function() {}, clearColor: function() {},
     viewport: function() {},
-    getContextAttributes: function() { return { alpha: true, antialias: true, depth: true, stencil: false }; },
-    VERSION: 'WebGL 1.0', RENDERER: 'WebKit WebGL', VENDOR: 'WebKit',
-    SHADING_LANGUAGE_VERSION: 'WebGL GLSL ES 1.0',
+    getContextAttributes: function() { return { alpha: true, antialias: true, depth: true, stencil: false, premultipliedAlpha: true, preserveDrawingBuffer: false }; },
+    VERSION: 'WebGL 1.0 (OpenGL ES 2.0 Chromium)',
+    RENDERER: 'ANGLE (' + _gpuModel + ' Direct3D11 vs_5_0 ps_5_0)',
+    VENDOR: 'Google Inc. (NVIDIA)',
+    SHADING_LANGUAGE_VERSION: 'WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)',
   };
+  var _canvasFpHash = crypto.createHash('md5').update(_canvasFpSeed.toString()).digest('hex');
   var mockCanvas = {
-    width: 280, height: 60,
+    width: 220, height: 30,
     getContext: function(type) {
       if (type === '2d') return mockCtx;
       if (type === 'webgl' || type === 'experimental-webgl') return mockWebGL;
       return null;
     },
-    toDataURL: function() {
-      var r = Math.random().toString(36).slice(2, 10);
-      return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42m' + r + 'P8/5+hAAAHBAL8B0VFAAAAAElFTkSuQmCC';
+    toDataURL: function(mimeType) {
+      mimeType = mimeType || 'image/png';
+      var body = _canvasFpHash.substring(0, 200);
+      return 'data:' + mimeType + ';base64,' + (mimeType === 'image/jpeg' ? '/9j/4AAQSkZJRgABAQEASABIAAD' : 'iVBORw0KGgoAAAANSUhEUg') + body;
     },
     toBlob: function(cb) { cb(null); },
   };
   var mockDocument = {
-    cookie: '', referrer: '', title: 'txCaptcha', hidden: false, visibilityState: 'visible',
-    documentElement: { clientWidth: 1920, clientHeight: 919 },
-    body: { clientWidth: 1920, clientHeight: 919, appendChild: function() {}, removeChild: function() {} },
+    cookie: '', referrer: 'https://mypikpak.com/drive/login?redirect=/all', title: 'txCaptcha', hidden: false, visibilityState: 'visible',
+    documentElement: { clientWidth: _screenW, clientHeight: _screenH - _taskbarH },
+    body: { clientWidth: _screenW, clientHeight: _screenH - _taskbarH, appendChild: function() {}, removeChild: function() {} },
     head: { appendChild: function() {} },
     createElement: function(tag) {
       if (tag === 'canvas') return mockCanvas;
@@ -198,18 +287,42 @@ function createMockWindow() {
     hasFocus: function() { return true; },
   };
   var startTime = Date.now();
+  var _navStart = startTime - 2000 - Math.floor(Math.random() * 3000);
+  var _dnsTime = 5 + Math.floor(Math.random() * 20);
+  var _tcpTime = 20 + Math.floor(Math.random() * 40);
+  var _tlsTime = 30 + Math.floor(Math.random() * 50);
+  var _ttfbTime = 50 + Math.floor(Math.random() * 100);
+  var _downloadTime = 20 + Math.floor(Math.random() * 80);
+  var _domParseTime = 100 + Math.floor(Math.random() * 200);
+  var _domReadyTime = 50 + Math.floor(Math.random() * 150);
   var mockPerformance = {
     now: function() { return Date.now() - startTime; },
     timing: {
-      navigationStart: Date.now() - 1000, loadEventEnd: Date.now() - 500,
-      domContentLoadedEventEnd: Date.now() - 600, connectEnd: Date.now() - 900,
-      connectStart: Date.now() - 950, domComplete: Date.now() - 500,
-      domInteractive: Date.now() - 600, domainLookupEnd: Date.now() - 950,
-      domainLookupStart: Date.now() - 980, fetchStart: Date.now() - 980,
-      requestStart: Date.now() - 950, responseEnd: Date.now() - 800,
-      responseStart: Date.now() - 850, secureConnectionStart: Date.now() - 900,
+      navigationStart: _navStart,
+      fetchStart: _navStart + 1,
+      domainLookupStart: _navStart + 2,
+      domainLookupEnd: _navStart + 2 + _dnsTime,
+      connectStart: _navStart + 2 + _dnsTime,
+      connectEnd: _navStart + 2 + _dnsTime + _tcpTime,
+      secureConnectionStart: _navStart + 2 + _dnsTime + Math.floor(_tcpTime / 2),
+      requestStart: _navStart + 2 + _dnsTime + _tcpTime,
+      responseStart: _navStart + 2 + _dnsTime + _tcpTime + _ttfbTime,
+      responseEnd: _navStart + 2 + _dnsTime + _tcpTime + _ttfbTime + _downloadTime,
+      domInteractive: _navStart + 2 + _dnsTime + _tcpTime + _ttfbTime + _downloadTime + _domParseTime,
+      domContentLoadedEventEnd: _navStart + 2 + _dnsTime + _tcpTime + _ttfbTime + _downloadTime + _domParseTime + _domReadyTime,
+      domComplete: _navStart + 2 + _dnsTime + _tcpTime + _ttfbTime + _downloadTime + _domParseTime + _domReadyTime + 50,
+      loadEventEnd: _navStart + 2 + _dnsTime + _tcpTime + _ttfbTime + _downloadTime + _domParseTime + _domReadyTime + 60,
+      unloadEventStart: 0,
+      unloadEventEnd: 0,
+      redirectStart: 0,
+      redirectEnd: 0,
     },
-    getEntriesByType: function() { return []; },
+    getEntriesByType: function(type) {
+      if (type === 'navigation') {
+        return [{ name: 'https://user.mypikpak.com/captcha/v2/txCaptcha.html', entryType: 'navigation', startTime: 0, duration: _dnsTime + _tcpTime + _ttfbTime + _downloadTime + _domParseTime + _domReadyTime }];
+      }
+      return [];
+    },
     memory: { usedJSHeapSize: 10000000, totalJSHeapSize: 20000000, jsHeapSizeLimit: 40000000 },
   };
   var mockLocation = {
@@ -251,8 +364,8 @@ function createMockWindow() {
     location: mockLocation, performance: mockPerformance,
     localStorage: Object.assign({}, mockStorage, { _data: {} }),
     sessionStorage: Object.assign({}, mockStorage, { _data: {} }),
-    innerWidth: 1920, innerHeight: 919, outerWidth: 1920, outerHeight: 1040,
-    devicePixelRatio: 1, screenX: 0, screenY: 0,
+    innerWidth: _screenW, innerHeight: _screenH - _taskbarH, outerWidth: _screenW, outerHeight: _screenH,
+    devicePixelRatio: [1, 1, 1.25][Math.floor(Math.random() * 3)], screenX: 0, screenY: 0,
     screenLeft: 0, screenTop: 0,
     scrollX: 0, scrollY: 0, pageXOffset: 0, pageYOffset: 0,
     CSS: { escape: function(s) { return s; }, supports: function() { return false; } },
@@ -287,10 +400,11 @@ function createMockWindow() {
 }
 
 // ============ V8 Execute TDC ============
-function runTdcInV8(tdcCode) {
+function runTdcInV8(tdcCode, timeoutMs) {
+  timeoutMs = timeoutMs || 30000;
   var mockWindow = createMockWindow();
   var sandbox = vm.createContext(mockWindow);
-  vm.runInContext(tdcCode, sandbox, { filename: 'tdc.js' });
+  vm.runInContext(tdcCode, sandbox, { filename: 'tdc.js', timeout: timeoutMs });
   if (!sandbox.TDC) throw new Error('TDC not found after executing tdc.js');
   var info = sandbox.TDC.getInfo();
   var collect = sandbox.TDC.getData(true);
@@ -311,8 +425,24 @@ function solvePow(prefix, targetMd5) {
 async function main() {
   var tdcUrl = 'https://turing.captcha.qcloud.com' + input.tdc_path;
 
-  var tdcCode = await httpGet(tdcUrl, 'https://user.mypikpak.com/');
-  var tdcResult = runTdcInV8(tdcCode);
+  var tdcCode = null;
+  var lastErr = null;
+  for (var attempt = 0; attempt < 3; attempt++) {
+    try {
+      tdcCode = await httpGet(tdcUrl, 'https://user.mypikpak.com/', 15000);
+      break;
+    } catch (e) {
+      lastErr = e;
+      if (attempt < 2) {
+        await new Promise(function(r) { setTimeout(r, 2000); });
+      }
+    }
+  }
+  if (!tdcCode) {
+    throw new Error('tdc.js \u4E0B\u8F7D\u5931\u8D25(3\u6B21): ' + (lastErr ? lastErr.message : 'unknown'));
+  }
+
+  var tdcResult = runTdcInV8(tdcCode, 30000);
 
   var output = {
     collect: tdcResult.collect,

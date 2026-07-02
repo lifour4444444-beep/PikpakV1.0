@@ -34,6 +34,7 @@ from lib.utils import (
     RateLimitError,
     calculate_captcha_sign,
     generate_device_id,
+    generate_device_sign,
     is_rate_limited,
     random_item,
     random_password,
@@ -53,6 +54,10 @@ _stop_event = threading.Event()
 _result_lock = threading.Lock()
 
 _on_captcha_image = None
+
+_captcha_init_lock = threading.Lock()
+_captcha_init_last_time = 0.0
+_CAPTCHA_INIT_MIN_INTERVAL = 5.0
 
 
 class _GlobalRateLimiter:
@@ -105,29 +110,40 @@ DRIVE_BASE_URL = 'https://api-drive.mypikpak.com'
 DEFAULT_CLIENT_ID = 'YUMx5nI8ZU8Ap8pm'
 
 
-_device_sign_cache = {}
-
 def _pikpak_headers(device_id, extra=None):
-    sign = _device_sign_cache.get(device_id)
-    if sign is None:
-        sign = f'wdi10.{device_id}{"x" * 32}'
-        _device_sign_cache[device_id] = sign
+    sign = generate_device_sign(device_id)
+
+    ua = get_user_agent()
+    if 'Windows' in ua:
+        os_ver = 'Win32'
+        platform = '"Windows"'
+        device_name = 'PC-Chrome'
+    elif 'Macintosh' in ua:
+        os_ver = 'MacIntel'
+        platform = '"macOS"'
+        device_name = 'Mac-Chrome'
+    else:
+        os_ver = 'Linux x86_64'
+        platform = '"Linux"'
+        device_name = 'Linux-Chrome'
+
+    chrome_ver = get_chrome_version()
     h = {
         'x-client-id': DEFAULT_CLIENT_ID,
         'x-protocol-version': '301',
         'x-device-id': device_id,
         'x-device-sign': sign,
         'x-client-version': '1.0.0',
-        'x-device-model': f'chrome%2F{get_chrome_version()}.0.0.0',
-        'x-device-name': 'PC-Chrome',
+        'x-device-model': f'chrome%2F{chrome_ver}.0.0.0',
+        'x-device-name': device_name,
         'x-net-work-type': 'NONE',
-        'x-os-version': 'Win32',
+        'x-os-version': os_ver,
         'x-platform-version': '1',
         'x-provider-name': 'NONE',
         'x-sdk-version': '8.1.4',
-        'sec-ch-ua': f'"Google Chrome";v="{get_chrome_version()}", "Chromium";v="{get_chrome_version()}", "Not)A;Brand";v="24"',
+        'sec-ch-ua': f'"Google Chrome";v="{chrome_ver}", "Chromium";v="{chrome_ver}", "Not)A;Brand";v="24"',
         'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Windows"',
+        'sec-ch-ua-platform': platform,
         'sec-fetch-dest': 'empty',
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'same-site',
@@ -151,6 +167,7 @@ else:
     _DATA_DIR = SCRIPT_DIR
 
 RESULT_FILE = os.path.join(_BASE_DIR, 'batch_result_protocol.txt')
+os.makedirs(_BASE_DIR, exist_ok=True)
 V8_SUBMIT_JS = os.path.join(_DATA_DIR, 'v8_submit.js')
 
 DELAY_MINUTES = 10
@@ -181,23 +198,35 @@ def set_worker_id(wid):
     _worker_tls.wid = wid
 
 
+_STEP_ICONS = {
+    'mail': '\u2709', 'captcha_init': '\u26A1', 'captcha_req': '\U0001F6E1',
+    'solve': '\U0001F9E9', 'exchange': '\U0001F504', 'send': '\U0001F4E7',
+    'wait': '\u23F3', 'verify': '\u2705', 'signup': '\U0001F680', 'invite': '\U0001F517',
+    'tdc': '\U0001F916', 'pow': '\u26CF', 'submit': '\U0001F4E4',
+    'prehandle': '\U0001F310', 'download': '\U0001F4F7', 'detect': '\U0001F441',
+}
+
+import threading
+_log_lock = threading.Lock()
+
 def _log(msg, end='\n'):
-    """关键信息输出到控制台"""
     global _log_buffer
-    wid = getattr(_worker_tls, 'wid', None)
-    prefix = f'[W{str(wid).zfill(2)}] ' if wid is not None else ''
-    if end == '':
-        if _log_buffer:
-            _log_buffer += msg
+    with _log_lock:
+        wid = getattr(_worker_tls, 'wid', None)
+        prefix = f'\u2502W{str(wid).zfill(2)}\u2502 ' if wid is not None else ''
+        ts = time.strftime('%H:%M:%S')
+        if end == '':
+            if _log_buffer:
+                _log_buffer += msg
+            else:
+                _log_buffer = f'\u2502{ts}\u2502 {prefix}{msg}'
         else:
-            _log_buffer = f'[{time.strftime("%H:%M:%S")}] {prefix}{msg}'
-    else:
-        if _log_buffer:
-            print(f'{_log_buffer}{msg}', end='\n')
-            _log_buffer = ''
-        else:
-            print(f'[{time.strftime("%H:%M:%S")}] {prefix}{msg}', end='\n')
-    sys.stdout.flush()
+            if _log_buffer:
+                print(f'{_log_buffer}{msg}', end='\n')
+                _log_buffer = ''
+            else:
+                print(f'\u2502{ts}\u2502 {prefix}{msg}', end='\n')
+        sys.stdout.flush()
 
 def get_image_dimensions(buf):
     if len(buf) < 24:
@@ -373,7 +402,7 @@ def parse_prehandle_response(body):
     }
 
 
-def run_tdc(sess, sid, subcapclass, tdc_path, pow_cfg, ans):
+def run_tdc(sess, sid, subcapclass, tdc_path, pow_cfg, ans, max_retries=2):
     input_data = {
         'sess': sess,
         'sid': sid,
@@ -396,30 +425,47 @@ def run_tdc(sess, sid, subcapclass, tdc_path, pow_cfg, ans):
         if os.name == 'nt':
             startup_kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
 
-        result = subprocess.run(
-            ['node', V8_SUBMIT_JS, tmp_path],
-            capture_output=True, text=True, timeout=120, encoding='utf-8',
-            env=env, **startup_kwargs,
-        )
+        last_err = None
+        for attempt in range(max_retries + 1):
+            try:
+                result = subprocess.run(
+                    ['node', V8_SUBMIT_JS, tmp_path],
+                    capture_output=True, text=True, timeout=60, encoding='utf-8',
+                    env=env, **startup_kwargs,
+                )
 
-        if result.returncode != 0:
-            stderr = (result.stderr or '').strip()
-            stdout = (result.stdout or '').strip()
-            raise RuntimeError(
-                f'v8_submit.js 退出码: {result.returncode}\n'
-                f'STDOUT: {stdout[-500:]}\n'
-                f'STDERR: {stderr[-500:]}'
-            )
+                if result.returncode != 0:
+                    stderr = (result.stderr or '').strip()
+                    stdout = (result.stdout or '').strip()
+                    raise RuntimeError(
+                        f'v8_submit.js \u9000\u51FA\u7801: {result.returncode}\n'
+                        f'STDOUT: {stdout[-500:]}\n'
+                        f'STDERR: {stderr[-500:]}'
+                    )
 
-        output = json.loads(result.stdout.strip())
-        if output.get('error'):
-            raise RuntimeError(f'TDC 执行错误: {output["error"]}')
+                output = json.loads(result.stdout.strip())
+                if output.get('error'):
+                    raise RuntimeError(f'TDC \u6267\u884C\u9519\u8BEF: {output["error"]}')
 
-        return {
-            'collect': output.get('collect', ''),
-            'info': output.get('info', ''),
-            'tokenid': output.get('tokenid', ''),
-        }
+                return {
+                    'collect': output.get('collect', ''),
+                    'info': output.get('info', ''),
+                    'tokenid': output.get('tokenid', ''),
+                }
+            except subprocess.TimeoutExpired:
+                last_err = RuntimeError('TDC \u6267\u884C\u8D85\u65F6(60s)')
+                _debug(f'TDC\u8D85\u65F6 \u5C1D\u8BD5{attempt + 1}/{max_retries + 1}')
+                if attempt < max_retries:
+                    time.sleep(2)
+            except json.JSONDecodeError as e:
+                last_err = RuntimeError(f'TDC \u8F93\u51FA\u89E3\u6790\u5931\u8D25: {e}')
+                if attempt < max_retries:
+                    time.sleep(1)
+            except Exception as e:
+                last_err = e
+                if attempt < max_retries:
+                    time.sleep(2)
+        raise last_err
     finally:
         try:
             os.unlink(tmp_path)
@@ -564,7 +610,7 @@ def local_solve(bg_image, sprite_image, yolo_path, siamese_path):
 
 
 def protocol_solve_captcha():
-    _log('  [1/6] prehandle...', end='')
+    _log('  \U0001F310 prehandle...', end='')
     _debug('[协议] 开始验证码求解')
 
     if _is_stopped(): return None
@@ -572,7 +618,7 @@ def protocol_solve_captcha():
     try:
         prehandle_info = fetch_prehandle()
     except Exception as e:
-        _log(f' ✗ {e}')
+        _log(f' \u2717 {e}')
         return None
 
     _debug(f'sess={prehandle_info["sess"][:40]}... sid={prehandle_info["sid"]}')
@@ -582,10 +628,10 @@ def protocol_solve_captcha():
     _debug(f'pow_cfg={json.dumps(prehandle_info["pow_cfg"])}')
 
     if not prehandle_info['bg_url']:
-        _log(' ✗ 无背景图')
+        _log(' \u2717 无背景图')
         return None
 
-    _log(' [2/6]下载图片...', end='')
+    _log(' \U0001F4F7\u2193\u2193...', end='')
     if _is_stopped(): return None
     try:
         image_data = download_image_as_base64(
@@ -595,7 +641,7 @@ def protocol_solve_captcha():
             sprite_data = download_image_as_base64(
                 prehandle_info['sprite_url'], referer='https://user.mypikpak.com/')
     except Exception as e:
-        _log(f' ✗ {e}')
+        _log(f' \u2717 {e}')
         return None
 
     _debug(f'背景图: {image_data["width"]}x{image_data["height"]} '
@@ -605,17 +651,17 @@ def protocol_solve_captcha():
                f'{sprite_data["type"]}')
 
     if not sprite_data:
-        _log(' ✗ 无参考条')
+        _log(' \u2717 无参考条')
         return None
 
-    _log(' [3/6]模型识别...', end='')
+    _log(' \U0001F441 detect...', end='')
     if _is_stopped(): return None
     bg_image = Image.open(io.BytesIO(base64.b64decode(image_data['base64'])))
     sprite_image = Image.open(io.BytesIO(base64.b64decode(sprite_data['base64'])))
 
     coords = local_solve(bg_image, sprite_image, YOLO_MODEL_PATH, SIAMESE_MODEL_PATH)
     if not coords or any(c is None for c in coords):
-        _log(f' ✗ ({len(coords) if coords else 0}/3)')
+        _log(f' \u2717 ({len(coords) if coords else 0}/3)')
         return None
 
     _debug(f'模型坐标: {json.dumps(coords)}')
@@ -653,7 +699,7 @@ def protocol_solve_captcha():
 
     invalid = [c for c in mapped_coords if c['x'] < 0 or c['x'] >= bg_w or c['y'] < 0 or c['y'] >= bg_h]
     if len(mapped_coords) != 3 or invalid:
-        _log(f' ✗ 坐标异常: {len(mapped_coords)}/3')
+        _log(f' \u2717 坐标异常: {len(mapped_coords)}/3')
         return None
 
     ans = json.dumps([
@@ -661,7 +707,7 @@ def protocol_solve_captcha():
         for i, c in enumerate(mapped_coords)
     ])
 
-    _log(' [4/6]TDC...', end='')
+    _log(' \U0001F916 TDC...', end='')
     if _is_stopped(): return None
     try:
         tdc_result = run_tdc(
@@ -670,27 +716,27 @@ def protocol_solve_captcha():
             prehandle_info['pow_cfg'], ans,
         )
     except Exception as e:
-        _log(f' ✗ {e}')
+        _log(f' \u2717 {e}')
         return None
 
     _debug(f'collect={len(tdc_result["collect"])}chars eks={len(tdc_result["info"])}chars')
 
     pow_cfg = prehandle_info['pow_cfg']
     if not pow_cfg or not pow_cfg.get('prefix') or not pow_cfg.get('md5'):
-        _log(' ✗ 无PoW')
+        _log(' \u2717 无PoW')
         return None
 
-    _log(' [5/6]PoW...', end='')
+    _log(' \u26CF PoW...', end='')
     if _is_stopped(): return None
     try:
         pow_result = solve_pow_single(pow_cfg['prefix'], pow_cfg['md5'])
     except Exception as e:
-        _log(f' ✗ {e}')
+        _log(f' \u2717 {e}')
         return None
 
     _debug(f'PoW nonce={pow_result["nonce"]} {pow_result["calc_time"]}ms')
 
-    _log(' [6/6]提交...', end='')
+    _log(' \U0001F4E4 submit...', end='')
     if _is_stopped(): return None
     try:
         verify_result = submit_verify(
@@ -700,17 +746,17 @@ def protocol_solve_captcha():
             pow_result['calc_time'],
         )
     except Exception as e:
-        _log(f' ✗ {e}')
+        _log(f' \u2717 {e}')
         return None
 
     if not verify_result['success']:
-        _log(f' ✗ code={verify_result["error_code"]} {verify_result["error_message"]}')
+        _log(f' \u2717 code={verify_result["error_code"]} {verify_result["error_message"]}')
         _debug(f'raw={json.dumps(verify_result["raw"])}')
         return None
 
-    _log(' ✓')
-    _log(f'    ticket: {verify_result["ticket"][:60]}...')
-    _log(f'    randstr: {verify_result["randstr"]}')
+    _log(' \u2713')
+    _log(f'    \u25CF ticket: {verify_result["ticket"][:60]}...')
+    _log(f'    \u25CF randstr: {verify_result["randstr"]}')
     _debug(f'验证成功 ticket={verify_result["ticket"][:30]}... randstr={verify_result["randstr"]}')
     return {'ticket': verify_result['ticket'], 'randstr': verify_result['randstr']}
 
@@ -741,17 +787,28 @@ def exchange_ticket_for_jwt(device_id, ticket, randstr, step2_jwt, locale):
 
         if resp['status_code'] == 200 and resp['data'].get('captcha_token') and \
                 resp['data']['captcha_token'] != step2_jwt:
-            _log(f'    JWT_C: {resp["data"]["captcha_token"][:50]}...')
+            _log(f'    \u25CF JWT_C: {resp["data"]["captcha_token"][:50]}...')
             _debug(f'获取到JWT_C: {resp["data"]["captcha_token"][:30]}...')
             return resp['data']['captcha_token']
     except Exception as e:
-        _log(f'    ✗ 兑换异常: {e}')
+        _log(f'    \u2717 \u5151\u6362\u5F02\u5E38: {e}')
         _debug(f'兑换异常: {e}')
 
     return step2_jwt
 
 
+def _throttle_captcha_init():
+    global _captcha_init_last_time
+    with _captcha_init_lock:
+        now = time.monotonic()
+        wait = _CAPTCHA_INIT_MIN_INTERVAL - (now - _captcha_init_last_time)
+        if wait > 0:
+            time.sleep(wait)
+        _captcha_init_last_time = time.monotonic()
+
+
 def get_initial_captcha_token(device_id, locale):
+    _throttle_captcha_init()
     client_version = '2.0.0'
     package_name = 'mypikpak.com'
     timestamp = str(int(time.time() * 1000))
@@ -764,7 +821,7 @@ def get_initial_captcha_token(device_id, locale):
         'Referer': 'https://mypikpak.com/',
     }), body={
         'client_id': DEFAULT_CLIENT_ID,
-        'action': 'POST:/v1/auth/verification',
+        'action': 'POST:/config/v1/drive',
         'device_id': device_id,
         'meta': {
             'captcha_sign': captcha_sign,
@@ -777,17 +834,20 @@ def get_initial_captcha_token(device_id, locale):
 
 
 def init_captcha_token(device_id, action, meta, locale, captcha_token):
+    _throttle_captcha_init()
+    body = {
+        'client_id': DEFAULT_CLIENT_ID,
+        'action': action,
+        'device_id': device_id,
+        'meta': meta,
+    }
+    if captcha_token:
+        body['captcha_token'] = captcha_token
     return make_request('POST', BASE_URL, '/v1/shield/captcha/init', headers=_pikpak_headers(device_id, {
         'accept-language': locale,
         'Origin': 'https://mypikpak.com',
         'Referer': 'https://mypikpak.com/',
-    }), body={
-        'client_id': DEFAULT_CLIENT_ID,
-        'action': action,
-        'device_id': device_id,
-        'captcha_token': captcha_token,
-        'meta': meta,
-    })
+    }), body=body)
 
 
 def send_verification(device_id, captcha_token, email, locale):
@@ -816,14 +876,14 @@ def send_verification_with_retry(device_id, captcha_token, email, locale, max_re
         data_str = str(resp.get('data', ''))
         if 'too frequent' in data_str.lower() or 'try again later' in data_str.lower():
             delay = 10 + attempt * 5
-            _log(f'  ⚠ 频率限制 [/v1/auth/verification], {delay}s后重试...')
+            _log(f'  \u26A0 \u9891\u7387\u9650\u5236 [/v1/auth/verification], {delay}s\u540E\u91CD\u8BD5...')
             if _is_stopped(): raise RuntimeError('用户停止')
             time.sleep(delay)
             continue
 
         if attempt < max_retries:
             delay = 3 * attempt
-            _log(f'  ⚠ 发送失败, {delay}s后重试...')
+            _log(f'  \u26A0 \u53D1\u9001\u5931\u8D25, {delay}s\u540E\u91CD\u8BD5...')
             if _is_stopped(): raise RuntimeError('用户停止')
             time.sleep(delay)
 
@@ -1020,29 +1080,35 @@ def run_batch_round(round_num):
 
     _debug(f'device_id={device_id} locale={locale} ua={get_user_agent()[:40]}...')
 
-    _log('  创建邮箱...', end='')
+    _log('  \u2709 \u521B\u5EFA\u90AE\u7BB1...', end='')
     if _is_stopped(): return False
     mail_account = create_mail_account(force_domain=lib.mail._FORCE_DOMAIN)
-    _log(f'\n📧 {mail_account["email"]}')
+    _log(f' \u2713 {mail_account["email"]}')
 
     time.sleep(random.uniform(1.0, 4.0))
 
-    _log('  获取captcha_token...', end='')
+    _log('  \u26A1 \u521D\u59CB\u5316token...', end='')
     if _is_stopped(): return False
     init_resp = get_initial_captcha_token(device_id, locale)
-    if init_resp['status_code'] != 200 or not init_resp['data'].get('captcha_token'):
-        _debug(f'初始captcha_token失败: {json.dumps(init_resp["data"])}')
+
+    initial_token = None
+    if init_resp['status_code'] == 200 and init_resp['data'].get('captcha_token'):
+        initial_token = init_resp['data']['captcha_token']
+        _log(' \u2713')
+        _log(f'    \u25CF JWT_A: {initial_token[:50]}...')
+    elif init_resp['status_code'] == 204:
+        _log(' \u2713 (204)')
+        _debug(f'\u9996\u6b21init\u8fd4\u56de204\uff0c\u5c06\u4e0d\u5e26captcha_token\u8fdb\u884c\u4e0b\u4e00\u6b65')
+    else:
+        _debug(f'\u521D\u59CB\u5316token\u5931\u8D25: {json.dumps(init_resp["data"])}')
         if is_rate_limited(init_resp['data']):
             raise RateLimitError(init_resp['data'], endpoint='/v1/shield/captcha/init')
-        _log(' ✗')
+        _log(' \u2717')
         return False
-    initial_token = init_resp['data']['captcha_token']
-    _log(' ✓')
-    _log(f'    JWT_A: {initial_token[:50]}...')
 
     time.sleep(random.uniform(1.0, 4.0))
 
-    _log('  请求人机验证...', end='')
+    _log('  \U0001F6E1 \u4EBA\u673A\u9A8C\u8BC1...', end='')
     if _is_stopped(): return False
     captcha_resp = init_captcha_token(
         device_id, 'POST:/v1/auth/verification',
@@ -1052,11 +1118,11 @@ def run_batch_round(round_num):
         _debug(f'captcha_token失败: {json.dumps(captcha_resp["data"])}')
         if is_rate_limited(captcha_resp['data']):
             raise RateLimitError(captcha_resp['data'], endpoint='/v1/shield/captcha/init(action)')
-        _log(' ✗')
+        _log(' \u2717')
         return False
-    _log(' ✓')
+    _log(' \u2713')
     step2_jwt = captcha_resp['data']['captcha_token']
-    _log(f'    JWT_B: {step2_jwt[:50]}...')
+    _log(f'    \u25CF JWT_B: {step2_jwt[:50]}...')
 
     captcha_result = None
     for captcha_retry in range(2):
@@ -1065,54 +1131,54 @@ def run_batch_round(round_num):
         if captcha_result:
             break
         if captcha_retry < 2:
-            _log(f'重试({captcha_retry + 1}/3)...', end='')
+            _log(f'\u21BB \u91CD\u8BD5({captcha_retry + 1}/3)...', end='')
             time.sleep(3)
     if _is_stopped(): return False
     if not captcha_result:
-        _log(f'  ✗ 验证码识别失败')
+        _log(f'  \u2717 \u9A8C\u8BC1\u7801\u8BC6\u522B\u5931\u8D25')
         return False
 
-    _log('  兑换token...', end='')
+    _log('  \U0001F504 \u5151\u6362token...', end='')
     captcha_token = exchange_ticket_for_jwt(
         device_id, captcha_result['ticket'], captcha_result['randstr'],
         step2_jwt, locale)
-    _log(' ✓')
-    _log(f'    JWT_C: {captcha_token[:50]}...')
+    _log(' \u2713')
+    _log(f'    \u25CF JWT_C: {captcha_token[:50]}...')
 
-    _log('  发送验证码...', end='')
+    _log('  \U0001F4E7 \u53D1\u9001\u9A8C\u8BC1\u7801...', end='')
     if _is_stopped(): return False
     try:
         verify_resp = send_verification_with_retry(
             device_id, captcha_token, mail_account['email'], locale)
     except RuntimeError as e:
-        _log(f' ✗ {e}')
+        _log(f' \u2717 {e}')
         return False
 
     verification_id = verify_resp['data']['verification_id']
-    _log(' ✓')
-    _log(f'    verify_id: {verification_id}')
+    _log(' \u2713')
+    _log(f'    \u25CF vid: {verification_id}')
 
-    _log('  等待验证码...', end='')
+    _log('  \u23F3 \u7B49\u5F85\u9A8C\u8BC1\u7801...', end='')
     if _is_stopped(): return False
     try:
-        code = fetch_verification_code(mail_account['token'], mail_account.get('base_url'), stop_check=_is_stopped, provider_type=mail_account.get('type'))
+        code = fetch_verification_code(mail_account['email'], mail_account['token'], mail_account.get('base_url'), stop_check=_is_stopped, provider_type=mail_account.get('type'))
     except Exception as e:
-        _log(f' ✗ {e}')
+        _log(f' \u2717 {e}')
         return False
-    _log(f' {code}')
+    _log(f' \u2713 {code}')
 
-    _log('  校验验证码...', end='')
+    _log('  \u2705 \u6821\u9A8C\u9A8C\u8BC1\u7801...', end='')
     if _is_stopped(): return False
     verify_result = verify_code_request(device_id, verification_id, code)
     if verify_result['status_code'] != 200 or not verify_result['data'].get('verification_token'):
         _debug(f'验证码校验失败: {json.dumps(verify_result["data"])}')
         if is_rate_limited(verify_result['data']):
             raise RateLimitError(verify_result['data'], endpoint='/v1/auth/verification/verify')
-        _log(' ✗')
+        _log(' \u2717')
         return False
-    _log(' ✓')
+    _log(' \u2713')
 
-    _log('  注册账号...', end='')
+    _log('  \U0001F680 \u6CE8\u518C\u8D26\u53F7...', end='')
     if _is_stopped(): return False
     signup_resp = signup(
         device_id, mail_account['email'], code,
@@ -1122,27 +1188,27 @@ def run_batch_round(round_num):
         _debug(f'注册失败: {json.dumps(signup_resp["data"])}')
         if is_rate_limited(signup_resp['data']):
             raise RateLimitError(signup_resp['data'], endpoint='/v1/auth/signup')
-        _log(' ✗')
+        _log(' \u2717')
         return False
-    _log(' ✓')
+    _log(' \u2713')
 
     access_token = signup_resp['data'].get('access_token') or signup_resp['data'].get('token', '')
     user_id = signup_resp['data'].get('sub', '')
-    _log(f'    access_token: {access_token[:50]}...')
-    _log(f'    user_id: {user_id}')
+    _log(f'    \u25CF token: {access_token[:50]}...')
+    _log(f'    \u25CF uid: {user_id}')
 
     invite_ok = None
     if access_token and user_id:
-        _log('  绑定邀请...', end='')
+        _log('  \U0001F517 \u7ED1\u5B9A\u9080\u8BF7...', end='')
         if _is_stopped(): return False
         try:
             bind_resp = bind_invite(access_token, user_id, captcha_token, device_id)
             if bind_resp["status_code"] == 200:
                 invite_ok = True
-                _log(' ✓')
+                _log(' \u2713')
             else:
                 invite_ok = False
-                _log(' ✗')
+                _log(' \u2717')
             _debug(f'绑定结果: {"成功" if invite_ok else json.dumps(bind_resp["data"])}')
         except Exception as e:
             invite_ok = False
@@ -1150,45 +1216,46 @@ def run_batch_round(round_num):
             _log(' ✗')
 
     acct = append_result(mail_account['email'], password, access_token, user_id, invite_ok)
-    _log(f'  ✅ 注册成功 | {mail_account["email"]}')
-    _log(f'     密码: {password}')
+    _log(f'  \u2705 \u6CE8\u518C\u6210\u529F \u2192 {mail_account["email"]}')
+    _log(f'     \U0001F511 {password}')
 
     return acct
 
 
 def main():
-    _log('PikPak 批量注册机')
-    _log(f'间隔: {DELAY_MINUTES}min | 模型: YOLOv5+Siamese | 验证码: 协议版')
+    _log('\u2550' * 40)
+    _log('\u25B6 PikPak \u6279\u91CF\u6CE8\u518C\u673A')
+    _log(f'\u2502 \u95F4\u9694: {DELAY_MINUTES}min \u2502 \u6A21\u578B: YOLO+Siamese \u2502 \u9A8C\u8BC1\u7801: \u534F\u8BAE')
     if PROXY_GATEWAY:
-        _log(f'代理: 网关 ({PROXY_GATEWAY[:50]}...)')
+        _log(f'\u2502 \u4EE3\u7406: \u7F51\u5173 ({PROXY_GATEWAY[:50]}...)')
     else:
-        _log('代理: 直连')
-    _log(f'详情日志: {LOG_FILE}')
-    _log('=' * 50)
+        _log('\u2502 \u4EE3\u7406: \u76F4\u8FDE')
+    _log(f'\u2502 \u65E5\u5FD7: {LOG_FILE}')
+    _log('\u2550' * 40)
 
     if not os.path.exists(V8_SUBMIT_JS):
-        _log(f'✗ v8_submit.js 不存在: {V8_SUBMIT_JS}')
+        _log(f'\u2717 v8_submit.js \u4E0D\u5B58\u5728: {V8_SUBMIT_JS}')
         sys.exit(1)
 
     try:
         node_ver = subprocess.run(
             ['node', '--version'], capture_output=True, text=True, timeout=5)
-        _log(f'Node.js {node_ver.stdout.strip()}')
+        _log(f'\u2502 Node.js {node_ver.stdout.strip()}')
         major = int(node_ver.stdout.strip().lstrip('v').split('.')[0])
         if major < 12:
-            _log('✗ Node.js 版本过低，需要 v12+')
+            _log('\u2717 Node.js \u7248\u672C\u8FC7\u4F4E\uFF0C\u9700\u8981 v12+')
             sys.exit(1)
     except FileNotFoundError:
-        _log('✗ Node.js 未安装，请安装 https://nodejs.org/')
+        _log('\u2717 Node.js \u672A\u5B89\u88C5\uFF0C\u8BF7\u5B89\u88C5 https://nodejs.org/')
         sys.exit(1)
     except Exception:
-        _log('✗ Node.js 不可用')
+        _log('\u2717 Node.js \u4E0D\u53EF\u7528')
         sys.exit(1)
 
     node_modules = os.path.join(_BASE_DIR, 'node_modules')
     socks_agent = os.path.join(node_modules, 'socks-proxy-agent')
     if not os.path.exists(socks_agent):
-        _log('✗ Node.js 依赖未安装，请运行: npm install')
+        _log('\u2717 Node.js \u4F9D\u8D56\u672A\u5B89\u88C5\uFF0C\u8BF7\u8FD0\u884C: npm install')
         sys.exit(1)
 
     configure_proxy(gateway=PROXY_GATEWAY)
@@ -1205,13 +1272,13 @@ def main():
                 ok = run_batch_round(round_num)
             except RateLimitError as e:
                 rate_limit_count += 1
-                _log(f'⛔ 触发频率限制 [{e.endpoint}] (第{rate_limit_count}/3次)，立即重试')
+                _log(f'\u26D4 \u89E6\u53D1\u9891\u7387\u9650\u5236 [{e.endpoint}] ({rate_limit_count}/3)\u2192\u91CD\u8BD5')
                 _debug(f'频率限制响应: {json.dumps(e.data)}')
                 unpin_proxy()
                 force_rotate_proxy()
                 pin_proxy()
                 if rate_limit_count >= 3:
-                    _log('⚠ 频率限制重试3次无效，跳过本轮')
+                    _log('\u26A0 \u9891\u7387\u9650\u5236\u91CD\u8BD53\u6B21\u65E0\u6548\uFF0C\u8DF3\u8FC7\u672C\u8F6E')
                     fail_count += 1
                     rate_limit_count = 0
                     ok = False
@@ -1223,13 +1290,13 @@ def main():
                         break
                     except RateLimitError as e2:
                         rate_limit_count += 1
-                        _log(f'⛔ 触发频率限制 [{e2.endpoint}] (第{rate_limit_count}/3次)，立即重试')
+                        _log(f'\u26D4 \u89E6\u53D1\u9891\u7387\u9650\u5236 [{e2.endpoint}] ({rate_limit_count}/3)\u2192\u91CD\u8BD5')
                         _debug(f'频率限制响应: {json.dumps(e2.data)}')
                         unpin_proxy()
                         force_rotate_proxy()
                         pin_proxy()
                         if rate_limit_count >= 3:
-                            _log('⚠ 频率限制重试3次无效，跳过本轮')
+                            _log('\u26A0 \u9891\u7387\u9650\u5236\u91CD\u8BD53\u6B21\u65E0\u6548\uFF0C\u8DF3\u8FC7\u672C\u8F6E')
                             fail_count += 1
                             rate_limit_count = 0
                             ok = False
@@ -1244,16 +1311,16 @@ def main():
             else:
                 fail_count += 1
 
-            _log(f'📊 累计: {success_count}成功 {fail_count}失败 | 下一轮 {DELAY_MINUTES}min后')
+            _log(f'\u2502 \u2191{success_count}\u2713 \u2193{fail_count}\u2717 \u2502 \u4E0B\u4E00\u8F6E {DELAY_MINUTES}min\u540E')
             time.sleep(DELAY_MINUTES * 60)
     except KeyboardInterrupt:
-        _log('\n⏹ 用户中断')
+        _log('\n\u23F9 \u7528\u6237\u4E2D\u65AD')
     except Exception as e:
-        _log(f'💥 {e}')
+        _log(f'\u2757 {e}')
 
-    _log('=' * 50)
-    _log(f'结束 | 成功: {success_count} | 失败: {fail_count}')
-    _log(f'结果: {RESULT_FILE}')
+    _log('\u2550' * 40)
+    _log(f'\u25A0 \u7ED3\u675F \u2502 \u2713{success_count} \u2717{fail_count}')
+    _log(f'\u25B6 {RESULT_FILE}')
 
 
 if __name__ == '__main__':

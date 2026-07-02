@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 import random
 import string
 import time
@@ -25,6 +26,8 @@ CAPTCHA_ALGORITHMS = [
 
 LOCALES = ['zh-CN', 'zh-TW', 'en-US', 'ja-JP', 'ko-KR']
 COUNTRY_CODES = ['US', 'JP', 'HK', 'SG', 'TW']
+
+DEVICE_SIGN_SECRET_KEY = 'pikpak_device_sign_2024'
 
 
 class RateLimitError(Exception):
@@ -57,6 +60,17 @@ def random_password():
 
 def generate_device_id():
     return uuid.uuid4().hex
+
+
+def generate_device_sign(device_id, client_id='YUMx5nI8ZU8Ap8pm', client_version='2.0.0', package_name='mypikpak.com'):
+    ts = str(int(time.time() * 1000))
+    raw = device_id + client_id + client_version + package_name + ts
+    sign_body = hmac.new(
+        DEVICE_SIGN_SECRET_KEY.encode('utf-8'),
+        raw.encode('utf-8'),
+        hashlib.sha256,
+    ).hexdigest()
+    return f'wdi10.{device_id}.{sign_body[:32]}'
 
 
 def calculate_captcha_sign(client_id, client_version, package_name, device_id, timestamp):
